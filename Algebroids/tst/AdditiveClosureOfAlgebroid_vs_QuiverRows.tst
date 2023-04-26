@@ -13,6 +13,8 @@ gap> QQ := HomalgFieldOfRationals();;
 gap> B := PathAlgebra( QQ, quiver );;
 gap> aoid := Algebroid( B, false : overhead := false );;
 gap> add := AdditiveClosure( aoid : overhead := false );;
+gap> aoid_2 := AlgebroidFromDataTables( aoid : overhead := false );;
+gap> add_2 := AdditiveClosure( aoid_2 : overhead := false );;
 
 #
 gap> n := 35;;
@@ -30,20 +32,34 @@ gap> iso := IsomorphismOntoQuiverRows( add : overhead := false );;
 gap> alpha_quiver := iso( alpha );;
 gap> beta_quiver := iso( beta );;
 
+gap> iso := IsomorphismOntoAlgebroidFromDataTables( aoid );;
+gap> iso := ExtendFunctorToAdditiveClosures( iso );;
+gap> alpha_tables := iso( alpha );;
+gap> beta_tables := iso( beta );;
+
 #
 gap> start := Runtime( );;
 gap> result := UnderlyingMatrix( HomomorphismStructureOnMorphisms( alpha, beta ) );;
-gap> runtime := Runtime( ) - start;;
+gap> runtime := Runtime( ) - start;
 
 #
 gap> start := Runtime( );;
 gap> result_quiver := UnderlyingMatrix( HomomorphismStructureOnMorphisms( alpha_quiver, beta_quiver ) );;
-gap> runtime_quiver := Runtime( ) - start;;
+gap> runtime_quiver := Runtime( ) - start;
+
+#
+gap> start := Runtime( );;
+gap> result_tables := UnderlyingMatrix( HomomorphismStructureOnMorphisms( alpha_tables, beta_tables ) );;
+gap> runtime_tables := Runtime( ) - start;
 
 #
 gap> if runtime >= runtime_quiver * 3 / 10 then Display( true ); else Display( runtime ); Display( runtime_quiver ); fi;
 true
 gap> if runtime <= runtime_quiver * 4 / 10 then Display( true ); else Display( runtime ); Display( runtime_quiver ); fi;
+true
+
+#
+gap> if runtime_tables <= runtime_quiver then Display( true ); else Display( runtime_tables ); Display( runtime_quiver ); fi;
 true
 
 #

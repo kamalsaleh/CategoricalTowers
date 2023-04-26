@@ -10,12 +10,15 @@ ReadPackage( "Algebroids", "gap/precompiled_categories/CategoryFromNerveDataPrec
 ReadPackage( "Algebroids", "gap/precompiled_categories/CategoryFromNerveDataHomStructureOnMorphismsPrecompiled.gi" );
 
 ReadPackage( "Algebroids", "gap/precompiled_categories/CategoryFromDataTablesPrecompiled.gi" );
+ReadPackage( "Algebroids", "gap/precompiled_categories/AlgebroidFromDataTablesPrecompiled.gi" );
 
 ReadPackage( "Algebroids", "gap/precompiled_categories/AdditiveClosureOfAlgebroidOfFiniteDimensionalQuiverAlgebraOfRightQuiverOverFieldPrecompiled.gi" );
 ReadPackage( "Algebroids", "gap/precompiled_categories/AdditiveClosureOfAlgebroidOfFiniteDimensionalQuiverAlgebraOfRightQuiverOverZPrecompiled.gi" );
+ReadPackage( "Algebroids", "gap/precompiled_categories/AdditiveClosureOfAlgebroidFromDataTablesPrecompiled.gi" );
 
 ReadPackage( "Algebroids", "gap/precompiled_categories/AdelmanCategoryOfAdditiveClosureOfAlgebroidOfFiniteDimensionalQuiverAlgebraOfRightQuiverOverFieldPrecompiled.gi" );
 ReadPackage( "Algebroids", "gap/precompiled_categories/AdelmanCategoryOfAdditiveClosureOfAlgebroidOfFiniteDimensionalQuiverAlgebraOfRightQuiverOverZPrecompiled.gi" );
+ReadPackage( "Algebroids", "gap/precompiled_categories/AdelmanCategoryOfAdditiveClosureOfAlgebroidFromDataTablesPrecompiled.gi" );
 
 ReadPackage( "Algebroids", "gap/FpCategories.gi");
 ReadPackage( "Algebroids", "gap/Algebroids.gi");
