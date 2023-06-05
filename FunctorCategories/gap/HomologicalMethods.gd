@@ -6,12 +6,10 @@
 
 DeclareAttribute( "RadicalInclusionOfPreSheaf", IsObjectInPreSheafCategory );
 
-DeclareOperation( "CoverElementByIndecomposableProjectivePreSheaf", [ IsObjectInPreSheafCategory, IsCapCategoryMorphism, IsInt ] );
+DeclareOperation( "CoverElementByValueOfYonedaEmbedding", [ IsObjectInPreSheafCategory, IsCapCategoryMorphism, IsInt ] );
 
 DeclareAttribute( "ProjectiveCoverObjectDataOfPreSheaf", IsObjectInPreSheafCategory );
 
-#DeclareAttribute( "MorphismsIntoDirectSumDecompositionOfInjectiveEnvelope", IsObjectInPreSheafCategory );
-
-#DeclareAttribute( "DirectSumDecompositionOfInjectiveObject", IsObjectInPreSheafCategory );
+DeclareAttribute( "WeakProjectiveCoverObjectDataOfPreSheaf", IsObjectInPreSheafCategory );
 
 DeclareAttribute( "InjectiveEnvelope", IsObjectInPreSheafCategory );

@@ -1794,198 +1794,262 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
     fi;
     
     if ForAny( [ IsMatrixCategory, IsCategoryOfRows ], is -> is( C ) ) and
-          ( ( HasUnderlyingQuiverAlgebra( B ) and IsAdmissibleQuiverAlgebra( UnderlyingQuiverAlgebra( B ) ) ) or
+          ( ( HasUnderlyingQuiverAlgebra( B ) and IsFiniteDimensional( UnderlyingQuiverAlgebra( B ) ) ) or IsAlgebroidFromDataTables( B ) ) then
+      
+      if  ( ( HasUnderlyingQuiverAlgebra( B ) and IsAdmissibleQuiverAlgebra( UnderlyingQuiverAlgebra( B ) ) ) or
             ( HasIsAdmissibleAlgebroid( B ) and IsAdmissibleAlgebroid( B ) ) ) then
+        
+        SetIsAbelianCategoryWithEnoughProjectives( PSh, true );
+        
+        SetIsAbelianCategoryWithEnoughInjectives( PSh, true );
+        
+        AddEpimorphismFromProjectiveCoverObject( PSh,
+          function( PSh, F )
+            local C, dec, objs, D, epi;
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            if HasEpimorphismFromProjectiveCoverObject( F ) then
+                return EpimorphismFromProjectiveCoverObject( F );
+            fi;
+            
+            C := Range( PSh );
+            
+            dec := ProjectiveCoverObjectDataOfPreSheaf( PSh, F );
+            
+            objs := List( dec, Source );
+            
+            D := DirectSum( PSh, objs );
+            
+            epi := UniversalMorphismFromDirectSumWithGivenDirectSum( PSh, objs, F, dec, D );
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            SetProjectiveCoverObjectDataOfPreSheaf( D, List( [ 1 .. Length( objs ) ], i -> InjectionOfCofactorOfDirectSumWithGivenDirectSum( PSh, objs, i, D ) ) );
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            SetEpimorphismFromProjectiveCoverObject( F, epi );
+            
+            return epi;
+            
+        end );
+        
+        AddMonomorphismIntoInjectiveEnvelopeObject( PSh,
+          function( PSh, F )
+            local B, coPSh, NL, NR, NR_on_objs, NR_on_mors, mono_coPSh, mono;
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            if HasMonomorphismIntoInjectiveEnvelopeObject( F ) then
+                return MonomorphismIntoInjectiveEnvelopeObject( F );
+            fi;
+            
+            B := Source( PSh );
+            
+            coPSh := CoPreSheaves( B, Range( PSh ) );
+            
+            NL := NakayamaLeftAdjointData( coPSh )[1];
+            
+            NR := NakayamaRightAdjointData( PSh );
+            
+            NR_on_objs := NR[1];
+            
+            NR_on_mors := NR[2];
+            
+            mono_coPSh := MonomorphismIntoInjectiveEnvelopeObject( coPSh, NL( F ) );
+            
+            mono := NR_on_mors( NR_on_objs( Source( mono_coPSh ) ), mono_coPSh, NR_on_objs( Range( mono_coPSh ) ) );
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            SetMonomorphismIntoInjectiveEnvelopeObject( F, mono );
+            
+            return mono;
+            
+        end );
+        
+        #  rad(P) >--> P -->> top(P)
+        #              |
+        #              | eta
+        #              v
+        #  G ------->> F
+        #     epi
+        #
+        #  computes a morphism from P to G which lifts eta along epi
+        #
+        
+        auxiliary_indices :=
+            List( SetOfObjects( B ),
+              u -> List( SetOfObjects( B ),
+                v -> List( BasisOfExternalHom( B, u, v ),
+                  function ( b )
+                    if IsEqualToIdentityMorphism( b ) then
+                      return [];
+                    else
+                      return List( DecompositionOfMorphismInAlgebroid( b )[1][2], g -> SafeUniquePosition( SetOfGeneratingMorphisms( B ), g ) );
+                    fi;
+                  end ) ) );
+        
+        AddProjectiveLift( PSh,
+          function ( PSh, eta, epi )
+            local A, C, vals_eta, vals_epi, N, P, G, tP, vals_tP, gens, ells, vals_P, vals_G, mu, nu, delta;
+            
+            A := Source( PSh );
+            C := Range( PSh );
+            
+            vals_eta := ValuesOnAllObjects( eta );
+            vals_epi := ValuesOnAllObjects( epi );
+            
+            N := Length( vals_eta );
+            
+            P := Source( eta );
+            G := Source( epi );
+            
+            tP := CokernelProjection( PSh, RadicalInclusionOfPreSheaf( PSh, P ) );
+            vals_tP := ValuesOnAllObjects( tP );
+            
+            gens := List( vals_tP, m -> PreInverseForMorphisms( C, m ) );
+            ells := ListN( gens, vals_eta, vals_epi, { p, q, r } -> PreComposeList( C, [ p, q, PreInverseForMorphisms( C, r ) ] ) );
+            
+            vals_P := ValuesOfPreSheaf( P );
+            vals_G := ValuesOfPreSheaf( G );
+            
+            mu := List( [ 1 .. N ], i -> Concatenation(
+                    List( [ 1 .. N ], j ->
+                      List( [ 1 .. Length( auxiliary_indices[i,j] ) ], s ->
+                        PostComposeList( C, Concatenation( List( auxiliary_indices[i,j][s], index -> vals_P[2][index] ), [ gens[j] ] ) ) ) ) ) );
+            
+            nu := List( [ 1 .. N ], i -> Concatenation(
+                    List( [ 1 .. N ], j ->
+                      List( [ 1 .. Length( auxiliary_indices[i,j] ) ], s ->
+                        PostComposeList( C, Concatenation( List( auxiliary_indices[i,j][s], index -> vals_G[2][index] ), [ ells[j] ] ) ) ) ) ) );
+            
+            delta := List( [ 1 .. N ], i -> Concatenation( List( [ 1 .. N ], j -> ListWithIdenticalEntries( Length( auxiliary_indices[i][j] ), Range( vals_tP[j] ) ) ) ) );
+            
+            ells := ListN( [ 1 .. N ], delta, mu, nu, { i, D, m, n } ->
+                      PreCompose( C, PreInverseForMorphisms( C, UniversalMorphismFromDirectSum( C, D, vals_P[1][i], m ) ), UniversalMorphismFromDirectSum( C, D, vals_G[1][i], n ) ) );
+            
+            return CreatePreSheafMorphismByValues( PSh, P, ells, G );
+            
+        end );
+        
+        #         mono
+        #     F >-----> G
+        #     |
+        # eta |
+        #     v
+        #     I
+        #
+        AddInjectiveColift( PSh,
+          function ( PSh, mono, eta )
+            local B, coPSh, NL, NL_on_objs, NL_on_mors, NR, NR_on_objs, NR_on_mors,
+                  mono_coPSh, eta_coPSh, colift_coPSh;
+            
+            B := Source( PSh );
+            
+            coPSh := CoPreSheaves( B, Range( PSh ) );
+            
+            NL := NakayamaLeftAdjointData( coPSh );
+            
+            NL_on_objs := NL[1];
+            
+            NL_on_mors := NL[2];
+            
+            NR := NakayamaRightAdjointData( PSh );
+            
+            NR_on_objs := NR[1];
+            
+            NR_on_mors := NR[2];
+            
+            mono_coPSh := NL_on_mors( NL_on_objs( Source( mono ) ), mono, NL_on_objs( Range( mono ) ) );
+            
+            eta_coPSh := NL_on_mors( NL_on_objs( Source( eta ) ), eta, NL_on_objs( Range( eta ) ) );
+            
+            colift_coPSh := InjectiveColift( coPSh, mono_coPSh, eta_coPSh );
+            
+            return  NR_on_mors( NR_on_objs( Source( colift_coPSh ) ), colift_coPSh, NR_on_objs( Range( colift_coPSh ) ) );
+            
+        end );
+        
+        AddIndecomposableProjectiveObjects( PSh,
+          function ( PSh )
+            local B;
+            
+            B := Source( PSh );
+            
+            return List( SetOfObjects( B ), YonedaEmbeddingData( PSh )[1] );
+            
+        end );
+        
+        AddIndecomposableInjectiveObjects( PSh,
+          function( PSh )
+            local B, coPSh;
+            
+            B := Source( PSh );
+            
+            coPSh := CoPreSheaves( B, Range( PSh ) );
+            
+            return List( IndecomposableInjectiveObjects( coPSh ), NakayamaRightAdjointData( PSh )[1] );
+            
+        end );
       
-      SetIsAbelianCategoryWithEnoughProjectives( PSh, true );
-      
-      SetIsAbelianCategoryWithEnoughInjectives( PSh, true );
-      
-      AddEpimorphismFromProjectiveCoverObject( PSh,
-        function( PSh, F )
-          local C, dec, objs, D, epi;
-          
-          #% CAP_JIT_DROP_NEXT_STATEMENT
-          if HasEpimorphismFromProjectiveCoverObject( F ) then
-              return EpimorphismFromProjectiveCoverObject( F );
-          fi;
-          
-          C := Range( PSh );
-          
-          dec := ProjectiveCoverObjectDataOfPreSheaf( PSh, F );
-          
-          objs := List( dec, Source );
-          
-          D := DirectSum( PSh, objs );
-          
-          epi := UniversalMorphismFromDirectSumWithGivenDirectSum( PSh, objs, F, dec, D );
-          
-          #% CAP_JIT_DROP_NEXT_STATEMENT
-          SetProjectiveCoverObjectDataOfPreSheaf( D, List( [ 1 .. Length( objs ) ], i -> InjectionOfCofactorOfDirectSumWithGivenDirectSum( PSh, objs, i, D ) ) );
-          
-          #% CAP_JIT_DROP_NEXT_STATEMENT
-          SetEpimorphismFromProjectiveCoverObject( F, epi );
-          
-          return epi;
-          
-      end );
-      
-      AddMonomorphismIntoInjectiveEnvelopeObject( PSh,
-        function( PSh, F )
-          local B, coPSh, NL, NR, NR_on_objs, NR_on_mors, mono_coPSh, mono;
-          
-          #% CAP_JIT_DROP_NEXT_STATEMENT
-          if HasMonomorphismIntoInjectiveEnvelopeObject( F ) then
-              return MonomorphismIntoInjectiveEnvelopeObject( F );
-          fi;
-          
-          B := Source( PSh );
-          
-          coPSh := CoPreSheaves( B, Range( PSh ) );
-          
-          NL := NakayamaLeftAdjointData( coPSh )[1];
-          
-          NR := NakayamaRightAdjointData( PSh );
-          
-          NR_on_objs := NR[1];
-          
-          NR_on_mors := NR[2];
-          
-          mono_coPSh := MonomorphismIntoInjectiveEnvelopeObject( coPSh, NL( F ) );
-          
-          mono := NR_on_mors( NR_on_objs( Source( mono_coPSh ) ), mono_coPSh, NR_on_objs( Range( mono_coPSh ) ) );
-          
-          #% CAP_JIT_DROP_NEXT_STATEMENT
-          SetMonomorphismIntoInjectiveEnvelopeObject( F, mono );
-          
-          return mono;
-          
-      end );
-      
-      #  rad(P) >--> P -->> top(P)
-      #              |
-      #              | eta
-      #              v
-      #  G ------->> F
-      #     epi
-      #
-      #  computes a morphism from P to G which lifts eta along epi
-      #
-      
-      auxiliary_indices :=
-          List( SetOfObjects( B ),
-            u -> List( SetOfObjects( B ),
-              v -> List( BasisOfExternalHom( B, u, v ),
-                function ( b )
-                  if IsEqualToIdentityMorphism( b ) then
-                    return [];
-                  else
-                    return List( DecompositionOfMorphismInAlgebroid( b )[1][2], g -> SafeUniquePosition( SetOfGeneratingMorphisms( B ), g ) );
-                  fi;
-                end ) ) );
-      
-      AddProjectiveLift( PSh,
-        function ( PSh, eta, epi )
-          local A, C, vals_eta, vals_epi, N, P, G, tP, vals_tP, gens, ells, vals_P, vals_G, mu, nu, delta;
-          
-          A := Source( PSh );
-          C := Range( PSh );
-          
-          vals_eta := ValuesOnAllObjects( eta );
-          vals_epi := ValuesOnAllObjects( epi );
-          
-          N := Length( vals_eta );
-          
-          P := Source( eta );
-          G := Source( epi );
-          
-          tP := CokernelProjection( PSh, RadicalInclusionOfPreSheaf( PSh, P ) );
-          vals_tP := ValuesOnAllObjects( tP );
-          
-          gens := List( vals_tP, m -> PreInverseForMorphisms( C, m ) );
-          ells := ListN( gens, vals_eta, vals_epi, { p, q, r } -> PreComposeList( C, [ p, q, PreInverseForMorphisms( C, r ) ] ) );
-          
-          vals_P := ValuesOfPreSheaf( P );
-          vals_G := ValuesOfPreSheaf( G );
-          
-          mu := List( [ 1 .. N ], i -> Concatenation(
-                  List( [ 1 .. N ], j ->
-                    List( [ 1 .. Length( auxiliary_indices[i,j] ) ], s ->
-                      PostComposeList( C, Concatenation( List( auxiliary_indices[i,j][s], index -> vals_P[2][index] ), [ gens[j] ] ) ) ) ) ) );
-          
-          nu := List( [ 1 .. N ], i -> Concatenation(
-                  List( [ 1 .. N ], j ->
-                    List( [ 1 .. Length( auxiliary_indices[i,j] ) ], s ->
-                      PostComposeList( C, Concatenation( List( auxiliary_indices[i,j][s], index -> vals_G[2][index] ), [ ells[j] ] ) ) ) ) ) );
-          
-          delta := List( [ 1 .. N ], i -> Concatenation( List( [ 1 .. N ], j -> ListWithIdenticalEntries( Length( auxiliary_indices[i][j] ), Range( vals_tP[j] ) ) ) ) );
-          
-          ells := ListN( [ 1 .. N ], delta, mu, nu, { i, D, m, n } ->
-                    PreCompose( C, PreInverseForMorphisms( C, UniversalMorphismFromDirectSum( C, D, vals_P[1][i], m ) ), UniversalMorphismFromDirectSum( C, D, vals_G[1][i], n ) ) );
-          
-          return CreatePreSheafMorphismByValues( PSh, P, ells, G );
-          
-      end );
-      
-      #         mono
-      #     F >-----> G
-      #     |
-      # eta |
-      #     v
-      #     I
-      #
-      AddInjectiveColift( PSh,
-        function ( PSh, mono, eta )
-          local B, coPSh, NL, NL_on_objs, NL_on_mors, NR, NR_on_objs, NR_on_mors,
-                mono_coPSh, eta_coPSh, colift_coPSh;
-          
-          B := Source( PSh );
-          
-          coPSh := CoPreSheaves( B, Range( PSh ) );
-          
-          NL := NakayamaLeftAdjointData( coPSh );
-          
-          NL_on_objs := NL[1];
-          
-          NL_on_mors := NL[2];
-          
-          NR := NakayamaRightAdjointData( PSh );
-          
-          NR_on_objs := NR[1];
-          
-          NR_on_mors := NR[2];
-          
-          mono_coPSh := NL_on_mors( NL_on_objs( Source( mono ) ), mono, NL_on_objs( Range( mono ) ) );
-          
-          eta_coPSh := NL_on_mors( NL_on_objs( Source( eta ) ), eta, NL_on_objs( Range( eta ) ) );
-          
-          colift_coPSh := InjectiveColift( coPSh, mono_coPSh, eta_coPSh );
-          
-          return  NR_on_mors( NR_on_objs( Source( colift_coPSh ) ), colift_coPSh, NR_on_objs( Range( colift_coPSh ) ) );
-          
-      end );
-      
-      AddIndecomposableProjectiveObjects( PSh,
-        function ( PSh )
-          local B;
-          
-          B := Source( PSh );
-          
-          return List( SetOfObjects( B ), YonedaEmbeddingData( PSh )[1] );
-          
-      end );
-      
-      AddIndecomposableInjectiveObjects( PSh,
-        function( PSh )
-          local B, coPSh;
-          
-          B := Source( PSh );
-          
-          coPSh := CoPreSheaves( B, Range( PSh ) );
-          
-          return List( IndecomposableInjectiveObjects( coPSh ), NakayamaRightAdjointData( PSh )[1] );
-          
-      end );
+      else
+        
+        AddEpimorphismFromSomeProjectiveObject( PSh,
+          function ( PSh, F )
+            local C, dec, objs, D, epi;
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            if HasEpimorphismFromSomeProjectiveObject( F ) then
+                return EpimorphismFromSomeProjectiveObject( F );
+            fi;
+            
+            C := Range( PSh );
+            
+            dec := WeakProjectiveCoverObjectDataOfPreSheaf( PSh, F );
+            
+            objs := List( dec, Source );
+            
+            D := DirectSum( PSh, objs );
+            
+            epi := UniversalMorphismFromDirectSumWithGivenDirectSum( PSh, objs, F, dec, D );
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            SetEpimorphismFromSomeProjectiveObject( F, epi );
+            
+            return epi;
+            
+        end );
+        
+        AddMonomorphismIntoSomeInjectiveObject( PSh,
+          function ( PSh, F )
+            local B, coPSh, NL, NR, NR_on_objs, NR_on_mors, mono_coPSh, mono;
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            if HasMonomorphismIntoSomeInjectiveObject( F ) then
+                return MonomorphismIntoSomeInjectiveObject( F );
+            fi;
+            
+            B := Source( PSh );
+            
+            coPSh := CoPreSheaves( B, Range( PSh ) );
+            
+            NL := NakayamaLeftAdjointData( coPSh )[1];
+            
+            NR := NakayamaRightAdjointData( PSh );
+            
+            NR_on_objs := NR[1];
+            
+            NR_on_mors := NR[2];
+            
+            mono_coPSh := MonomorphismIntoSomeInjectiveObject( coPSh, NL( F ) );
+            
+            mono := NR_on_mors( NR_on_objs( Source( mono_coPSh ) ), mono_coPSh, NR_on_objs( Range( mono_coPSh ) ) );
+            
+            #% CAP_JIT_DROP_NEXT_STATEMENT
+            SetMonomorphismIntoSomeInjectiveObject( F, mono );
+            
+            return mono;
+            
+        end );
+        
+      fi;
       
     fi;
     

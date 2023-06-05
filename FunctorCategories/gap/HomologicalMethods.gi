@@ -58,7 +58,7 @@ InstallMethod( RadicalInclusionOfPreSheaf,
 ##
 ## See Lemma 2.83 at http://dx.doi.org/10.25819/ubsi/10144
 ##
-InstallMethod( CoverElementByIndecomposableProjectivePreSheaf,
+InstallMethod( CoverElementByValueOfYonedaEmbedding,
         [ IsObjectInPreSheafCategory, IsCapCategoryMorphism, IsInt ],
   
   function ( F, ell, j )
@@ -92,6 +92,106 @@ InstallMethod( CoverElementByIndecomposableProjectivePreSheaf,
     
 end );
 
+## Very fast way to compute a "huge" projective weak-cover
+## (this will be overloaded by the next method)
+##
+InstallOtherMethod( WeakProjectiveCoverObjectDataOfPreSheaf,
+        [ IsPreSheafCategory, IsObjectInPreSheafCategory ],
+  
+  function ( PSh, F )
+    local B, C, nr_objs, U;
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    if HasWeakProjectiveCoverObjectDataOfPreSheaf( F ) then
+        return WeakProjectiveCoverObjectDataOfPreSheaf( F );
+    fi;
+    
+    B := Source( PSh );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    if not IsFiniteDimensional( UnderlyingQuiverAlgebra( B ) ) then
+        Error( "the underlying algebra must be finite dimensional!\n" );
+    fi;
+    
+    C := Range( PSh );
+    
+    nr_objs := DefiningTripleOfUnderlyingQuiver( B )[1];
+    
+    U := TensorUnit( C );
+    
+    return Concatenation( ListN( [ 1 .. nr_objs ], ValuesOfPreSheaf(F)[1], {j, F_j} -> List( BasisOfExternalHom( C, U, F_j ), ell -> CoverElementByValueOfYonedaEmbedding( F, ell, j ) ) ) );
+    
+end );
+
+## Heuristic to compute "economic" projective weak-cover
+##
+InstallOtherMethod( WeakProjectiveCoverObjectDataOfPreSheaf,
+        [ IsPreSheafCategory, IsObjectInPreSheafCategory ],
+  
+  function ( PSh, F )
+    local B, C, Y, f, indices, k, U, data, eta, pos, j, r, mat, ell;
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    if HasWeakProjectiveCoverObjectDataOfPreSheaf( F ) then
+        return WeakProjectiveCoverObjectDataOfPreSheaf( F );
+    fi;
+    
+    B := Source( PSh );
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    if not IsFiniteDimensional( UnderlyingQuiverAlgebra( B ) ) then
+        Error( "the underlying algebra must be finite dimensional!\n" );
+    fi;
+    
+    C := Range( PSh );
+    
+    Y := YonedaEmbeddingData( PSh )[1];
+    
+    f := i -> Sum( List( ValuesOfPreSheaf( Y(SetOfObjects(B)[i]) )[1], RankOfObject ) );
+    
+    indices := [ 1 .. DefiningTripleOfUnderlyingQuiver( B )[1] ];
+    
+    Sort( indices, { i, j } -> f(i) > f(j) );
+    
+    k := CommutativeRingOfLinearCategory( PSh );
+    
+    U := TensorUnit( C );
+    
+    data := [ ];
+    
+    eta := IdentityMorphism( F );
+    
+    while true do
+      
+      pos := PositionProperty( indices, i -> RankOfObject( ValuesOfPreSheaf( Range( eta ) )[1][i] ) <> 0 );
+      
+      if pos <> fail then
+        
+        j := indices[pos];
+        
+        r := RankOfObject( ValuesOfPreSheaf( Range( eta ) )[1][j] );
+        
+        mat := HomalgMatrix( Concatenation( [ One( k ) ], ListWithIdenticalEntries( r - 1, Zero( k ) ) ), 1, r, k );
+        
+        ell := MorphismConstructor( C, U, mat, ValuesOfPreSheaf( Range( eta ) )[1][j] );
+        
+        Add( data, CoverElementByValueOfYonedaEmbedding( F, Lift( C, ell, ValuesOnAllObjects( eta )[j] ), j ) );
+        
+        eta := PreCompose( PSh, eta, CokernelProjection( PSh, CoverElementByValueOfYonedaEmbedding( Range( eta ), ell, j ) ) );
+        
+      else
+        
+        break;
+        
+      fi;
+      
+    od;
+    
+    return data;
+    
+end );
+
+## Compute projective cover in the admissible case
 ##
 InstallOtherMethodForCompilerForCAP( ProjectiveCoverObjectDataOfPreSheaf,
         [ IsPreSheafCategory, IsObjectInPreSheafCategory ],
@@ -131,7 +231,7 @@ InstallOtherMethodForCompilerForCAP( ProjectiveCoverObjectDataOfPreSheaf,
                   
                   iotas := List( [ 1 .. n ], i -> PreCompose( C, InjectionOfCofactorOfDirectSum( C, D, i ), pre_image ) );
                   
-                  return List( iotas, ell -> CoverElementByIndecomposableProjectivePreSheaf( F, ell, j ) );
+                  return List( iotas, ell -> CoverElementByValueOfYonedaEmbedding( F, ell, j ) );
                   
                 end ) );
     
@@ -141,6 +241,12 @@ InstallOtherMethodForCompilerForCAP( ProjectiveCoverObjectDataOfPreSheaf,
     return dec;
     
 end );
+
+##
+InstallMethod( WeakProjectiveCoverObjectDataOfPreSheaf,
+          [ IsObjectInPreSheafCategory ],
+
+  F -> WeakProjectiveCoverObjectDataOfPreSheaf( CapCategory( F ), F ) );
 
 ##
 InstallMethod( ProjectiveCoverObjectDataOfPreSheaf,
