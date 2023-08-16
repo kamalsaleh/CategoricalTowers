@@ -65,6 +65,73 @@ InstallMethod( DataTablesOfCategory,
 end );
 
 ##
+InstallMethod( DataTablesOfCategory,
+          "for linear closures of path categories",
+          [ IsQuotientCapCategory ],
+  
+  function ( B )
+    local objs, gmors, bases_elms;
+   
+    if HasModelingCategory( B ) then
+        B := ModelingCategory( B );
+    fi;
+     
+    if not IsPathCategory( UnderlyingCategory( UnderlyingCategory( B ) ) ) then
+        TryNextMethod( );
+    fi;
+    
+    if not HasRangeCategoryOfHomomorphismStructure( B ) then
+        Error( "the linear category passed to 'DataTablesOfCategory' must be hom-finite!" );
+    fi;
+    
+    objs := SetOfObjects( B );
+    
+    gmors := SetOfGeneratingMorphisms( B );
+    
+    bases_elms := Concatenation( List( objs, u -> Concatenation( List( objs, v -> BasisOfExternalHom( v, u ) ) ) ) );
+    
+    return rec(
+      coefficients_ring := CommutativeRingOfLinearCategory( B ),
+      nr_objs := Length( objs ),
+      nr_bases_elms := Length( bases_elms ),
+      
+      labels_objs := List( objs, o -> ObjectLabel( ObjectDatum( UnderlyingOriginalObject( ObjectDatum( o ) ) ) ) ),
+      latex_strings_objs := List( objs, o -> LaTeXOutput( ObjectDatum( UnderlyingOriginalObject( ObjectDatum( o ) ) ) ) ),
+      indices_objs := List( objs, o -> Position( bases_elms, IdentityMorphism( o ) ) ),
+      
+      nr_gmors := Length( gmors ),
+      labels_gmors := List( gmors, m -> MorphismLabel( MorphismDatum( SupportMorphisms( MorphismDatum( m ) )[1] )[2][1] ) ),
+      latex_strings_gmors := List( gmors, m -> LaTeXOutput( MorphismDatum( SupportMorphisms( MorphismDatum( m ) )[1] )[2][1] : OnlyDatum := true ) ),
+      indices_gmors := List( gmors, m -> Position( bases_elms, m ) ),
+      sources_gmors := List( gmors, m -> Position( objs, Source( m ) ) ),
+      ranges_gmors := List( gmors, m -> Position( objs, Range( m ) ) ),
+      
+      bases_elms_comps := Concatenation( List( objs,
+                            i -> Concatenation( List( objs,
+                              j -> List( BasisOfExternalHom( j, i ),
+                                            function ( b )
+                                              if IsEqualToIdentityMorphism( B, b ) then
+                                                return [ -ObjectIndex( ObjectDatum( UnderlyingOriginalObject( ObjectDatum( Source( b ) ) ) ) ) ];
+                                              else
+                                                return List( MorphismSupport( SupportMorphisms( MorphismDatum( b ) )[1] ), MorphismIndex );
+                                              fi;
+                                            end ) ) ) ) ),
+      
+      indices_of_bases_elms := List( objs,
+                                i -> List( objs,
+                                  j -> List( BasisOfExternalHom( j, i ),
+                                    b -> Position( bases_elms, b ) ) ) ),
+      
+      hom_structure_objs_gmors := List( objs,
+                                    o -> List( gmors,
+                                      gm -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomStructure( o, gm ) ) ) ) ),
+      
+      hom_structure_gmors_objs := List( objs,
+                                    o -> List( gmors,
+                                      gm -> EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomStructure( gm, o ) ) ) ) ) );
+end );
+
+##
 InstallMethod( IsomorphismOntoAlgebroidFromDataTables,
           [ IsAlgebroid ],
   
@@ -122,6 +189,10 @@ InstallOtherMethod( DataTablesOfCategory,
   function ( qB )
     local B, objs, support_objs, gmors, support_gmors, bases_elms;
     
+    if not IsAlgebroidFromDataTables( UnderlyingCategory( qB ) ) then
+        TryNextMethod( );
+    fi;
+     
     if not HasRangeCategoryOfHomomorphismStructure( qB ) then
         Error( "the quotient category passed to 'DataTablesOfCategory' must be hom-finite!" );
     fi;
