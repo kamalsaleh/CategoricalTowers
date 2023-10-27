@@ -75,6 +75,14 @@
 @Section Constructors
 @Section GAP categories
 
+@Chapter Path Categories
+
+@Section GAP categories
+@Section Constructors
+@Section Attributes
+@Section Operations
+@Section Quotients of path categories
+
 @Chapter Algebroids from data tables
 
 @Section Properties
