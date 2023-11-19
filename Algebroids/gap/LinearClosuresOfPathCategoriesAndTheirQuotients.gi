@@ -39,17 +39,25 @@ BindGlobal( "LINEAR_CLOSURE_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS",
     
     if IsPathCategory( C ) then
         
-        sorting_func := { mor_1, mor_2 } -> IsDescendingForMorphisms( C, mor_1, mor_2, admissible_order );
+        sorting_func :=
+          { mor_1, mor_2 } -> IsDescendingForMorphisms( C,
+                                  mor_1,
+                                  mor_2,
+                                  admissible_order );
         
     else
         
-        sorting_func := { mor_1, mor_2 } -> IsDescendingForMorphisms( UnderlyingCategory( C ), CanonicalRepresentative( mor_1 ), CanonicalRepresentative( mor_2 ), admissible_order );
+        sorting_func :=
+          { mor_1, mor_2 } -> IsDescendingForMorphisms( UnderlyingCategory( C ),
+                                  CanonicalRepresentative( mor_1 ),
+                                  CanonicalRepresentative( mor_2 ),
+                                  admissible_order );
         
     fi;
     
     kC := LinearClosure( k, C, sorting_func : FinalizeCategory := false ); # every morphism starts by its maximum monomial
-
-    kC!.Name := Concatenation( RingName( k ), "-", kC!.Name );
+    
+    kC!.Name := Concatenation( "LinearClosure( ", RingName( k ), ", ", Name( C ), " )" );
     
     kC!.admissible_order := admissible_order;
     

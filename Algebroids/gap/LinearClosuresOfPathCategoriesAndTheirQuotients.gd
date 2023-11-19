@@ -4,4 +4,29 @@
 # Declarations
 #
 
+#! @Chapter Linear closures of path categories and their quotients
+
+####################################
+#
+#! @Section Constructors
+#
+####################################
+
+
+#! @Description
+#!  Returns the $k$-linear closure category of <A>C</A>.
+#! @Arguments k, C
+#! @Returns a &CAP; category
+DeclareOperation( "LinearClosure", [ IsHomalgRing, IsPathCategory ] );
+#! @InsertChunk GroebnerBasisForLinearClosuresOfPathCategories
+
+DeclareOperation( "QuotientCategory", [ IsLinearClosure, IsDenseList ] );
+
+DeclareAttribute( "DefiningRelations", IsQuotientCapCategory );
+DeclareAttribute( "GroebnerBasisOfDefiningRelations", IsQuotientCapCategory );
+
 DeclareGlobalFunction( "INSTALL_VIEW_AND_DISPLAY_METHODS_IN_LINEAR_CLOSURES_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS" );
+
+DeclareGlobalFunction( "INSTALL_CANONICAL_REPRESENTATIVE_METHODS_IN_QUOTIENT_CATEGORIES_OF_LINEAR_CLOSURES_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS" );
+DeclareGlobalFunction( "INSTALL_VIEW_AND_DISPLAY_METHODS_IN_QUOTIENT_CATEGORIES_OF_LINEAR_CLOSURES_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS" );
+

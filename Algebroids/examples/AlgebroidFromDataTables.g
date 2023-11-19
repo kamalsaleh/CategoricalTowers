@@ -56,7 +56,7 @@ data_tables := DataTablesOfCategory( B );;
 data_tables[1];
 #! Q
 data_tables[2];
-#! "q(0,1,2,3)[a:0->1,b:1->3,c:0->2,d:2->3,e:3->3]"
+#! FinQuiver( "q(0,1,2,3)[a:0-≻1,b:1-≻3,c:0-≻2,d:2-≻3,e:3-≻3]" )
 data_tables[3];
 #! [[[ [] ], [ [1] ], [ [3] ], [ [1,2],[3,4],[1,2,5],[3,4,5],[1,2,5,5],[3,4,5,5]]],
 #!  [[  ], [ [] ], [  ], [ [2],[2,5],[2,5,5] ]],
@@ -68,8 +68,8 @@ data_tables[5][4][1];
 #! [ [ 1, 0, 0, 0, 0, 0 ], [ 0, 0, 1, 0, 0, 0 ], [ 0, 0, 0, 0, 1, 0 ] ]
 A := AlgebroidFromDataTables( data_tables );; # alternatively,
 A := AlgebroidFromDataTables( B );
-#! Q-algebroid( {0,1,2,3}[a:0-≻1,b:1-≻3,c:0-≻2,d:2-≻3,e:3-≻3] ) defined by
-#! 4 objects and 5 generating morphisms
+#! Algebroid( Q, q(0,1,2,3)[a:0-≻1,b:1-≻3,c:0-≻2,d:2-≻3,e:3-≻3] ) defined
+#! by data tables on 4 objects and 5 generating morphisms
 AssignSetOfObjects( A, "V_" );
 #! #I  MakeReadWriteGlobal: V_0 already read-write
 #! #I  MakeReadWriteGlobal: V_1 already read-write
