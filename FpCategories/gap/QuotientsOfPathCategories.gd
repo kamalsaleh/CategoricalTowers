@@ -35,6 +35,13 @@ if false then
 DeclareOperation( "QuotientCategory", [ IsPathCategory, IsDenseList ] );
 fi;
 
+DeclareOperation( "TensorProductOfPathCategories", [ IsPathCategory, IsPathCategory ] );
+DeclareOperation( "TensorProductOfQuotientsOfPathCategories", [ IsQuotientCapCategory, IsQuotientCapCategory ] );
+
+DeclareOperation( "ElementaryTensor", [ IsCapCategoryCell, IsCapCategoryCell, IsQuotientOfPathCategory ] );
+
+DeclareGlobalFunction( "QUOTIENT_CATEGORY_OF_PATH_CATEGORY" );
+
 #! @Description
 #!  Returns the generators of the underlying two-sided ideal of morphisms.
 #! @Arguments qC
@@ -63,3 +70,4 @@ DeclareAttribute( "CanonicalRepresentative", IsQuotientOfPathCategoryMorphism );
 
 #! @InsertChunk PathCategories
 
+DeclareGlobalFunction( "INSTALL_SPECIAL_VIEW_STRING_FOR_MORPHISMS_IN_TENSOR_PRODUCT_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS" );

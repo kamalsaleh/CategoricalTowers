@@ -12,6 +12,7 @@ ReadPackage( "Algebroids", "gap/Functors.gd");
 ReadPackage( "Algebroids", "gap/CategoryFromNerveData.gd");
 ReadPackage( "Algebroids", "gap/CategoryFromDataTables.gd");
 ReadPackage( "Algebroids", "gap/LinearClosuresOfPathCategoriesAndTheirQuotients.gd");
+ReadPackage( "Algebroids", "gap/QuotientsOfLinearClosuresOfPathCategories.gd");
 ReadPackage( "Algebroids", "gap/AlgebroidFromDataTables.gd");
 ReadPackage( "Algebroids", "gap/CategoryOfAlgebroids.gd");
 ReadPackage( "Algebroids", "gap/Bialgebroids.gd");

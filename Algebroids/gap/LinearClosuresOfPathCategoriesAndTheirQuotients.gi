@@ -89,6 +89,8 @@ BindGlobal( "LINEAR_CLOSURE_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS",
     
     if CanCompute( C, "MorphismsOfExternalHom" ) then
         
+        SetIsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms( kC, true );
+        
         ##
         AddBasisOfExternalHom( kC,
           
@@ -181,6 +183,244 @@ InstallOtherMethod( \[\],
   function ( k, C )
     
     return LinearClosure( k, C );
+    
+end );
+
+##
+InstallMethod( TensorProductOfLinearClosures,
+            "tensor product of linear closures of path categories",
+            [ IsLinearClosure, IsLinearClosure ],
+  
+  function ( kP1, kP2 )
+    local P1, P2, ring, q1, quiver_datum_1, q2, quiver_datum_2, q1xq2, P, kP, gmors_kP, rels;
+    
+    P1 := UnderlyingCategory( kP1 );
+    P2 := UnderlyingCategory( kP2 );
+    
+    if not (IsPathCategory( P1 ) and IsPathCategory( P2 )) then
+          TryNextMethod( );
+    fi;
+    
+    ring := UnderlyingRing( kP1 );
+    
+    if not IsIdenticalObj( ring, UnderlyingRing( kP2 ) ) then
+        Error( "the passed linear closures must have the same underlying ring!\n" );
+    fi;
+    
+    q1 := UnderlyingQuiver( P1 );
+    quiver_datum_1 := QuiverDatum( q1 );
+    
+    q2 := UnderlyingQuiver( P2 );
+    quiver_datum_2 := QuiverDatum( q2 );
+    
+    q1xq2 := TensorProductOfFinQuivers( q1, q2 );
+    
+    P := PathCategory( q1xq2 );
+    
+    kP := LinearClosure( ring, P );
+    
+    gmors_kP := SetOfGeneratingMorphisms( kP );
+    
+    rels :=
+      Concatenation(
+        List( [ 1 .. quiver_datum_1[3][1] ], i ->
+          List( [ 1 .. quiver_datum_2[3][1] ], j ->
+            SubtractionForMorphisms( kP,
+              PreCompose( kP,
+                gmors_kP[(quiver_datum_1[3][2][i] - 1) * quiver_datum_2[3][1] + j],
+                gmors_kP[quiver_datum_1[2][1] * quiver_datum_2[3][1] + (i-1) * quiver_datum_2[2][1] + quiver_datum_2[3][3][j]] ),
+              PreCompose( kP,
+                gmors_kP[quiver_datum_1[2][1] * quiver_datum_2[3][1] + (i-1) * quiver_datum_2[2][1] + quiver_datum_2[3][2][j]],
+                gmors_kP[(quiver_datum_1[3][3][i] - 1) * quiver_datum_2[3][1] + j] ) ) ) ) );
+    
+    return QuotientCategory( kP, rels );
+    
+end );
+
+##
+InstallMethod( TensorProductOfLinearClosures,
+            "tensor product of linear closures of quotients of path categories",
+            [ IsLinearClosure, IsLinearClosure ],
+  
+  function ( kC1, kC2 )
+    local C1, C2, ring, P1, P2, kP1, kP2, groebner_basis_1, groebner_basis_2, kP1_x_kP2, rels_0, rels_1, rels_2;
+    
+    C1 := UnderlyingCategory( kC1 );
+    C2 := UnderlyingCategory( kC2 );
+    
+    if not (IsQuotientOfPathCategory( C1 ) and IsQuotientOfPathCategory( C2 )) then
+          TryNextMethod( );
+    fi;
+    
+    ring := UnderlyingRing( kC1 );
+    
+    if not IsIdenticalObj( ring, UnderlyingRing( kC2 ) ) then
+        Error( "the passed linear closures must have the same underlying ring!\n" );
+    fi;
+    
+    P1 := UnderlyingCategory( C1 );
+    P2 := UnderlyingCategory( C2 );
+    
+    kP1 := LinearClosure( ring, P1 );
+    kP2 := LinearClosure( ring, P2 );
+    
+    groebner_basis_1 :=
+      List( GroebnerBasisOfDefiningRelations( C1 ),
+        r -> MorphismConstructor( kP1,
+                SetOfObjects( kP1 )[ObjectIndex( Source( r[1] ) )],
+                Pair( [ One( ring ), -One( ring ) ], r ),
+                SetOfObjects( kP1 )[ObjectIndex( Target( r[1] ) )] ) );
+    
+    groebner_basis_2 :=
+      List( GroebnerBasisOfDefiningRelations( C2 ),
+        r -> MorphismConstructor( kP2,
+                SetOfObjects( kP2 )[ObjectIndex( Source( r[1] ) )],
+                Pair( [ One( ring ), -One( ring ) ], r ),
+                SetOfObjects( kP2 )[ObjectIndex( Target( r[1] ) )] ) );
+    
+    kP1_x_kP2 := TensorProductOfLinearClosures( kP1, kP2 );
+    
+    rels_0 := GroebnerBasisOfDefiningRelations( kP1_x_kP2 );
+    
+    rels_1 :=
+      Concatenation(
+        List( SetOfObjects( kP1 ), o ->
+          List( groebner_basis_2, r ->
+            UnderlyingCell( ElementaryTensor( o, r, kP1_x_kP2 ) ) ) ) );
+
+    rels_2 :=
+      Concatenation(
+        List( groebner_basis_1, r ->
+          List( SetOfObjects( kP2 ), o ->
+            UnderlyingCell( ElementaryTensor( r, o, kP1_x_kP2 ) ) ) ) );
+    
+    return QuotientCategory( UnderlyingCategory( kP1_x_kP2 ),  Concatenation( rels_0, rels_1, rels_2 ) );
+    
+end );
+
+##
+InstallOtherMethod( ElementaryTensor,
+          [ IsLinearClosureObject, IsLinearClosureObject, IsQuotientCapCategory ],
+  
+  function ( obj_1, obj_2, kC1_x_kC2 )
+    local q2;
+    
+    q2 := UnderlyingQuiver( CapCategory( obj_2 ) );
+    
+    return SetOfObjects( kC1_x_kC2 )[( ObjectIndex( ObjectDatum( obj_1 ) ) - 1 ) * NumberOfObjects( q2 ) + ObjectIndex( ObjectDatum( obj_2 ) )];
+    
+end );
+
+##
+InstallOtherMethod( ElementaryTensor,
+          [ IsLinearClosureObject, IsLinearClosureMorphism, IsQuotientCapCategory ],
+  
+  function ( obj, mor, kC1_x_kC2 )
+    local q2, obj_index, coeffs, supprt, supprt_indices, source, target;
+    
+    if not IsPathCategory( UnderlyingCategory( UnderlyingCategory( kC1_x_kC2 ) ) ) then
+            TryNextMethod( );
+    fi;
+    
+    q2 := UnderlyingQuiver( CapCategory( mor ) );
+    
+    obj_index := ObjectIndex( ObjectDatum( obj ) );
+    
+    coeffs := CoefficientsList( mor );
+    supprt := SupportMorphisms( mor );
+    
+    if IsPathCategory( UnderlyingCategory( CapCategory( mor ) ) ) then
+        supprt_indices := List( supprt, m -> MorphismIndices( m ) );
+    else
+        supprt_indices := List( supprt, m -> MorphismIndices( UnderlyingCell( m ) ) );
+    fi;
+    
+    supprt_indices :=
+      List( supprt_indices, m_indices ->
+        List( m_indices, index ->
+          (obj_index - 1) * NumberOfMorphisms( q2 ) + index ) );
+    
+    source := ElementaryTensor( obj, Source( mor ), kC1_x_kC2 );
+    target := ElementaryTensor( obj, Target( mor ), kC1_x_kC2 );
+    
+    supprt :=
+      List( supprt_indices, indices ->
+        MorphismConstructor( UnderlyingCategory( UnderlyingCategory( kC1_x_kC2 ) ),
+          ObjectDatum( ObjectDatum( source ) ),
+          Pair( Length( indices ), indices ),
+          ObjectDatum( ObjectDatum( target ) ) ) );
+    
+    return MorphismConstructor( kC1_x_kC2,
+              source,
+              MorphismConstructor( UnderlyingCategory( kC1_x_kC2 ),
+                  UnderlyingCell( source ),
+                  Pair( coeffs, supprt ),
+                  UnderlyingCell( target )  ),
+              target );
+    
+end );
+
+##
+InstallOtherMethod( ElementaryTensor,
+          [ IsLinearClosureMorphism, IsLinearClosureObject, IsQuotientCapCategory ],
+  
+  function ( mor, obj, kC1_x_kC2 )
+    local q1, q2, obj_index, coeffs, supprt, supprt_indices, source, target;
+    
+    if not IsPathCategory( UnderlyingCategory( UnderlyingCategory( kC1_x_kC2 ) ) ) then
+            TryNextMethod( );
+    fi;
+    
+    q1 := UnderlyingQuiver( CapCategory( mor ) );
+    q2 := UnderlyingQuiver( CapCategory( obj ) );
+    
+    obj_index := ObjectIndex( ObjectDatum( obj ) );
+    
+    coeffs := CoefficientsList( mor );
+    supprt := SupportMorphisms( mor );
+    
+    if IsPathCategory( UnderlyingCategory( CapCategory( mor ) ) ) then
+        supprt_indices := List( supprt, m -> MorphismIndices( m ) );
+    else
+        supprt_indices := List( supprt, m -> MorphismIndices( UnderlyingCell( m ) ) );
+    fi;
+    
+    supprt_indices :=
+      List( supprt_indices, m_indices ->
+        List( m_indices, index ->
+          NumberOfObjects( q1 ) * NumberOfMorphisms( q2 ) + (index - 1) * NumberOfObjects( q2 ) + obj_index ) );
+    
+    source := ElementaryTensor( Source( mor ), obj, kC1_x_kC2 );
+    target := ElementaryTensor( Target( mor ), obj, kC1_x_kC2 );
+    
+    supprt :=
+      List( supprt_indices, indices ->
+        MorphismConstructor( UnderlyingCategory( UnderlyingCategory( kC1_x_kC2 ) ),
+          ObjectDatum( ObjectDatum( source ) ),
+          Pair( Length( indices ), indices ),
+          ObjectDatum( ObjectDatum( target ) ) ) );
+    
+    
+    return MorphismConstructor( kC1_x_kC2,
+              source,
+              MorphismConstructor( UnderlyingCategory( kC1_x_kC2 ),
+                  UnderlyingCell( source ),
+                  Pair( coeffs, supprt ),
+                  UnderlyingCell( target )  ),
+              target );
+    
+    
+end );
+
+##
+InstallOtherMethod( ElementaryTensor,
+          [ IsLinearClosureMorphism, IsLinearClosureMorphism, IsQuotientCapCategory ],
+  
+  function ( mor_1, mor_2, kC1_x_kC2 )
+    
+    return PreCompose( kC1_x_kC2,
+          ElementaryTensor( mor_1, Source( mor_2 ), kC1_x_kC2 ),
+          ElementaryTensor( Target( mor_1 ), mor_2, kC1_x_kC2 ) );
     
 end );
 

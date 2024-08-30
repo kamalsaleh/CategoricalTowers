@@ -354,7 +354,7 @@ InstallMethod( TensorProductOfFinQuivers,
           [ IsFinQuiver, IsFinQuiver ],
   
   function ( q1, q2 )
-    local nr_objs, labels_objs, latex_strings_objs, nr_gmors, labels_gmors, latex_strings_gmors, sources_gmors, targets_gmors;
+    local nr_objs, labels_objs, latex_strings_objs, nr_gmors, labels_gmors, latex_strings_gmors, sources_gmors, targets_gmors, q1xq2;
     
     nr_objs := NumberOfObjects( q1 ) * NumberOfObjects( q2 );
     
@@ -384,7 +384,7 @@ InstallMethod( TensorProductOfFinQuivers,
             [ Concatenation( List( [ 1 .. NumberOfObjects( q1 ) ], l -> List( IndicesOfTargets( q2 ), r -> (l-1) * NumberOfObjects( q2 ) + r ) ) ),
               Concatenation( List( IndicesOfTargets( q1 ), l -> List( [ 1 .. NumberOfObjects( q2 ) ], r -> (l-1) * NumberOfObjects( q2 ) + r ) ) ) ] );
     
-    return
+    q1xq2 :=
       FinQuiver(
          NTuple( 3,
            Concatenation( QuiverName( q1 ), "⊗", QuiverName( q2 ) ),
@@ -398,7 +398,15 @@ InstallMethod( TensorProductOfFinQuivers,
              targets_gmors,
              labels_gmors,
              latex_strings_gmors ) ) : colors := q1!.colors );
-
+    
+    if HasIsAcyclicQuiver( q1 ) and HasIsAcyclicQuiver( q2 ) then
+        
+        SetIsAcyclicQuiver( q1xq2, IsAcyclicQuiver( q1 ) and IsAcyclicQuiver( q2 ) );
+        
+    fi;
+    
+    return q1xq2;
+    
 end );
 
 ##
@@ -472,6 +480,26 @@ InstallMethod( ExternalHoms,
     return List( [ 1 .. NumberOfObjects( q ) ],
               s -> List( [ 1 .. NumberOfObjects( q ) ],
                 t -> SetOfMorphisms( q ){Filtered( [ 1 .. NumberOfMorphisms( q ) ], j -> s = sources[j] and t = targets[j] )} ) );
+    
+end );
+
+##
+InstallMethod( IsAcyclicQuiver,
+          [ IsFinQuiver ],
+  
+  function ( q )
+    
+    return IsFinitePathCategory( PathCategory( q ) );
+    
+end );
+
+##
+InstallMethod( IsCyclicQuiver,
+          [ IsFinQuiver ],
+  
+  function ( q )
+    
+    return not IsAcyclicQuiver( q );
     
 end );
 

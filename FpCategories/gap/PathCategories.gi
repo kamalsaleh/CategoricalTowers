@@ -262,7 +262,9 @@ InstallMethod( PathCategory,
     
     # Homomorphism Structure - Only for path categories with underlying acyclic quivers
     
-    if IsFinitePathCategory( C )  then
+    if (HasIsAcyclicQuiver( q ) and IsAcyclicQuiver( q )) or IsFinitePathCategory( C )  then
+        
+        SetIsAcyclicQuiver( q, true );
         
         SetIsFiniteCategory( C, true );
         
@@ -278,6 +280,12 @@ InstallMethod( PathCategory,
             return ExternalHoms( C )[s][t];
             
         end );
+        
+    else
+        
+        SetIsAcyclicQuiver( q, false );
+        
+        SetIsFiniteCategory( C, false );
         
     fi;
     

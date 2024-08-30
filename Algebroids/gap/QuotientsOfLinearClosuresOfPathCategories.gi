@@ -361,6 +361,36 @@ InstallMethod( QuotientCategory,
 end );
 
 ##
+InstallMethod( TensorProductOfQuotientsOfLinearClosures,
+          [ IsQuotientCapCategory, IsQuotientCapCategory ],
+  
+  function ( quo_kC1, quo_kC2 )
+    local kC1, kC2, kC1_x_kC2, rels_0, rels_1, rels_2;
+    
+    kC1 := UnderlyingCategory( quo_kC1 );
+    kC2 := UnderlyingCategory( quo_kC2 );
+    
+    kC1_x_kC2 := TensorProductOfLinearClosures( kC1, kC2 );
+    
+    rels_0 := GroebnerBasisOfDefiningRelations( kC1_x_kC2 );
+    
+    rels_1 :=
+      Concatenation(
+        List( SetOfObjects( kC1 ), o ->
+          List( GroebnerBasisOfDefiningRelations( quo_kC2 ), r ->
+            UnderlyingCell( ElementaryTensor( o, r, kC1_x_kC2 ) ) ) ) );
+    
+    rels_2 :=
+      Concatenation(
+        List( GroebnerBasisOfDefiningRelations( quo_kC1 ), r ->
+          List( SetOfObjects( kC2 ), o ->
+            UnderlyingCell( ElementaryTensor( r, o, kC1_x_kC2 ) ) ) ) );
+    
+    return QuotientCategory( UnderlyingCategory( kC1_x_kC2 ), Concatenation( rels_0, rels_1, rels_2 ) );
+    
+end );
+
+##
 InstallOtherMethod( \/,
         [ IsLinearClosure, IsDenseList ],
   

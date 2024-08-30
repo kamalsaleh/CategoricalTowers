@@ -179,6 +179,18 @@ DeclareAttribute( "ExternalHoms", IsFinQuiver );
 DeclareAttribute( "OppositeQuiver", IsFinQuiver );
 
 #! @Description
+#!  Returns whether the quiver <A>q</A> is cyclic or not.
+#! @Arguments q
+#! @Returns a boolean
+DeclareProperty( "IsCyclicQuiver", IsFinQuiver );
+
+#! @Description
+#!  Returns whether the quiver <A>q</A> is acyclic or not.
+#! @Arguments q
+#! @Returns a boolean
+DeclareProperty( "IsAcyclicQuiver", IsFinQuiver );
+
+#! @Description
 #!  Returns the index of the object <A>v</A>.
 #! @Arguments v
 #! @Returns a positive integer

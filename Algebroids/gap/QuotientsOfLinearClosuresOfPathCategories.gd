@@ -1,0 +1,6 @@
+
+
+
+
+
+DeclareOperation( "TensorProductOfQuotientsOfLinearClosures", [ IsQuotientCapCategory, IsQuotientCapCategory ] );
