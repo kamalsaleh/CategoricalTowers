@@ -6,7 +6,11 @@
 
 ##
 InstallTrueMethod( IsFiniteCategory, IsInitialCategory );
+
+#= comment for Julia
 InstallTrueMethod( IsFinite, IsFiniteCategory );
+# =#
+
 InstallTrueMethod( IsObjectFiniteCategory, IsFiniteCategory );
 InstallTrueMethod( IsEquivalentToFiniteCategory, IsFiniteCategory );
 
@@ -22,21 +26,27 @@ end );
 InstallMethod( DummyCategoryInDoctrines,
         "for a list of string",
         [ IsList ],
-
-  function( doctrine_names )
-    local minimal, compare, options;
+  
+  FunctionWithNamedArguments(
+  [
+    [ "minimal", false ]
+  ],
+  function( CAP_NAMED_ARGUMENTS, doctrine_names )
+    local compare, options;
     
     if IsEmpty( doctrine_names ) then
         Error( "the list of doctrine names is empty\n" );
+    #= comment for Julia
     elif IsStringRep( doctrine_names ) then
         doctrine_names := [ doctrine_names ];
+    # =#
     fi;
-    
+   
+    #= comment for Julia (ListKnownDoctrines depends on Digraphs)
     if not IsSubset( ListKnownDoctrines( ), doctrine_names ) then
         Error( "the following entries are not supported doctrines: ", String( Difference( doctrine_names, ListKnownDoctrines( ) ) ), "\n" );
     fi;
-    
-    minimal := ValueOption( "minimal" );
+    # =#
     
     compare :=
       function( b, a )
@@ -44,7 +54,7 @@ InstallMethod( DummyCategoryInDoctrines,
         
         bool := IsSubset( ListMethodsOfDoctrine( a ), ListMethodsOfDoctrine( b ) );
         
-        if minimal = true and IsBoundGlobal( a ) and IsBoundGlobal( b ) then
+        if CAP_NAMED_ARGUMENTS.minimal and IsBoundGlobal( a ) and IsBoundGlobal( b ) then
             return IsSpecializationOfFilter( ValueGlobal( b ), ValueGlobal( a ) ) or bool;
         else
             return bool;
@@ -69,7 +79,7 @@ InstallMethod( DummyCategoryInDoctrines,
     
     return DummyCategory( options );
     
-end );
+end ) );
 
 ##
 InstallMethod( SET_RANGE_CATEGORY_Of_HOMOMORPHISM_STRUCTURE,
@@ -101,6 +111,7 @@ InstallMethod( SetOfObjectsAsUnresolvableAttribute,
         
   SetOfObjectsOfCategory );
 
+#= comment for Julia
 ##
 InstallMethod( SetOfObjects,
         [ IsInitialCategory ],
@@ -120,6 +131,7 @@ InstallMethodForCompilerForCAP( SetOfObjects,
     return List( SetOfObjects( OppositeCategory( cat_op ) ), obj -> ObjectConstructor( cat_op, obj ) );
     
 end );
+# =#
 
 ##
 InstallMethod( SetOfMorphisms,
@@ -158,12 +170,14 @@ InstallOtherMethod( Subobject,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethod( Subobject,
         "for a morphism in a category",
         [ IsCapCategoryMorphism and IsMonomorphism ],
         
   IdFunc );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( CovariantHomFunctorData,
@@ -205,6 +219,7 @@ InstallMethod( CovariantHomFunctor,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethodForCompilerForCAP( GlobalSectionFunctorData,
         [ IsCapCategory and HasRangeCategoryOfHomomorphismStructure ],
@@ -233,6 +248,7 @@ InstallMethod( GlobalSectionFunctor,
     return Hom1;
     
 end );
+# =#
 
 ## fallback method
 InstallMethod( DatumOfCellAsEvaluatableString,
@@ -1054,7 +1070,7 @@ InstallGlobalFunction( PositionsOfSublist,
     len := Length( suplist );
     positions := [];
     
-    repeat
+    while true do
       
       pos := PositionSublist( suplist, sublist, pos );
       
@@ -1062,12 +1078,17 @@ InstallGlobalFunction( PositionsOfSublist,
             Add( positions, pos );
       fi;
       
-    until pos = fail or pos >= len;
+      if (pos = fail) or (pos >= len) then
+        break;
+      fi;
+      
+    od;
     
     return positions;
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( \.,
         "for an opposite category and a positive integer",
@@ -1165,3 +1186,4 @@ InstallMethod( AllCoproducts,
     return CapFixpoint( predicate, func, coproducts_initial_value );
     
 end );
+# =#
