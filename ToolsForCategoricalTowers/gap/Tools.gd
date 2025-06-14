@@ -598,3 +598,5 @@ DeclareGlobalFunction( "PositionsOfSublist" );
 #! @Returns a list of objects
 DeclareOperation( "AllCoproducts",
         [ IsCapCategory and IsCocartesianCategory, IsList ] );
+
+DeclareOperation( "OneMutable", [ IsCapCategoryMorphism ] );

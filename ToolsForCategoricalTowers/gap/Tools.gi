@@ -103,6 +103,7 @@ InstallMethod( SET_RANGE_CATEGORY_Of_HOMOMORPHISM_STRUCTURE,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( SetOfObjects,
         [ IsInitialCategory ],
@@ -112,6 +113,7 @@ InstallMethod( SetOfObjects,
     return [ ];
     
 end );
+# =#
 
 ##
 InstallMethod( CallFuncList,
@@ -140,12 +142,14 @@ InstallOtherMethod( Subobject,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethod( Subobject,
         "for a morphism in a category",
         [ IsCapCategoryMorphism and IsMonomorphism ],
         
   IdFunc );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( CovariantHomFunctorData,
@@ -187,6 +191,7 @@ InstallMethod( CovariantHomFunctor,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethodForCompilerForCAP( GlobalSectionFunctorData,
         [ IsCapCategory and HasRangeCategoryOfHomomorphismStructure ],
@@ -215,6 +220,7 @@ InstallMethod( GlobalSectionFunctor,
     return Hom1;
     
 end );
+# =#
 
 ## fallback method
 InstallMethod( DatumOfCellAsEvaluatableString,
@@ -768,10 +774,9 @@ InstallMethodForCompilerForCAP( PreComposeFunctorsByData,
         
     end;
     
-    return
-      Triple( A,
-              Pair( composed_functor_on_objects, composed_functor_on_morphisms ),
-              C );
+    return Triple( A,
+                   Pair( composed_functor_on_objects, composed_functor_on_morphisms ),
+                   C );
     
 end );
 
@@ -797,8 +802,7 @@ InstallMethodForCompilerForCAP( PreComposeWithWrappingFunctorData,
               Pair( wrapping_functor_on_objects, wrapping_functor_on_morphisms ),
               C );
     
-    return
-      PreComposeFunctorsByData( C,
+    return PreComposeFunctorsByData( C,
               functor_data,
               wrapping_functor_data );
     
@@ -852,7 +856,7 @@ InstallGlobalFunction( CAP_INTERNAL_CORRESPONDING_WITH_GIVEN_OBJECTS_METHOD,
              IsList( info.with_given_without_given_name_pair ) and
              Length( info.with_given_without_given_name_pair ) = 2 and
              name_of_cap_operation = info.with_given_without_given_name_pair[1] and
-             IsBound( info.with_given_without_given_name_pair[2] ) and
+             #IsBound( info.with_given_without_given_name_pair[2] ) and
              IsBound( CAP_INTERNAL_METHOD_NAME_RECORD.(info.with_given_without_given_name_pair[2]).with_given_object_name ) ) then
         
         return [ name_of_cap_operation ];
@@ -951,7 +955,7 @@ InstallGlobalFunction( PositionsOfSublist,
     len := Length( suplist );
     positions := [];
     
-    repeat
+    while true do
       
       pos := PositionSublist( suplist, sublist, pos );
       
@@ -959,12 +963,17 @@ InstallGlobalFunction( PositionsOfSublist,
             Add( positions, pos );
       fi;
       
-    until pos = fail or pos >= len;
+      if (pos = fail) or (pos >= len) then
+        break;
+      fi;
+      
+    od;
     
     return positions;
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( \.,
         "for an opposite category and a positive integer",
@@ -1154,3 +1163,4 @@ InstallGlobalFunction( CAP_INTERNAL_COMPACT_NAME_OF_CATEGORICAL_OPERATION,
     return cname;
     
 end );
+# =#
