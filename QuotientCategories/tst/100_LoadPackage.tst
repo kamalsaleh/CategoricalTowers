@@ -7,12 +7,12 @@
 gap> PushOptions( rec( OnlyNeeded := true ) );
 gap> package_loading_info_level := InfoLevel( InfoPackageLoading );;
 gap> SetInfoLevel( InfoPackageLoading, PACKAGE_ERROR );;
-gap> LoadPackage( "ModulePresentations", false );
+gap> LoadPackage( "FreydCategoriesForCAP", false );
 true
 gap> LoadPackage( "QuotientCategories", false );
 true
 gap> SetInfoLevel( InfoPackageLoading, PACKAGE_INFO );;
-gap> LoadPackage( "ModulePresentations" );
+gap> LoadPackage( "FreydCategoriesForCAP" );
 true
 gap> LoadPackage( "QuotientCategories" );
 true
