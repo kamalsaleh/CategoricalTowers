@@ -4,6 +4,11 @@
 # Declarations
 #
 
+#= comment for Julia
+## To avoid world age conflicts in Julia. In Julia it delegates to Base.invokelatest(func, arg...)
+DeclareSynonym( "CallFuncListAtRuntime", CallFuncList );
+# =#
+
 #! @Chapter Tools
 
 ####################################
