@@ -234,6 +234,7 @@ InstallMethodForCompilerForCAP( SetOfGeneratingMorphisms,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethod( AssignSetOfObjects,
         [ IsLinearClosure, IsString ],
@@ -323,6 +324,7 @@ InstallOtherMethod( AssignSetOfGeneratingMorphisms,
     AssignSetOfGeneratingMorphisms( A, "" );
     
 end );
+# =#
 
 ##
 InstallGlobalFunction( "INSTALL_VIEW_AND_DISPLAY_METHODS_IN_LINEAR_CLOSURES_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS",
@@ -467,8 +469,7 @@ InstallMethod( DataTablesOfCategory,
     
     external_homs :=  List( objs, s -> List( objs, t -> BasisOfExternalHom( kC, s, t ) ) );
     
-    return
-      NTuple( 5,
+    return NTuple( 5,
       
       #coefficients_ring,
       UnderlyingRing( kC ),
