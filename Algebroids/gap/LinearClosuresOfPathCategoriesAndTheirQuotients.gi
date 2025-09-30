@@ -51,7 +51,7 @@ BindGlobal( "LINEAR_CLOSURE_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS",
         
     fi;
     
-    kC := LinearClosure( rows, C, sorting_func : FinalizeCategory := false ); # every morphism starts by its maximum monomial
+    kC := LINEAR_CLOSURE_CONSTRUCTOR_USING_CategoryOfRows( rows, C, sorting_func : FinalizeCategory := false ); # every morphism starts by its maximum monomial
     
     SetIsObjectFiniteCategory( kC, true );
     
