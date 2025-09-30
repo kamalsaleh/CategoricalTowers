@@ -370,7 +370,7 @@ InstallGlobalFunction( "INSTALL_VIEW_AND_DISPLAY_METHODS_IN_LINEAR_CLOSURES_OF_P
         
         bracket :=
           function( str )
-            if Position( str, '+' ) = fail and Position( str, '-' ) = fail then
+            if not ('+' in str or '-' in str ) then
                 return str;
             else
                 return Concatenation( "(", str, ")" );
@@ -379,7 +379,7 @@ InstallGlobalFunction( "INSTALL_VIEW_AND_DISPLAY_METHODS_IN_LINEAR_CLOSURES_OF_P
         
         coeffs := List( CoefficientsList( alpha ), c -> bracket( Concatenation( kC!.colors.coeff, String( c ), kC!.colors.reset ) ) );
         
-        labels := List( SupportMorphisms( alpha ), m -> ( str -> str{[1 .. PositionSublist( str, Concatenation( Q!.colors.other, ":" ) ) - 1]} )( ViewString( m ) ) );
+        labels := List( SupportMorphisms( alpha ), m -> ( str -> str{ [ 1 .. PositionSublist( str, Concatenation( Q!.colors.other, ":" ) ) - 1 ] } )( ViewString( m ) ) );
         
         if IsEmpty( labels ) then
             
@@ -391,15 +391,14 @@ InstallGlobalFunction( "INSTALL_VIEW_AND_DISPLAY_METHODS_IN_LINEAR_CLOSURES_OF_P
             
         fi;
         
-        return
-          Concatenation(
-              datum_string,
-              Q!.colors.other,
-              ":",
-              ViewString( UnderlyingOriginalObject( Source( alpha ) ) ),
-              Q!.colors.other,
-              " → ",
-              ViewString( UnderlyingOriginalObject( Target( alpha ) ) ) );
+        return Concatenation(
+                  datum_string,
+                  Q!.colors.other,
+                  ":",
+                  ViewString( UnderlyingOriginalObject( Source( alpha ) ) ),
+                  Q!.colors.other,
+                  " → ",
+                  ViewString( UnderlyingOriginalObject( Target( alpha ) ) ) );
           
     end );
     
