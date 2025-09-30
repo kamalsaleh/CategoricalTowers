@@ -5,6 +5,7 @@
 #
 
 ReadPackage( "Algebroids", "gap/LinearClosuresOfPathCategoriesAndTheirQuotients.gi" );
+ReadPackage( "Algebroids", "gap/GroebnerBasesForLinearClosuresOfPathCategories.gi" );
 
 #= comment for Julia
 #ReadPackage( "Algebroids", "gap/FpCategories.gi");
@@ -29,7 +30,6 @@ ReadPackage( "Algebroids", "gap/LinearClosuresOfPathCategoriesAndTheirQuotients.
 #ReadPackage( "Algebroids", "gap/CategoryOfAlgebroids.gi");
 #ReadPackage( "Algebroids", "gap/Bialgebroids.gi");
 #ReadPackage( "Algebroids", "gap/Tools.gi");
-#ReadPackage( "Algebroids", "gap/GroebnerBasesForLinearClosuresOfPathCategories.gi" );
 #ReadPackage( "Algebroids", "gap/QuotientsOfLinearClosuresOfPathCategories.gi" );
 #ReadPackage( "Algebroids", "gap/QuotientsOfAlgebroidsFromDataTables.gi" );
 #
