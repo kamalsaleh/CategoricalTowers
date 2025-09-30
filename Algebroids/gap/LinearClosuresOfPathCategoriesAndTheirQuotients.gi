@@ -37,7 +37,7 @@ BindGlobal( "LINEAR_CLOSURE_OF_PATH_CATEGORIES_OR_THEIR_QUOTIENTS",
         
     elif colors = true then
         
-        colors := rec( coeff := TextAttr.5, other := TextAttr.1, reset := TextAttr.reset );
+        colors := rec( coeff := "\033[35m", other := "\033[31m", reset := "\033[0m" );
         
     fi;
     
