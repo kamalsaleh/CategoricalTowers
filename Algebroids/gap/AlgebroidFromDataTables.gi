@@ -1181,6 +1181,7 @@ InstallMethod( IsAdmissibleAlgebroid,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( IsomorphismOntoAlgebroidFromDataTables,
           [ IsAlgebroid, IsAlgebroidFromDataTables ],
@@ -1226,6 +1227,13 @@ InstallMethod( IsomorphismFromAlgebroidFromDataTables,
     return eta;
     
 end );
+
+##
+InstallMethod( CellAsEvaluatableString,
+        [ IsMorphismInAlgebroidFromDataTables, IsList ], ## not HasHasGenesisOfCell
+        
+  _MorphismInAlgebroid_CellAsEvaluatableString );
+# =#
 
 ##
 InstallOtherMethod( CapFunctor,
@@ -1493,12 +1501,6 @@ InstallOtherMethod( ElementaryTensor,
   
   { mor_1, obj_2 } -> ElementaryTensor( mor_1, IdentityMorphism( obj_2 ) )
 );
-
-##
-InstallMethod( CellAsEvaluatableString,
-        [ IsMorphismInAlgebroidFromDataTables, IsList ], ## not HasHasGenesisOfCell
-        
-  _MorphismInAlgebroid_CellAsEvaluatableString );
 
 ###################
 #
