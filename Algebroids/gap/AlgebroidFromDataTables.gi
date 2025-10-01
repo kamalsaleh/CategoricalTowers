@@ -1535,10 +1535,18 @@ end );
 ##
 InstallMethod( ViewString,
           [ IsObjectInAlgebroidFromDataTables ],
-  
+          
   function ( obj )
+    local A;
     
-    return Concatenation( "<", ViewString( SetOfObjects( UnderlyingQuiver( CapCategory( obj ) ) )[ObjectIndex( obj )] ), ">" );
+    A := CapCategory( obj );
+    
+    return Concatenation(
+              "<(",
+              A!.colors.obj,
+              LabelsOfObjects( UnderlyingQuiver( A ) )[ObjectIndex( obj )],
+              A!.colors.reset,
+              ")>");
     
 end );
 
