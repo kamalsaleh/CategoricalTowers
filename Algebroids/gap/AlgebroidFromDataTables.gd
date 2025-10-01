@@ -25,13 +25,17 @@ DeclareCategory( "IsCellInAlgebroidFromDataTables",
 #! @Description
 #!  The &GAP; category of algebroids from data tables.
 DeclareCategory( "IsObjectInAlgebroidFromDataTables",
+        #= comment for Julia
         IsCellInAlgebroidFromDataTables and
+        # =#
         IsCapCategoryObject );
 
 #! @Description
 #!  The &GAP; category of morphisms in an algebroid from data tables.
 DeclareCategory( "IsMorphismInAlgebroidFromDataTables",
+        #= comment for Julia
         IsCellInAlgebroidFromDataTables and
+        # =#
         IsCapCategoryMorphism );
 
 ####################################
