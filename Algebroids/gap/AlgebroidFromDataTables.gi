@@ -54,21 +54,15 @@ InstallMethod( DataTablesOfCategory,
       
     fi;
     
-    return
-      NTuple( 5,
-        
-        CommutativeRingOfLinearCategory( A ),
-        
-        q,
-        
-        List( objs, s -> List( objs, t -> List( BasisOfExternalHom( qA, s, t ), m ->
-          List( DecompositionIndicesOfMorphismInAlgebroid( MorphismDatum( m ) )[1][2], index -> SafePosition( support_gmors, index ) ) ) ) ),
-          
-        List( objs, o -> List( gmors, gm ->
-          EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( qA, IdentityMorphism( qA, o ), gm ) ) ) ) ),
-          
-        List( objs, o -> List( gmors, gm ->
-          EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( qA, gm, IdentityMorphism( qA, o ) ) ) ) ) ) );
+    return NTuple( 5,
+              CommutativeRingOfLinearCategory( A ),
+              q,
+              List( objs, s -> List( objs, t -> List( BasisOfExternalHom( qA, s, t ), m ->
+                List( DecompositionIndicesOfMorphismInAlgebroid( MorphismDatum( m ) )[1][2], index -> SafePosition( support_gmors, index ) ) ) ) ),
+              List( objs, o -> List( gmors, gm ->
+                EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( qA, IdentityMorphism( qA, o ), gm ) ) ) ) ),
+              List( objs, o -> List( gmors, gm ->
+                EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( qA, gm, IdentityMorphism( qA, o ) ) ) ) ) ) );
     
 end );
 
