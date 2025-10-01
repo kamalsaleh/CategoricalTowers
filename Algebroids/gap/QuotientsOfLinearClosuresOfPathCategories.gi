@@ -399,31 +399,26 @@ InstallOtherMethod( \/,
   QuotientCategory
 );
 
-##
-InstallOtherMethod( DataTablesOfCategory,
-          [ IsQuotientCategory ],
+## DataTablesOfCategory should delegate to this
+BindGlobal( "DATA_TABLES_OF_CATEGORY_FOR_QUOTIENT_CATEGORY_OF_LINEAR_CLOSURE_OF_PATH_CATEGORY_OR_QUOTIENT_OF_PATH_CATEGORY",
   
   function ( quo_kC )
     local kC, C, all_objs, support_objs, objs, all_gmors, support_gmors, gmors, q;
     
     if not HasRangeCategoryOfHomomorphismStructure( quo_kC ) then
-        Error( "the linear closure category passed to 'DataTablesOfCategory' must be hom-finite!" );
+        Error( "the quotient category passed to 'DataTablesOfCategory' must be hom-finite!" );
     fi;
     
     kC := AmbientCategory( quo_kC );
     
     if not IsLinearClosure( kC ) then
-        
-        TryNextMethod( );
-        
+        Error("The ambient category of the passed quotient category must be a linear closure category!\n");
     fi;
     
     C := UnderlyingCategory( kC );
     
     if not (IsPathCategory( C ) or IsQuotientOfPathCategory( C ))  then
-        
-        TryNextMethod( );
-        
+        Error("The ambient category of the passed quotient category must be a linear closure category of a path category or quotient of path category!" );
     fi;
     
     all_objs := SetOfObjects( quo_kC );
@@ -454,26 +449,20 @@ InstallOtherMethod( DataTablesOfCategory,
       
     fi;
     
-    return
-      NTuple( 5,
-      
-      #coefficients_ring,
-      UnderlyingRing( kC ),
-      
-      #quiver
-      q,
-      
-      #decomposition_indices_of_bases_elements
-      List( objs, s -> List( objs, t -> List( BasisOfExternalHom( quo_kC, s, t ), m ->
-        List( MorphismIndices( CanonicalRepresentative( SupportMorphisms( CanonicalRepresentative( m ) )[1] ) ), index -> Position( support_gmors, index ) ) ) ) ),
-      
-      # hom_structure_objs_gmors
-      List( objs, o -> List( gmors, gm ->
-        EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( quo_kC, IdentityMorphism( quo_kC, o ), gm ) ) ) ) ),
-      
-      #hom_structure_gmors_objs
-      List( objs, o -> List( gmors, gm ->
-        EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( quo_kC, gm, IdentityMorphism( quo_kC, o ) ) ) ) ) ) );
+    return NTuple( 5,
+              #coefficients_ring,
+              UnderlyingRing( kC ),
+              #quiver
+              q,
+              #decomposition_indices_of_bases_elements
+              List( objs, s -> List( objs, t -> List( BasisOfExternalHom( quo_kC, s, t ), m ->
+                List( MorphismIndices( CanonicalRepresentative( SupportMorphisms( CanonicalRepresentative( m ) )[1] ) ), index -> Position( support_gmors, index ) ) ) ) ),
+              # hom_structure_objs_gmors
+              List( objs, o -> List( gmors, gm ->
+                EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( quo_kC, IdentityMorphism( quo_kC, o ), gm ) ) ) ) ),
+              #hom_structure_gmors_objs
+              List( objs, o -> List( gmors, gm ->
+                EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( HomomorphismStructureOnMorphisms( quo_kC, gm, IdentityMorphism( quo_kC, o ) ) ) ) ) ) );
 
 end );
 
