@@ -62,16 +62,6 @@ DeclareOperation( "AlgebroidFromDataTables", [ IsDenseList ] );
 #
 ####################################
 
-if false then
-#! @Description
-#!  The argument is a $k$-algebroid <A>A</A> defined by a finite dimensional quiver-algebra.
-#!  This operation extracts a data-tables record from <A>A</A> which can be used to construct an algebroid $A$, that is isomorphic to <A>A</A>.
-#! @Arguments A
-#! @Returns a &CAP; functor
-DeclareAttribute( "DataTablesOfCategory",
-        IsAlgebroid );
-fi;
-
 #! @Description
 #!  ?
 #! @Arguments A, A
