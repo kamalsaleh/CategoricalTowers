@@ -201,7 +201,7 @@ InstallMethod( AlgebroidFromDataTables,
         
     elif colors = true then
         
-        colors := rec( obj := TextAttr.4, coeff := TextAttr.5, basis_elm := TextAttr.2, other := TextAttr.1, reset := TextAttr.reset );
+        colors := rec( obj := "\033[34m", coeff := "\033[35m", basis_elm := "\033[32m", other := "\033[31m", reset := "\033[0m" );
         
     elif not IsRecord( colors ) then
         
