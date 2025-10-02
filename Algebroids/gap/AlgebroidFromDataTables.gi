@@ -59,7 +59,7 @@ BindGlobal( "CREATE_NAME_FOR_ALGEBROID_FROM_DATA_TABLES",
             o_string := Concatenation(
                               JoinStringsWithSeparator( LabelsOfObjects( q ){ [ 1 .. 3 ] }, "," ),
                               ",..,",
-                              JoinStringsWithSeparator( LabelsOfObjects( q ){ [NumberOfObjects( q ) - 2 .. NumberOfObjects( q ) ] }, "," ) );
+                              JoinStringsWithSeparator( LabelsOfObjects( q ){ [ NumberOfObjects( q ) - 2 .. NumberOfObjects( q ) ] }, "," ) );
     fi;
     
     if NumberOfMorphisms( q ) < 10 then
