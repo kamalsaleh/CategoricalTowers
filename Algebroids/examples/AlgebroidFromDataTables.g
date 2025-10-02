@@ -52,7 +52,7 @@ kF := k[F];
 B := kF / [ kF.e^3 ];
 #! Algebroid( Q, FreeCategory( RightQuiver( "q(0,1,2,3)[a:0->1,b:1->3,c:0->2,d:2->3,
 #! e:3->3]" ) ) ) / relations
-data_tables := DataTablesOfCategory( B );;
+data_tables := DataTablesOfLinearCategory( B );;
 data_tables[1];
 #! Q
 data_tables[2];

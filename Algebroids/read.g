@@ -21,7 +21,8 @@ ReadPackage( "Algebroids", "gap/GroebnerBasesForLinearClosuresOfPathCategories.g
 ReadPackage( "Algebroids", "gap/QuotientsOfLinearClosuresOfPathCategories.gi" );
 
 ReadPackage( "Algebroids", "gap/precompiled_categories/AdditiveClosureOfAlgebroidFromDataTablesPrecompiled.gi" );
-ReadPackage( "Algebroids", "gap/AlgebroidFromDataTables.gi");
+ReadPackage( "Algebroids", "gap/AlgebroidFromDataTables.gi" );
+ReadPackage( "Algebroids", "gap/DataTablesOfLinearCategories.gi" );
 
 #= comment for Julia
 #ReadPackage( "Algebroids", "gap/FpCategories.gi");
