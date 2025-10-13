@@ -790,20 +790,21 @@ InstallMethod( Dimension,
 end );
 
 ##
-InstallMethod( \.,
-        "for a finitely presented matrix algebra and a positive integer",
-        [ IsObjectInCategoryOfFpMatrixAlgebras, IsPosInt ],
+InstallOtherMethod( \/,
+        "for a  string and finitely presented matrix algebra",
+        [ IsString, IsObjectInCategoryOfFpMatrixAlgebras ],
         
-  function( fp_matrix_algebra, string_as_int )
-    local name;
-    
-    name := NameRNam( string_as_int );
+  function( name, fp_matrix_algebra )
     
     ## never use AssociatedQuotientCategoryOfLinearClosureOfPathCategory below since it
     ## will trigger a GB computation followed by a HasFiniteNumberOfMacaulayMorphisms/MacaulayMorphisms:
     return AssociatedLinearClosureOfPathCategory( fp_matrix_algebra ).(name);
     
 end );
+
+#= comment for Julia
+INSTALL_DOT_METHOD( IsObjectInCategoryOfFpMatrixAlgebras );
+# =#
 
 ##
 InstallMethod( Counit,

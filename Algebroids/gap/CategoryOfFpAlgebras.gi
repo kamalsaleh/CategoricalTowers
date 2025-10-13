@@ -11,7 +11,7 @@ InstallMethodWithCrispCache( CreateAmbientLinearClosureOfFpAlgebra,
   function( B, nrgens, var_name )
     local nmgens, quiver, F;
     
-    nmgens := ParseListOfIndeterminates( [ Concatenation( var_name, "1..", String( nrgens ) ) ] );
+    nmgens := List( [ 1 .. nrgens ], i -> Concatenation( var_name, String( i ) ) );
     
     quiver := FinQuiver(
                       Triple( "q",
@@ -339,13 +339,13 @@ InstallMethod( CategoryOfFpAlgebras,
         
         var := CAP_INTERNAL_RETURN_OPTION_OR_DEFAULT( "variable_name", "a" );
         
-        nmgens := ParseListOfIndeterminates( [ Concatenation( var, "1..", String( nrgens ) ) ] );
+        nmgens := List( [ 1 .. nrgens ], i -> Concatenation( var, String( i ) ) );
         
         B := UnderlyingCategoryOfMatrices( FpAlg_k );
         
         L := CreateAmbientLinearClosureOfFpAlgebra( B, nrgens, var );
         
-        o := SetOfObjects( L )[1];
+        o := CallFuncListAtRuntime( SetOfObjects,  [ L ] )[1];
         
         gens := List( nmgens, name -> L.(name) );
         
@@ -353,9 +353,9 @@ InstallMethod( CategoryOfFpAlgebras,
                            NTuple( 7,
                                    L,
                                    o,
-                                   nrgens,
+                                   BigInt( nrgens ),
                                    gens,
-                                   0,
+                                   BigInt( 0 ),
                                    CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( L ) ) ),
                                    nmgens ) );
         
@@ -363,9 +363,11 @@ InstallMethod( CategoryOfFpAlgebras,
         
         ## e_m⋅e_m = e_m
         idem := List( [ 1 .. l ], m ->
-                      SubtractionForMorphisms( L,
+                      CallFuncListAtRuntime(
+                            SubtractionForMorphisms,
+                            [ L,
                               PreCompose( L, gens[m][nrsgens[m] + 1], gens[m][nrsgens[m] + 1] ),
-                              gens[m][nrsgens[m] + 1] ) );
+                              gens[m][nrsgens[m] + 1] ] ) );
         
         ## e_m⋅e_n = 0 for m ≠ n
         orth_idem := List( [ 1 .. l ], m ->
@@ -388,9 +390,12 @@ InstallMethod( CategoryOfFpAlgebras,
         
         GB := ReducedGroebnerBasis( L, Concatenation( idem, orth_idem, central_idem ) );
         
-        sum := SubtractionForMorphisms( L,
-                       IdentityMorphism( L, o ),
-                       SumOfMorphisms( o, List( [ 1 .. l ], m -> gens[m][nrsgens[m] + 1] ), o ) );
+        sum := CallFuncListAtRuntime(
+                  SubtractionForMorphisms,
+                    [ L,
+                      CallFuncListAtRuntime( IdentityMorphism, [ L, o ] ),
+                      SumOfMorphisms( o, List( [ 1 .. l ], m -> gens[m][nrsgens[m] + 1] ), o )
+                    ] );
         
         nrsrels := List( [ 1 .. l ], m -> data[m][5] );
         
@@ -416,9 +421,9 @@ InstallMethod( CategoryOfFpAlgebras,
                        NTuple( 7,
                                L,
                                o,
-                               nrgens,
+                               BigInt( nrgens ),
                                Concatenation( gens ),
-                               Sum( nrsrels ) + 2 * nrgens + (l - 1)^2,
+                               BigInt( Sum( nrsrels ) + 2 * nrgens + (l - 1)^2 ),
                                Concatenation( rels, idem, orth_idem, central_idem, [ sum ] ),
                                nmgens ) );
         
@@ -563,13 +568,13 @@ InstallMethod( CategoryOfFpAlgebras,
         
         var := CAP_INTERNAL_RETURN_OPTION_OR_DEFAULT( "variable_name", "a" );
         
-        nmgens := ParseListOfIndeterminates( [ Concatenation( var, "1..", String( nrgens ) ) ] );
+        nmgens := List( [ 1 .. nrgens ], i -> Concatenation( var, String( i ) ) );
         
         B := UnderlyingCategoryOfMatrices( FpAlg_k );
         
         L := CreateAmbientLinearClosureOfFpAlgebra( B, nrgens, var );
         
-        o := SetOfObjects( L )[1];
+        o := CallFuncListAtRuntime( SetOfObjects, [ L ] )[1];
         
         gens := List( nmgens, name -> L.(name) );
         
@@ -577,9 +582,9 @@ InstallMethod( CategoryOfFpAlgebras,
                            NTuple( 7,
                                    L,
                                    o,
-                                   nrgens,
+                                   BigInt( nrgens ),
                                    gens,
-                                   0,
+                                   BigInt( 0 ),
                                    CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( L ) ) ),
                                    nmgens ) );
         
@@ -602,9 +607,9 @@ InstallMethod( CategoryOfFpAlgebras,
                        NTuple( 7,
                                L,
                                o,
-                               nrgens,
+                               BigInt( nrgens ),
                                Concatenation( gens ),
-                               Sum( nrsrels ),
+                               BigInt( Sum( nrsrels ) ),
                                rels,
                                nmgens ) );
         
@@ -676,13 +681,13 @@ InstallMethod( CategoryOfFpAlgebras,
         
         var := CAP_INTERNAL_RETURN_OPTION_OR_DEFAULT( "variable_name", "a" );
         
-        nmgens := ParseListOfIndeterminates( [ Concatenation( var, "1..", String( nrgens ) ) ] );
-        
+        nmgens := List( [ 1 .. nrgens ], i -> Concatenation( var, String( i ) ) );
+         
         B := UnderlyingCategoryOfMatrices( FpAlg_k );
         
-        L := CreateAmbientLinearClosureOfFpAlgebra( B, nrgens, var );
+        L := CreateAmbientLinearClosureOfFpAlgebra( B, BigInt( nrgens ), var );
         
-        o := SetOfObjects( L )[1];
+        o := CallFuncListAtRuntime( SetOfObjects, [ L ] )[1];
         
         gens := List( nmgens, name -> L.(name) );
         
@@ -690,9 +695,9 @@ InstallMethod( CategoryOfFpAlgebras,
                            NTuple( 7,
                                    L,
                                    o,
-                                   nrgens,
+                                   BigInt( nrgens ),
                                    gens,
-                                   0,
+                                   BigInt( 0 ),
                                    CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( L ) ) ),
                                    nmgens ) );
         
@@ -724,9 +729,9 @@ InstallMethod( CategoryOfFpAlgebras,
                        NTuple( 7,
                                L,
                                o,
-                               nrgens,
+                               BigInt( nrgens ),
                                gens,
-                               nrrels + nrgens1 * nrgens2,
+                               BigInt( nrrels + nrgens1 * nrgens2 ),
                                Concatenation( rels, mixed ),
                                nmgens ) );
         
@@ -928,9 +933,9 @@ InstallMethod( CategoryOfFpAlgebras,
                        NTuple( 7,
                                datum[1],
                                datum[2],
-                               datum[3],
+                               BigInt( datum[3] ),
                                datum[4],
-                               Length( all_rels ),
+                               BigInt( Length( all_rels ) ),
                                all_rels,
                                datum[7] ) );
         
@@ -1110,9 +1115,9 @@ InstallOtherMethodForCompilerForCAP( AmbientAlgebra,
                    NTuple( 7,
                            datum[1],
                            datum[2],
-                           datum[3],
+                           BigInt( datum[3] ),
                            datum[4],
-                           0,
+                           BigInt( 0 ),
                            CapJitTypedExpression( [ ], cat -> CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( datum[1] ) ) ),
                            datum[7] ) );
     
@@ -1155,7 +1160,7 @@ InstallMethod( \/,
         relations := DefiningRelations( fp_linear_category_on_one_object );
     fi;
     
-    object := SetOfObjects( L )[1];
+    object := CallFuncListAtRuntime( SetOfObjects, [ L ] )[1];
     
     generators := SetOfGeneratingMorphisms( L );
     
@@ -1166,7 +1171,7 @@ InstallMethod( \/,
         coef := CoefficientsList( gen );
         supp := SupportMorphisms( gen );
         
-        Assert( 0, Length( coef ) = 1 and coef[1] in k and IsOne( coef[1] ) );
+        Assert( 0, Length( coef ) = 1 and coef[1] in k and coef[1] = One( k ) );
         Assert( 0, Length( supp ) = 1 );
         
         return MorphismLabel( supp[1] );
@@ -1177,9 +1182,9 @@ InstallMethod( \/,
                           NTuple( 7,
                                   L,
                                   object,
-                                  Length( generators ),
+                                  BigInt( Length( generators ) ),
                                   generators,
-                                  Length( relations ),
+                                  BigInt( Length( relations ) ),
                                   relations,
                                   List( generators, get_labels ) ) );
     
@@ -1210,7 +1215,7 @@ InstallOtherMethod( \/,
     
     k := CommutativeRingOfLinearCategory( L );
     
-    object := SetOfObjects( L )[1];
+    object := CallFuncListAtRuntime( SetOfObjects, [ L ] )[1];
     
     generators := SetOfGeneratingMorphisms( L );
     
@@ -1232,29 +1237,31 @@ InstallOtherMethod( \/,
                    NTuple( 7,
                            L,
                            object,
-                           Length( generators ),
+                           BigInt( Length( generators ) ),
                            generators,
-                           Length( relations ),
+                           BigInt( Length( relations ) ),
                            relations,
                            List( generators, get_labels ) ) );
     
 end );
 
 ##
-InstallMethod( \.,
-        "for a finitely presented algebra and a positive integer",
-        [ IsObjectInCategoryOfFpAlgebras, IsPosInt ],
+InstallOtherMethod( \/,
+        "for a string and a finitely presented algebra",
+        [ IsString, IsObjectInCategoryOfFpAlgebras ],
         
-  function( fp_algebra, string_as_int )
-    local name;
-    
-    name := NameRNam( string_as_int );
+  function( name, fp_algebra )
     
     ## never use AssociatedQuotientCategoryOfLinearClosureOfPathCategory below since it
     ## will trigger a GB computation followed by a HasFiniteNumberOfMacaulayMorphisms/MacaulayMorphisms:
     return AssociatedLinearClosureOfPathCategory( fp_algebra ).(name);
     
 end );
+
+#= comment for Julia
+##
+INSTALL_DOT_METHOD( IsObjectInCategoryOfFpAlgebras );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( AssociatedFunctorOfLinearClosuresOfPathCategoriesData,
@@ -1418,7 +1425,7 @@ InstallMethod( DisplayString,
     datum := ObjectDatum( fp_algebra );
     
     if datum[3] > 0 then
-        gens := Concatenation( "<", JoinStringsWithSeparator( datum[7] ), ">" );
+        gens := Concatenation( "<", JoinStringsWithSeparator( datum[7], "," ), ">" );
     else
         gens := "";
     fi;
