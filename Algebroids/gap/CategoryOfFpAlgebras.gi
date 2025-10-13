@@ -31,13 +31,18 @@ end );
 ##
 InstallMethod( CategoryOfFpAlgebras,
         "for a linear category",
-        [ IsCapCategory and IsLinearCategoryOverCommutativeRing ],
+        [ IsCapCategory ],
         
   FunctionWithNamedArguments(
   [ [ "FinalizeCategory", true ],
   ],
   function( CAP_NAMED_ARGUMENTS, linear_category )
     local name, k, FpAlg_k;
+    
+    if not ( HasIsLinearCategoryOverCommutativeRing( linear_category ) and
+              IsLinearCategoryOverCommutativeRing( linear_category ) ) then
+        TryNextMethod( );
+    fi;
     
     k := CommutativeRingOfLinearCategory( linear_category );
     
@@ -963,11 +968,15 @@ end ) );
 
 ##
 InstallMethod( CategoryOfFpAlgebras,
-        "for a homalg ring",
-        [ IsHomalgRing and IsCommutative ],
+        "for a commutative homalg ring",
+        [ IsHomalgRing ],
         
   function( k )
     
+    if not ( HasIsCommutative( k ) and IsCommutative( k ) ) then
+        TryNextMethod( );
+    fi;
+
     return CategoryOfFpAlgebras( CategoryOfRows( k ) );
     
 end );
@@ -1123,10 +1132,15 @@ end );
 ##
 InstallMethod( \/,
         "for a linear category and a category of finitely presented algebras",
-        [ IsCapCategory and IsLinearCategoryOverCommutativeRing, IsCategoryOfFpAlgebras ],
+        [ IsCapCategory, IsCategoryOfFpAlgebras ],
         
   function( fp_linear_category_on_one_object, FpAlg_k )
     local k, L, relations, object, generators, get_labels, fp_algebra;
+    
+    if not ( HasIsLinearCategoryOverCommutativeRing( fp_linear_category_on_one_object ) and
+              IsLinearCategoryOverCommutativeRing( fp_linear_category_on_one_object ) ) then
+        TryNextMethod( );
+    fi;
     
     Assert( 0, IsLinearClosure( fp_linear_category_on_one_object ) or IsQuotientCategory( fp_linear_category_on_one_object ) );
     
