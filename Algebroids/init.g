@@ -4,22 +4,25 @@
 # Reading the declaration part of the package.
 #
 
+
 #= comment for Julia
-ReadPackage( "Algebroids", "gap/FpCategories.gd");
 ReadPackage( "Algebroids", "gap/Algebroids.gd");
-ReadPackage( "Algebroids", "gap/Tools.gd");
 # =#
+
+ReadPackage( "Algebroids", "gap/Tools.gd");
 
 ReadPackage( "Algebroids", "gap/LinearClosuresOfPathCategoriesAndTheirQuotients.gd" );
 ReadPackage( "Algebroids", "gap/AlgebroidFromDataTables.gd" );
 
+ReadPackage( "Algebroids", "gap/CategoryOfFpAlgebras.gd" );
+ReadPackage( "Algebroids", "gap/CategoryOfFpMatrixAlgebras.gd" );
+
 #= comment for Julia
+ReadPackage( "Algebroids", "gap/FpCategories.gd");
 #ReadPackage( "Algebroids", "gap/QuiverRows.gd" );
 #
 #ReadPackage( "Algebroids", "gap/Functors.gd");
 #ReadPackage( "Algebroids", "gap/CategoryFromDataTables.gd");
-#ReadPackage( "Algebroids", "gap/CategoryOfFpAlgebras.gd" );
-#ReadPackage( "Algebroids", "gap/CategoryOfFpMatrixAlgebras.gd" );
 #ReadPackage( "Algebroids", "gap/CategoryOfAlgebroids.gd");
 #ReadPackage( "Algebroids", "gap/Bialgebroids.gd");
 #

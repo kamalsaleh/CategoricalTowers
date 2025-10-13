@@ -7,10 +7,14 @@
 ##
 InstallMethod( Dimension,
         "for an algebroid",
-        [ IsCapCategory and IsObjectFiniteCategory and IsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms ],
+        [ IsCapCategory ],
         
   function( A )
     local objects;
+    
+    if not ( IsObjectFiniteCategory( A ) and IsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms( A ) ) then
+        Error( "the passed argument to `Dimension` must be an object-finite linear category with finitely generated free external homs!\n" );
+    fi;
     
     objects := SetOfObjects( A );
     
@@ -18,6 +22,7 @@ InstallMethod( Dimension,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( AssociatedRightQuiver,
         "for a finite quiver",
@@ -227,3 +232,4 @@ InstallMethod( \.,
     return Yc;
     
 end );
+# =#

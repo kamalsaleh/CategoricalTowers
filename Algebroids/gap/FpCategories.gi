@@ -1234,10 +1234,14 @@ end );
 ##
 InstallMethod( POW,
         "for a f.p. category and an integer",
-        [ IsFpCategory and HasUnderlyingQuiverAlgebra, IsInt ],
+        [ IsFpCategory, IsInt ],
         
   function( C, n )
     local Qq, R, parity;
+    
+    if not HasUnderlyingQuiverAlgebra( C ) then
+        TryNextMethod( );
+    fi;
     
     if n < 0 then
         Error( "the only admissible values for n are non-negative integers\n" );

@@ -118,12 +118,14 @@ DeclareAttribute( "UnderlyingQuiverAlgebra",
 
 CapJitAddTypeSignature( "UnderlyingQuiverAlgebra", [ IsAlgebroid ], input_types -> CapJitDataTypeOfRing( UnderlyingQuiverAlgebra( input_types[1].category ) ) );
 
+if false then
 #! @Description
 #!  The dimension of the underlying quiver algebra (=path algebra with relations) underlying the algebroid <A>A</A>.
 #! @Arguments A
 #! @Returns a nonnegative integer
 DeclareAttribute( "Dimension",
         IsAlgebroid );
+fi;
 
 #! @Description
 #!  The matrix of basis paths of the canonical basis of the quiver algebra (=path algebra with relations) underlying the algebroid <A>A</A>,
@@ -391,17 +393,17 @@ DeclareOperation( "Algebroid",
 #! @Arguments C, H
 #! @Group Algebroid
 DeclareOperation( "Algebroid",
-        [ IsFpCategory, IsCapCategory ] );
+        [ IsCapCategory, IsCapCategory ] );
 
 #! @Arguments R, C
 #! @Group Algebroid
 DeclareOperation( "Algebroid",
-        [ IsHomalgRing, IsFpCategory ] );
+        [ IsHomalgRing, IsCapCategory ] );
 
 #! @Arguments R, C
 #! @Group Algebroid
 DeclareOperation( "[]",
-        [ IsHomalgRing, IsFpCategory ] );
+        [ IsHomalgRing, IsCapCategory ] );
 
 #! @Arguments A, L
 #! @Group Algebroid

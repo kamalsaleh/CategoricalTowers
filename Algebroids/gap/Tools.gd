@@ -18,7 +18,7 @@
 #!  Return the dimension of the object-finite linear category C with free external Homs of finite rank.
 #! @Arguments C
 #! @Returns an integer
-DeclareAttribute( "Dimension", IsCapCategory and IsObjectFiniteCategory and IsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms );
+DeclareAttribute( "Dimension", IsCapCategory );
 
 ####################################
 #
@@ -26,6 +26,7 @@ DeclareAttribute( "Dimension", IsCapCategory and IsObjectFiniteCategory and IsLi
 #
 ####################################
 
+#= comment for Julia
 DeclareAttribute( "AssociatedRightQuiver",
         IsFinQuiver );
 
@@ -60,3 +61,4 @@ DeclareGlobalFunction( "DecompositionIndicesOfAllMorphismsAsENHANCED_SYNTAX_TREE
 DeclareGlobalFunction( "DataTablesAsString" );
 
 DeclareGlobalFunction( "DataTablesAsENHANCED_SYNTAX_TREE" );
+# =#
