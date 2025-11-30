@@ -4,7 +4,7 @@
 # Declarations
 #
 
-#! @Chapter Path categories
+#! @Chapter Path Categories
 
 ####################################
 #
