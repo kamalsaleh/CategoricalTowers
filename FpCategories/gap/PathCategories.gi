@@ -1091,45 +1091,6 @@ InstallMethod( HasFiniteNumberOfMacaulayMorphisms,
 end );
 
 ##
-InstallGlobalFunction( FpCategories_SORT_MORPHISMS_LIKE_QPA,
-  
-  function ( supports )
-    local nr_objs, sort_function, s, t;
-    
-    nr_objs := Length( supports );
-    
-    sort_function :=
-      function ( m_1, m_2 )
-        local l_1, l_2, i;
-        
-        l_1 := Length( m_1 );
-        l_2 := Length( m_2 );
-        
-        if l_1 <> l_2 then
-          
-          return l_1 < l_2;
-          
-        else
-          
-          i := PositionProperty( [ 1 .. l_1 ], j -> m_1[j] <> m_2[j] );
-          
-          return i <> fail and m_1[i] < m_2[i];
-          
-        fi;
-        
-    end;
-    
-    for s in [ 1 .. nr_objs ] do
-      for t in [ 1 .. nr_objs ] do
-        
-        supports[s][t] := SortedList( supports[s][t], sort_function );
-        
-      od;
-    od;
-    
-end );
-
-##
 InstallMethod( MacaulayMorphisms,
           [ IsPathCategory, IsDenseList ],
   
@@ -1185,7 +1146,11 @@ InstallMethod( MacaulayMorphisms,
               
           od;
           
-          supports[s][t] := Concatenation( homQ_len_st, supports[s][t] );
+          if C!.admissible_order = "dp" then
+              supports[s][t] := Concatenation( supports[s][t], homQ_len_st );
+          else
+              supports[s][t] := Concatenation( homQ_len_st, supports[s][t] );
+          fi;
           
         od;
       od;
@@ -1197,12 +1162,6 @@ InstallMethod( MacaulayMorphisms,
       fi;
       
     od;
-    
-    if C!.admissible_order = "dp" then
-        
-        FpCategories_SORT_MORPHISMS_LIKE_QPA( supports );
-        
-    fi;
     
     return LazyHList( [ 1 .. nr_objs ], s ->
                    LazyHList( [ 1 .. nr_objs ], t ->
