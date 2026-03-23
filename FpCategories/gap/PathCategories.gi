@@ -360,7 +360,7 @@ InstallMethod( ExternalHomsWithGivenLengthDataOp,
         [ IsPathCategory, IsBigInt ],
   
   function ( C, len )
-    local q, nr_objs, nr_gmors, gmors, data, prev_data, r, j, s;
+    local q, nr_objs, nr_gmors, gmors, data, prev_data, r, j;
     
     q := UnderlyingQuiver( C );
     
@@ -381,25 +381,13 @@ InstallMethod( ExternalHomsWithGivenLengthDataOp,
       
       prev_data := ExternalHomsWithGivenLengthData( C, len - 1 );
       
-      # It is better to get the morphisms already sorted from max to min, hence:
+      # Iterate by first generator to produce morphisms in left-degree-lexicographic order:
       
-      if C!.admissible_order = "Dp" then
-        
-        for r in [ 1 .. nr_objs ] do
-          for j in [ 1 .. nr_gmors ] do
-            data[gmors[j][1]][r] := Concatenation( data[gmors[j][1]][r], List( prev_data[gmors[j][2]][r], l -> Concatenation( [ j ], l ) ) );
-          od;
+      for r in [ 1 .. nr_objs ] do
+        for j in [ 1 .. nr_gmors ] do
+          data[gmors[j][1]][r] := Concatenation( data[gmors[j][1]][r], List( prev_data[gmors[j][2]][r], l -> Concatenation( [ j ], l ) ) );
         od;
-        
-      elif C!.admissible_order = "dp" then
-        
-        for s in [ 1 .. nr_objs ] do
-          for j in [ 1 .. nr_gmors ] do
-            data[s][gmors[j][2]] := Concatenation( data[s][gmors[j][2]], List( prev_data[s][gmors[j][1]], l -> Concatenation( l, [ j ] ) ) );
-          od;
-        od;
-        
-      fi;
+      od;
       
     fi;
     
