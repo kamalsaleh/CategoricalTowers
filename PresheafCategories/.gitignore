@@ -31,4 +31,4 @@
 /doc/*.xml
 /doc_tmp/
 /stats
-/tst/presheaves*.tst
+/tst/presheafcategories*.tst

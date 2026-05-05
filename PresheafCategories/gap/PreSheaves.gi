@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# PreSheaves: Categories of (co)presheaves
+# PresheafCategories: Categories of (co)presheaves
 #
 # Implementations
 #

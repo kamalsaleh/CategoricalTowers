@@ -1,7 +1,7 @@
 #! @Chunk TerminalCategory
 
 #! @Example
-LoadPackage( "PreSheaves" );
+LoadPackage( "PresheafCategories" );
 #! true
 LoadPackage( "Toposes", ">= 2024.06-03", fail );
 #! true

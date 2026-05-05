@@ -27,7 +27,7 @@
 | [IntrinsicModules](IntrinsicModules#readme) | Finitely presented modules over computable rings allowing multiple presentations and the notion of elements | [![HTML stable documentation][html-IntrinsicModules-img]][html-IntrinsicModules-url] [![PDF stable documentation][pdf-IntrinsicModules-img]][pdf-IntrinsicModules-url] |
 | [LazyCategories](LazyCategories#readme) | Construct an equivalent lazy category out of a CAP category | [![HTML stable documentation][html-LazyCategories-img]][html-LazyCategories-url] [![PDF stable documentation][pdf-LazyCategories-img]][pdf-LazyCategories-url] |
 | [Locales](Locales#readme) | Locales, frames, coframes, meet semi-lattices of locally closed subsets, and Boolean algebras of constructible sets | [![HTML stable documentation][html-Locales-img]][html-Locales-url] [![PDF stable documentation][pdf-Locales-img]][pdf-Locales-url] |
-| [PreSheaves](PreSheaves#readme) | Categories of (co)presheaves | [![HTML stable documentation][html-PreSheaves-img]][html-PreSheaves-url] [![PDF stable documentation][pdf-PreSheaves-img]][pdf-PreSheaves-url] |
+| [PresheafCategories](PresheafCategories#readme) | Categories of (co)presheaves | [![HTML stable documentation][html-PresheafCategories-img]][html-PresheafCategories-url] [![PDF stable documentation][pdf-PresheafCategories-img]][pdf-PresheafCategories-url] |
 | [QuotientCategories](QuotientCategories#readme) | Quotient categories | [![HTML stable documentation][html-QuotientCategories-img]][html-QuotientCategories-url] [![PDF stable documentation][pdf-QuotientCategories-img]][pdf-QuotientCategories-url] |
 | [SliceCategories](SliceCategories#readme) | Slice categories | [![HTML stable documentation][html-SliceCategories-img]][html-SliceCategories-url] [![PDF stable documentation][pdf-SliceCategories-img]][pdf-SliceCategories-url] |
 | [SubcategoriesForCAP](SubcategoriesForCAP#readme) | Subcategory and other related constructors for CAP categories | [![HTML stable documentation][html-SubcategoriesForCAP-img]][html-SubcategoriesForCAP-url] [![PDF stable documentation][pdf-SubcategoriesForCAP-img]][pdf-SubcategoriesForCAP-url] |
@@ -140,11 +140,11 @@
 [pdf-Locales-url]: https://homalg-project.github.io/CategoricalTowers/Locales/download_pdf.html
 
 
-[html-PreSheaves-img]: https://img.shields.io/badge/🔗%20HTML-stable-blue.svg
-[html-PreSheaves-url]: https://homalg-project.github.io/CategoricalTowers/PreSheaves/doc/chap0_mj.html
+[html-PresheafCategories-img]: https://img.shields.io/badge/🔗%20HTML-stable-blue.svg
+[html-PresheafCategories-url]: https://homalg-project.github.io/CategoricalTowers/PresheafCategories/doc/chap0_mj.html
 
-[pdf-PreSheaves-img]: https://img.shields.io/badge/🔗%20PDF-stable-blue.svg
-[pdf-PreSheaves-url]: https://homalg-project.github.io/CategoricalTowers/PreSheaves/download_pdf.html
+[pdf-PresheafCategories-img]: https://img.shields.io/badge/🔗%20PDF-stable-blue.svg
+[pdf-PresheafCategories-url]: https://homalg-project.github.io/CategoricalTowers/PresheafCategories/download_pdf.html
 
 
 [html-QuotientCategories-img]: https://img.shields.io/badge/🔗%20HTML-stable-blue.svg

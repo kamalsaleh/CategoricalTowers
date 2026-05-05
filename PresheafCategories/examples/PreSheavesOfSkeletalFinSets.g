@@ -1,7 +1,7 @@
 #! @Chunk PreSheavesOfSkeletalFinSets
 
 #! @Example
-LoadPackage( "PreSheaves" );
+LoadPackage( "PreSheafCategories" );
 #! true
 LoadPackage( "Toposes", ">= 2025.08-02", fail );
 #! true

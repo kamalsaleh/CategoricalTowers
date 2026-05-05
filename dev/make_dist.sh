@@ -107,11 +107,11 @@ git subtree split --prefix=Locales -b Locales-split
 git push https://homalg-project:$SUBSPLIT_PUSH_SECRET@github.com/homalg-project/Locales Locales-split:master
 echo ""
 
-# PreSheaves
-echo "Release PreSheaves"
-GAP_PKG_RELEASE_DATE=$(date -I) ./dev/release-gap-package --skip-existing-release --srcdir "$PWD/PreSheaves" --webdir "$PWD/gh-pages/PreSheaves" --update-script "$PWD/gh-pages/update.g" --release-script "$PWD/dev/.release"
-git subtree split --prefix=PreSheaves -b PreSheaves-split
-git push https://homalg-project:$SUBSPLIT_PUSH_SECRET@github.com/homalg-project/PreSheaves PreSheaves-split:master
+# PresheafCategories
+echo "Release PresheafCategories"
+GAP_PKG_RELEASE_DATE=$(date -I) ./dev/release-gap-package --skip-existing-release --srcdir "$PWD/PresheafCategories" --webdir "$PWD/gh-pages/PresheafCategories" --update-script "$PWD/gh-pages/update.g" --release-script "$PWD/dev/.release"
+git subtree split --prefix=PresheafCategories -b PresheafCategories-split
+git push https://homalg-project:$SUBSPLIT_PUSH_SECRET@github.com/homalg-project/PresheafCategories PresheafCategories-split:master
 echo ""
 
 # QuotientCategories

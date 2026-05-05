@@ -49,9 +49,9 @@ flags:
   Locales:
     paths:
       - "Locales/"
-  PreSheaves:
+  PresheafCategories:
     paths:
-      - "PreSheaves/"
+      - "PresheafCategories/"
   QuotientCategories:
     paths:
       - "QuotientCategories/"
