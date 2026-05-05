@@ -107,11 +107,11 @@ GAP_PKG_RELEASE_DATE=$(date -I) ./dev/release-gap-package --srcdir "$PWD/Locales
 #git subtree split --prefix=Locales -b Locales-split
 echo ""
 
-# PreSheaves
-echo "Simulate release of PreSheaves"
-GAP_PKG_RELEASE_DATE=$(date -I) ./dev/release-gap-package --srcdir "$PWD/PreSheaves" --webdir "$PWD/gh-pages/PreSheaves" --update-script "$PWD/gh-pages/update.g" --release-script "$PWD/dev/.release" --only-tarball
+# PresheafCategories
+echo "Simulate release of PresheafCategories"
+GAP_PKG_RELEASE_DATE=$(date -I) ./dev/release-gap-package --srcdir "$PWD/PresheafCategories" --webdir "$PWD/gh-pages/PresheafCategories" --update-script "$PWD/gh-pages/update.g" --release-script "$PWD/dev/.release" --only-tarball
 # creating subsplits is slow and should only rarely result in errors -> do not simulate to keep testing PRs as fast as possible
-#git subtree split --prefix=PreSheaves -b PreSheaves-split
+#git subtree split --prefix=PresheafCategories -b PresheafCategories-split
 echo ""
 
 # QuotientCategories

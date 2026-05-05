@@ -59,7 +59,7 @@ for pkg in \
   IntrinsicModules \
   LazyCategories \
   Locales \
-  PreSheaves \
+  PresheafCategories \
   QuotientCategories \
   SliceCategories \
   SubcategoriesForCAP \
