@@ -15,17 +15,17 @@
 #! @Description
 #!  The &GAP; category of path categories.
 DeclareCategory( "IsPathCategory",
-        IsCapCategory );
+        IsFpCategory );
 
 #! @Description
 #!  The &GAP; category of objects in path categories.
 DeclareCategory( "IsPathCategoryObject",
-        IsCapCategoryObject );
+        IsObjectInFpCategory );
 
 #! @Description
 #!  The &GAP; category of morphisms in path categories.
 DeclareCategory( "IsPathCategoryMorphism",
-        IsCapCategoryMorphism );
+        IsMorphismInFpCategory );
 
 ####################################
 #

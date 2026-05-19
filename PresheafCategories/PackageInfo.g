@@ -92,6 +92,8 @@ Dependencies := rec(
                    [ "MonoidalCategories", ">= 2026.05-01" ],
                    [ "CartesianCategories", ">= 2026.05-01" ],
                    [ "ToolsForCategoricalTowers", ">= 2025.03-02" ],
+                   [ "FpCategories", ">= 2026.05-01" ],
+                   [ "FpLinearCategories", ">= 2026.05-02" ],
                    ],
   SuggestedOtherPackages := [
                    ],

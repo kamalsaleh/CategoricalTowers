@@ -9,3 +9,6 @@ ReadPackage( "PresheafCategories", "gap/PreSheaves.gi" );
 
 ##
 ReadPackage( "PresheafCategories", "gap/PreSheavesWithBounds.gi" );
+
+##
+ReadPackage( "PresheafCategories", "gap/PreSheavesOfFpEnrichedCategories.gi" );
