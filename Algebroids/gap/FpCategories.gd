@@ -13,29 +13,9 @@
 ####################################
 
 #! @Description
-#!  The &GAP; category of finitely presented categories.
-DeclareCategory( "IsFpCategory",
-        IsCapCategory );
-
-#! @Description
 #!  The &GAP; category of algebras.
 DeclareCategory( "IsMonoidAsCategory",
         IsFpCategory );
-
-#! @Description
-#!  The &GAP; category of cells in a finitely presented category.
-DeclareCategory( "IsCellInFpCategory",
-        IsCapCategoryCell );
-
-#! @Description
-#!  The &GAP; category of objects in a finitely presented category.
-DeclareCategory( "IsObjectInFpCategory",
-        IsCellInFpCategory and IsCapCategoryObject );
-
-#! @Description
-#!  The &GAP; category of morphisms in a finitely presented category.
-DeclareCategory( "IsMorphismInFpCategory",
-        IsCellInFpCategory and IsCapCategoryMorphism );
 
 ####################################
 #
