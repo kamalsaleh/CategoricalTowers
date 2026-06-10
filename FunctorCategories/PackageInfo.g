@@ -99,14 +99,16 @@ Dependencies := rec(
                    [ "Toposes", ">= 2025.12-02" ],
                    [ "FinSetsForCAP", ">= 2025.12-08" ],
                    [ "FpCategories", ">= 2025.12-05" ],
+                   [ "FpLinearCategories", "2026.05-02" ],
                    [ "Locales", ">= 2025.02-04" ],
                    [ "PresheafCategories", ">= 2026.05-01" ],
                    [ "FiniteCocompletions", ">= 2026.05-10" ],
-                   [ "Algebroids", ">= 2026.04-01" ],
                    [ "SubcategoriesForCAP", ">= 2026.04-01" ],
                    [ "SliceCategories", ">= 2026.04-01" ],
                    ],
-  SuggestedOtherPackages := [ ],
+  SuggestedOtherPackages := [
+                   [ "Algebroids", ">= 2026.04-01" ],
+                   ],
   ExternalConditions := [ ],
 ),
 

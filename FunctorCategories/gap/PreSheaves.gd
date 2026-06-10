@@ -82,6 +82,18 @@ DeclareAttribute( "UnderlyingCapTwoCategoryCell",
         IsCellInPreSheafCategory );
 
 ##
+DeclareAttribute( "WellDefinednessForObjectsCheckDataOrFail",
+        IsCapCategory );
+
+##
+DeclareOperation( "AdditionalMonoidalPreSheafOperationNames",
+        [ IsCapCategory ] );
+
+##
+DeclareOperation( "AddAdditionalPrecompiledFunctionsToPreSheafCategory",
+        [ IsCapCategory, IsCapCategory, IsPreSheafCategory ] );
+
+##
 DeclareAttribute( "YonedaEmbeddingDataOfSourceCategory",
         IsPreSheafCategoryOfFpEnrichedCategory );
 

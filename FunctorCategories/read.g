@@ -10,12 +10,16 @@ ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversPrecompi
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversAsCCCPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversAsCCCPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
+
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsPrecompiled.gi");
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfFreeAlgebroidInCategoryOfRowsPrecompiled.gi");
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfAlgebroidWithRelationsInCategoryOfRowsPrecompiled.gi");
+fi;
+
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFreeAlgebroidInCategoryOfRowsPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfAlgebroidWithRelationsInCategoryOfRowsPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfAlgebroidFromDataTablesInCategoryOfRowsPrecompiled.gi");
 
 ReadPackage( "FunctorCategories", "gap/Tools.gi");
@@ -24,8 +28,15 @@ ReadPackage( "FunctorCategories", "gap/ToolsMethodRecordInstallations.autogen.gi
 ReadPackage( "FunctorCategories", "gap/ToolsDerivedMethods.gi");
 
 ReadPackage( "FunctorCategories", "gap/PreSheaves.gi");
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/PreSheaves.gi");
+fi;
+
 ReadPackage( "FunctorCategories", "gap/HomStructure.gi");
 ReadPackage( "FunctorCategories", "gap/FunctorCategories.gi");
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/FunctorCategories.gi");
+fi;
 ReadPackage( "FunctorCategories", "gap/CoPreSheaves.gi");
 ReadPackage( "FunctorCategories", "gap/FiniteCocompletion.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfBouquets.gi");

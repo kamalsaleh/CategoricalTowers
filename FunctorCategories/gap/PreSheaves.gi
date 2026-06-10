@@ -130,55 +130,6 @@ InstallOtherMethod( CreatePreSheaf,
 end );
 
 ##
-InstallMethod( CreatePreSheaf,
-        "for a presheaf category and two lists",
-        [ IsPreSheafCategory and HasRangeCategoryOfHomomorphismStructure, IsList, IsList ],
-        
-  function ( PSh, dims, matrices )
-    local kmat, objects, morphisms, k, mat;
-    
-    if dims = [ ] then
-        Error( "the list of dimensions is empty\n" );
-    elif not IsInt( dims[1] ) then
-        Error( "expecting a list of integers as the second argument but received ", dims, "\n" );
-    fi;
-    
-    kmat := RangeCategoryOfHomomorphismStructure( PSh );
-    
-    if not ( IsMatrixCategory( kmat ) or IsCategoryOfRows( kmat ) ) then
-        TryNextMethod( );
-    fi;
-    
-    objects := List( dims, dim -> dim / kmat );
-    
-    morphisms := SetOfGeneratingMorphisms( Source( PSh ) );
-    
-    k := CommutativeSemiringOfLinearCategory( kmat );
-    
-    mat :=
-      function ( m )
-        local source, target;
-        
-        source := VertexIndex( UnderlyingVertex( Source( morphisms[m] ) ) );
-        target := VertexIndex( UnderlyingVertex( Target( morphisms[m] ) ) );
-        
-        if IsHomalgMatrix( matrices[m] ) then
-            m := matrices[m];
-        else
-            m := HomalgMatrix( One( k ) * matrices[m], dims[source], dims[target], k );
-        fi;
-        
-        return m / kmat;
-        
-    end;
-    
-    morphisms := List( [ 1 .. Length( morphisms ) ], mat );
-    
-    return CreatePreSheafByValues( PSh, objects, morphisms );
-    
-end );
-
-##
 InstallOtherMethodForCompilerForCAP( CreatePreSheafMorphismByValues,
         "for a presheaf category, two objects in the presheaf category, and a list",
         [ IsPreSheafCategory, IsObjectInPreSheafCategory, IsList, IsObjectInPreSheafCategory ],
@@ -429,30 +380,131 @@ InstallGlobalFunction( ADD_BASIC_OPERATIONS_TO_PRESHEAF_CATEGORY,
 end );
 
 ##
+InstallMethod( WellDefinednessForObjectsCheckDataOrFail,
+    "for a path category",
+    [ IsPathCategory ],
+
+  function ( B )
+  local is_respected;
+
+  is_respected := function ( PSh, F, relations )
+
+      return true;
+
+  end;
+
+  return Pair( [ ], is_respected );
+
+end );
+
+##
+InstallMethod( WellDefinednessForObjectsCheckDataOrFail,
+    "for a quotient of a path category",
+    [ IsQuotientOfPathCategory ],
+
+  function ( B )
+  local relations, is_respected;
+
+  relations := DefiningRelations( OppositeOfPresentedCategory( B ) );
+  is_respected := function ( PSh, F, relations )
+      local D, values;
+
+      D := Target( PSh );
+      values := ValuesOfPreSheaf( F );
+      F := CapFunctor( AmbientCategory( OppositeOfSource( PSh ) ), values[1], values[2], D );
+
+      return ForAll( relations, m -> IsCongruentForMorphisms( D, F( m[1] ), F( m[2] ) ) );
+
+  end;
+
+  return Pair( relations, is_respected );
+
+end );
+
+##
+InstallMethod( WellDefinednessForObjectsCheckDataOrFail,
+    "for an algebroid from data tables",
+    [ IsAlgebroidFromDataTables ],
+
+  function ( B )
+  local pairs, is_respected;
+
+  pairs := IndicesPairsOfCompatibleMorphisms( UnderlyingQuiver( B ) );
+  is_respected := function ( PSh, F, pairs )
+      local B, D, generating_morphisms;
+
+      B := Source( PSh );
+      D := Target( PSh );
+      generating_morphisms := SetOfGeneratingMorphisms( B );
+
+      return ForAll( pairs, p -> IsCongruentForMorphisms( D,
+                     F( PreCompose( B, generating_morphisms[p[1]], generating_morphisms[p[2]] ) ),
+                     PostCompose( D, F( generating_morphisms[p[1]] ), F( generating_morphisms[p[2]] ) ) ) );
+
+  end;
+
+  return Pair( pairs, is_respected );
+
+end );
+
+##
+InstallMethod( WellDefinednessForObjectsCheckDataOrFail,
+    "for a category with relations among generating morphisms",
+    [ IsCapCategory and HasRelationsAmongGeneratingMorphisms ],
+
+  function ( B )
+  local relations, is_respected;
+
+  relations := RelationsAmongGeneratingMorphisms( B );
+  is_respected := function ( PSh, F, relations )
+      local D, on_mors, is_equal;
+
+      D := Target( PSh );
+      on_mors := ValuesOfPreSheaf( F )[2];
+
+      is_equal :=
+      function( pair )
+
+        if IsEmpty( pair[1] ) and IsEmpty( pair[2] ) then
+          Error( "both lists in the relation are empty\n" );
+        elif IsEmpty( pair[2] ) then
+          return IsOne( PreComposeList( D, List( Reversed( pair[1] ), i -> on_mors[1 + i] ) ) );
+        elif IsEmpty( pair[1] ) then
+          return IsOne( PreComposeList( D, List( Reversed( pair[2] ), i -> on_mors[1 + i] ) ) );
+        fi;
+
+        return IsCongruentForMorphisms( D,
+               PreComposeList( D, List( Reversed( pair[1] ), i -> on_mors[1 + i] ) ),
+               PreComposeList( D, List( Reversed( pair[2] ), i -> on_mors[1 + i] ) ) );
+
+      end;
+
+      return ForAll( relations, p -> is_equal( p ) );
+
+  end;
+
+  return Pair( relations, is_respected );
+
+end );
+
+##
+InstallMethod( WellDefinednessForObjectsCheckDataOrFail,
+    "for a category",
+    [ IsCapCategory ],
+
+  function ( B )
+    
+    return fail;
+
+end );
+
+##
 InstallGlobalFunction( ADD_FUNCTIONS_FOR_WELL_DEFINED_TO_PRESHEAF_CATEGORY,
   function ( PSh )
-    local B, D, B_op, kq, A, relations;
+    local B, D;
     
     B := Source( PSh );
     D := Target( PSh );
-    B_op := OppositeOfSource( PSh );
-    
-    if IsFpCategoryDefinedByQuiverAlgebra( B ) then
-        kq := UnderlyingQuiverAlgebra( B_op );
-        relations := RelationsOfFpCategoryDefinedByQuiverAlgebra( B_op );
-        A := kq;
-        if IsQuotientOfPathAlgebra( A ) then
-            A := PathAlgebra( A );
-        fi;
-        relations := List( relations, a -> List( a, ai -> PathAsAlgebraElement( A, ai ) ) );
-    elif IsQuotientOfPathCategory( B ) then
-        relations := DefiningRelations( B_op );
-    elif IsAlgebroid( B ) then
-        relations := RelationsOfAlgebroid( B_op );
-        relations := List( relations, UnderlyingQuiverAlgebraElement );
-    else
-        relations := fail;
-    fi;
     
     AddIsWellDefinedForMorphisms( PSh,
       function ( PSh, eta )
@@ -483,13 +535,13 @@ InstallGlobalFunction( ADD_FUNCTIONS_FOR_WELL_DEFINED_TO_PRESHEAF_CATEGORY,
                  end );
         
     end );
+
+    if WellDefinednessForObjectsCheckDataOrFail( B ) <> fail then
+        
+        AddIsWellDefinedForObjects( PSh,
+          function ( PSh, F )
+            local B, D, objects, generating_morphisms, is_well_defined_data;
     
-    if IsFpCategoryDefinedByQuiverAlgebra( B ) then
-        
-        AddIsWellDefinedForObjects( PSh,
-          function ( PSh, F )
-            local B, D, objects, generating_morphisms;
-            
             B := Source( PSh );
             D := Target( PSh );
             
@@ -506,171 +558,9 @@ InstallGlobalFunction( ADD_FUNCTIONS_FOR_WELL_DEFINED_TO_PRESHEAF_CATEGORY,
                 return false;
             fi;
             
-            F := UnderlyingCapTwoCategoryCell( F );
+            is_well_defined_data := WellDefinednessForObjectsCheckDataOrFail( B );
             
-            return ForAll( relations, m -> IsCongruentForMorphisms( D, ApplyToQuiverAlgebraElement( F, m[1] ), ApplyToQuiverAlgebraElement( F, m[2] ) ) );
-            
-        end );
-        
-    elif IsPathCategory( B ) then
-        
-        AddIsWellDefinedForObjects( PSh,
-          function ( PSh, F )
-            local B, D, objects, generating_morphisms;
-            
-            B := Source( PSh );
-            D := Target( PSh );
-            
-            objects := SetOfObjects( B );
-            generating_morphisms := SetOfGeneratingMorphisms( B );
-            
-            if not ForAll( objects, o -> IsWellDefinedForObjects( D, F( o ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsWellDefinedForMorphisms( D, F( m ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Target( m ) ), Source( F( m ) ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Source( m ) ), Target( F( m ) ) ) ) then
-                return false;
-            fi;
-            
-            return true;
-            
-        end );
-        
-    elif IsQuotientOfPathCategory( B ) then
-        
-        AddIsWellDefinedForObjects( PSh,
-          function ( PSh, F )
-            local B, D, objects, generating_morphisms;
-            
-            B := Source( PSh );
-            D := Target( PSh );
-            
-            objects := SetOfObjects( B );
-            generating_morphisms := SetOfGeneratingMorphisms( B );
-            
-            if not ForAll( objects, o -> IsWellDefinedForObjects( D, F( o ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsWellDefinedForMorphisms( D, F( m ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Target( m ) ), Source( F( m ) ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Source( m ) ), Target( F( m ) ) ) ) then
-                return false;
-            fi;
-
-            F := ValuesOfPreSheaf( F );
-            
-            F := CapFunctor( AmbientCategory( OppositeOfSource( PSh ) ), F[1], F[2], Target( PSh ) );
-            
-            return ForAll( relations, m -> IsCongruentForMorphisms( D, F( m[1] ), F( m[2] ) ) );
-            
-        end );
-        
-    elif IsAlgebroid( B ) then
-        
-        AddIsWellDefinedForObjects( PSh,
-          function ( PSh, F )
-            local B, D, objects, generating_morphisms;
-            
-            B := Source( PSh );
-            D := Target( PSh );
-            
-            objects := SetOfObjects( B );
-            generating_morphisms := SetOfGeneratingMorphisms( B );
-            
-            if not ForAll( objects, o -> IsWellDefinedForObjects( D, F( o ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsWellDefinedForMorphisms( D, F( m ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Target( m ) ), Source( F( m ) ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Source( m ) ), Target( F( m ) ) ) ) then
-                return false;
-            fi;
-            
-            F := UnderlyingCapTwoCategoryCell( F );
-            
-            return ForAll( relations, m -> IsZeroForMorphisms( D, ApplyToQuiverAlgebraElement( F, m ) ) );
-            
-        end );
-        
-    elif IsAlgebroidFromDataTables( B ) then
-
-        AddIsWellDefinedForObjects( PSh,
-          function ( PSh, F )
-            local B, D, objects, generating_morphisms, pairs;
-            
-            B := Source( PSh );
-            D := Target( PSh );
-            
-            objects := SetOfObjects( B );
-            generating_morphisms := SetOfGeneratingMorphisms( B );
-            
-            if not ForAll( objects, o -> IsWellDefinedForObjects( D, F( o ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsWellDefinedForMorphisms( D, F( m ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Target( m ) ), Source( F( m ) ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Source( m ) ), Target( F( m ) ) ) ) then
-                return false;
-            fi;
-            
-            pairs := IndicesPairsOfCompatibleMorphisms( UnderlyingQuiver( B ) );
-            
-            return ForAll( pairs, p -> IsCongruentForMorphisms( D,
-                                                F( PreCompose( B, generating_morphisms[p[1]], generating_morphisms[p[2]] ) ),
-                                                PostCompose( D, F( generating_morphisms[p[1]] ), F( generating_morphisms[p[2]] ) ) ) );
-            
-        end );
-        
-    elif IsCategoryFromNerveData( B ) or
-      IsCategoryFromDataTables( B ) then
-        
-        AddIsWellDefinedForObjects( PSh,
-          function ( PSh, F )
-            local B, D, objects, generating_morphisms, relations, on_mors, is_equal;
-            
-            B := Source( PSh );
-            D := Target( PSh );
-            
-            objects := SetOfObjects( B );
-            generating_morphisms := SetOfGeneratingMorphisms( B );
-            
-            if not ForAll( objects, o -> IsWellDefinedForObjects( D, F( o ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsWellDefinedForMorphisms( D, F( m ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Target( m ) ), Source( F( m ) ) ) ) then
-                return false;
-            elif not ForAll( generating_morphisms, m -> IsEqualForObjects( D, F( Source( m ) ), Target( F( m ) ) ) ) then
-                return false;
-            fi;
-            
-            relations := RelationsAmongGeneratingMorphisms( B );
-            
-            on_mors := ValuesOfPreSheaf( F )[2];
-            
-            is_equal :=
-              function( pair )
-                
-                if IsEmpty( pair[1] ) and IsEmpty( pair[2] ) then
-                    Error( "both lists in the relation are empty\n" );
-                elif IsEmpty( pair[2] ) then
-                    return IsOne( PreComposeList( D, List( Reversed( pair[1] ), i -> on_mors[1 + i] ) ) );
-                elif IsEmpty( pair[1] ) then
-                    return IsOne( PreComposeList( D, List( Reversed( pair[2] ), i -> on_mors[1 + i] ) ) );
-                fi;
-                
-                return IsCongruentForMorphisms( D,
-                               PreComposeList( D, List( Reversed( pair[1] ), i -> on_mors[1 + i] ) ),
-                               PreComposeList( D, List( Reversed( pair[2] ), i -> on_mors[1 + i] ) ) );
-                
-            end;
-            
-            return ForAll( relations, is_equal );
+            return is_well_defined_data[2]( PSh, F, is_well_defined_data[1] );
             
         end );
         
@@ -1090,6 +980,45 @@ InstallGlobalFunction( ADD_MONOIDAL_STRUCTURE_TO_PRESHEAF_CATEGORY,
         return CreatePreSheafByFunctions( PSh, presheaf_on_objects, presheaf_on_morphisms );
         
     end );
+    
+end );
+
+##
+InstallMethod( AdditionalMonoidalPreSheafOperationNames,
+    "for a category",
+    [ IsCapCategory ],
+
+  function ( B )
+
+    return [ ];
+
+end );
+
+##
+InstallMethod( AddAdditionalPrecompiledFunctionsToPreSheafCategory,
+    "for a category, a category, and a presheaf category",
+    [ IsCapCategory, IsCapCategory, IsPreSheafCategory ],
+    
+  function ( B, D, PSh )
+    
+    return;
+    
+end );
+
+##
+InstallMethod( AddAdditionalPrecompiledFunctionsToPreSheafCategory,
+    "for a data-tables source, a category, and a presheaf category",
+    [ IsCategoryFromDataTables, IsCapCategory, IsPreSheafCategory ],
+    
+  function ( B, D, PSh )
+    
+    if not IsSkeletalCategoryOfFiniteSets( D ) then
+        return;
+    fi;
+    
+    ADD_FUNCTIONS_FOR_PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsPrecompiled( PSh );
+    
+    ADD_FUNCTIONS_FOR_PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsSubobjectClassifierPrecompiled( PSh );
     
 end );
 
@@ -1687,21 +1616,13 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
     list_of_operations_to_install := Intersection( list_of_operations_to_install, list_of_operations );
     
     if HasIsMonoidalCategory( D ) and IsMonoidalCategory( D ) then
-        if HasCounit( B_op ) and HasComultiplication( B_op ) then
+      if HasIsLinearClosureOfACategory( B ) and IsLinearClosureOfACategory( B ) then
             
-            Append( list_of_operations_to_install, CAP_INTERNAL_METHOD_NAME_LIST_FOR_MONOIDAL_PRESHEAF_CATEGORY );
+        Append( list_of_operations_to_install, CAP_INTERNAL_METHOD_NAME_LIST_FOR_MONOIDAL_PRESHEAF_CATEGORY );
             
-            if HasAntipode( B_op ) then
-                
-                Append( list_of_operations_to_install, CAP_INTERNAL_METHOD_NAME_LIST_FOR_MONOIDAL_PRESHEAF_CATEGORY_WITH_DUALS );
-                
-            fi;
-            
-        elif HasIsLinearClosureOfACategory( B ) and IsLinearClosureOfACategory( B ) then
-            
-            Append( list_of_operations_to_install, CAP_INTERNAL_METHOD_NAME_LIST_FOR_MONOIDAL_PRESHEAF_CATEGORY );
-            
-        fi;
+      fi;
+
+      Append( list_of_operations_to_install, AdditionalMonoidalPreSheafOperationNames( B_op ) );
         
         list_of_operations_to_install := Intersection( list_of_operations_to_install, ListInstalledOperationsOfCategory( D ) );
         
@@ -1859,19 +1780,8 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
     fi;
     
     ADD_BASIC_OPERATIONS_TO_PRESHEAF_CATEGORY( PSh );
-    
-    if ( IsFpCategoryDefinedByQuiverAlgebra( B ) and HasIsFinitelyPresentedCategory( B ) and IsFinitelyPresentedCategory( B ) ) or
-       IsPathCategory( B ) or
-       IsQuotientOfPathCategory( B ) or
-       IsCategoryFromNerveData( B ) or
-       IsCategoryFromDataTables( B ) or
-       (HasIsFiniteCategory and IsFiniteCategory)( B ) or
-       ( IsAlgebroid( B ) and HasIsFinitelyPresentedLinearCategory( B ) and IsFinitelyPresentedLinearCategory( B ) ) or
-       IsAlgebroidFromDataTables( B ) then
       
-      ADD_FUNCTIONS_FOR_WELL_DEFINED_TO_PRESHEAF_CATEGORY( PSh );
-        
-    fi;
+    ADD_FUNCTIONS_FOR_WELL_DEFINED_TO_PRESHEAF_CATEGORY( PSh );
     
     if HasRangeCategoryOfHomomorphismStructure( D ) and
        MissingOperationsForConstructivenessOfCategory( D, "IsEquippedWithHomomorphismStructure" ) = [ ] then
@@ -2241,56 +2151,18 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
         
     fi;
     
-    if ForAny( [ IsMatrixCategory, IsCategoryOfRows ], is -> is( D ) ) and
-          ( ( HasUnderlyingQuiverAlgebra( B ) and IsAdmissibleQuiverAlgebra( UnderlyingQuiverAlgebra( B ) ) ) or
-            ( HasIsAdmissibleAlgebroid( B ) and IsAdmissibleAlgebroid( B ) ) ) then
+    if HasIsAdmissibleAlgebroid( B ) and IsAdmissibleAlgebroid( B ) then
         
         ADD_ADMISSIBLE_ALGEBROID_STRUCTURE_TO_PRESHEAF_CATEGORY( PSh );
         
     fi;
-
     
     AddToToDoList( ToDoListEntry( [ [ PSh, "IsFinalized", true ] ], function ( ) IdentityFunctor( PSh )!.UnderlyingFunctor := IdentityFunctor( D ); end ) );
     
     #if false then
     if CAP_NAMED_ARGUMENTS.no_precompiled_code <> true then
         
-        if IsFpCategoryDefinedByQuiverAlgebra( B ) and IsSkeletalCategoryOfFiniteSets( D ) then
-            
-            ADD_FUNCTIONS_FOR_PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsPrecompiled( PSh );
-            
-            ADD_FUNCTIONS_FOR_PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsSubobjectClassifierPrecompiled( PSh );
-            
-        elif IsCategoryFromDataTables( B ) and IsSkeletalCategoryOfFiniteSets( D ) then
-            
-            ADD_FUNCTIONS_FOR_PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsPrecompiled( PSh );
-            
-            ADD_FUNCTIONS_FOR_PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsSubobjectClassifierPrecompiled( PSh );
-            
-        elif IsAlgebroid( B ) then
-            
-            commutative_semiring := CommutativeSemiringOfLinearCategory( D );
-            
-            if IsCategoryOfRows( D ) and
-               IsHomalgRing( commutative_semiring ) and
-               HasIsFieldForHomalg( commutative_semiring ) and IsFieldForHomalg( commutative_semiring ) and
-               not B!.over_Z then
-                
-                if IsQuotientOfPathAlgebra( UnderlyingQuiverAlgebra( B ) ) or
-                   ( HasIsMonoidalCategory( D ) and IsMonoidalCategory( D ) and
-                     HasCounit( B ) and HasComultiplication( B ) ) then
-                    
-                    ADD_FUNCTIONS_FOR_PreSheavesOfAlgebroidWithRelationsInCategoryOfRowsPrecompiled( PSh );
-                    
-                else
-                    
-                    ADD_FUNCTIONS_FOR_PreSheavesOfFreeAlgebroidInCategoryOfRowsPrecompiled( PSh );
-                    
-                fi;
-                
-            fi;
-            
-        fi;
+        AddAdditionalPrecompiledFunctionsToPreSheafCategory( B, D, PSh );
         
     fi;
     
@@ -2301,28 +2173,6 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
     return PSh;
     
 end ) );
-
-##
-InstallMethodWithCache( PreSheaves,
-        "for a f.p. category and a category",
-        [ IsFpCategoryDefinedByQuiverAlgebra, IsCapCategory ],
-        
-  function ( B, D )
-    
-    return PreSheavesOfFpEnrichedCategory( B, D );
-    
-end );
-
-##
-InstallMethodWithCache( PreSheaves,
-        "for an algebroid and a category",
-        [ IsAlgebroid, IsCapCategory ],
-        
-  function ( B, D )
-    
-    return PreSheavesOfFpEnrichedCategory( B, D );
-    
-end );
 
 ##
 InstallMethodWithCache( PreSheaves,
@@ -2358,36 +2208,6 @@ InstallMethodWithCache( PreSheaves,
     fi;
     
     return PreSheavesOfFpEnrichedCategory( B, D );
-    
-end );
-
-##
-InstallMethodWithCache( PreSheaves,
-        "for a CAP category and a homalg field",
-        [ IsAlgebroid, IsHomalgRing and IsFieldForHomalg ],
-        
-  function ( B, k )
-    local kmat, PSh;
-    
-    if HasRangeCategoryOfHomomorphismStructure( B ) then
-        
-        kmat := RangeCategoryOfHomomorphismStructure( B );
-        
-    else
-        
-        kmat := CategoryOfRows( k );
-        
-    fi;
-    
-    Assert( 0, IsMatrixCategory( kmat ) or IsCategoryOfRows( kmat ) );
-    
-    CapCategorySwitchLogicOn( kmat );
-    
-    PSh := PreSheaves( B, kmat );
-    
-    CapCategorySwitchLogicOn( PSh );
-    
-    return PSh;
     
 end );
 

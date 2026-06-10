@@ -74,6 +74,13 @@ DeclareProperty( "IsFinitelyPresentedLinearCategory",
 AddCategoricalProperty( [ "IsFinitelyPresentedLinearCategory", "IsFinitelyPresentedLinearCategory" ] );
 
 #! @Description
+#!  Check whether the algebroid <A>A</A> is admissible.
+#! @Arguments A
+#! @Returns true or false
+DeclareProperty( "IsAdmissibleAlgebroid",
+        IsAlgebroid );
+
+#! @Description
 #!  Check whether the algebroid <A>A</A> is commutative.
 #! @Arguments A
 #! @Returns true or false

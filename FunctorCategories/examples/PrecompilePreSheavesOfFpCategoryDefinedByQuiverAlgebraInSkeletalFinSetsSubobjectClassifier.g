@@ -6,10 +6,13 @@
 
 # #@if ValueOption( "no_precompiled_code" ) <> true
 
+LoadPackage( "Algebroids", false );
+#! true
+
 LoadPackage( "FunctorCategories", false );
 #! true
 
-LoadPackage( "CompilerForCAP", ">= 2025.11-01", false );
+LoadPackage( "CompilerForCAP", ">= 2026.06-05", false );
 #! true
 
 ReadPackageOnce( "FinSetsForCAP", "gap/CompilerLogic.gi" );
@@ -33,11 +36,12 @@ CapJitPrecompileCategoryAndCompareResult(
     given_arguments,
     package_name,
     compiled_category_name
-   : operations := [ "SubobjectClassifier",
+   : subdirectory := "with_algebroids/precompiled_categories",
+     operations := [ "SubobjectClassifier",
                      ]
 );;
 
-PreSheavesOfFreeCategoryInSkeletalFinSetsSubobjectClassifierPrecompiled( given_arguments[1] );
+PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsSubobjectClassifierPrecompiled( given_arguments[1] );
 #! PreSheaves( FreeCategory( RightQuiver( "q(2)[m:1->2]" ) ), SkeletalFinSets )
 
 cat := PreSheaves( free_category_of_quiver( given_arguments[1], SkeletalFinSets ) );
