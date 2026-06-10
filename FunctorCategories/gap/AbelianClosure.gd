@@ -59,6 +59,7 @@ DeclareAttribute( "EmbeddingOfUnderlyingCategory",
 #
 ####################################
 
+if false then
 #! @Description
 #!  Construct an Abelian closure category.
 #! @Returns a &CAP; category
@@ -69,3 +70,4 @@ DeclareOperation( "AbelianClosure",
 
 DeclareOperationWithCache( "AbelianClosure",
         [ IsAlgebroid, IsCapCategory ] );
+fi;

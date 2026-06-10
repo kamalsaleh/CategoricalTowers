@@ -28,11 +28,13 @@ DeclareAttribute( "NakayamaLeftAdjointData",
 DeclareOperation( "NakayamaLeftAdjoint",
         [ IsPreSheafCategory, IsCoPreSheafCategory ] );
 
+if false then
 #! @Arguments B
 #! @Group NakayamaLeftAdjoint
 DeclareAttribute( "NakayamaLeftAdjoint",
         IsAlgebroid );
 #! @InsertChunk NakayamaLeftAdjoint
+fi;
 
 ##
 DeclareAttribute( "NakayamaRightAdjointData",
@@ -46,11 +48,13 @@ DeclareAttribute( "NakayamaRightAdjointData",
 DeclareOperation( "NakayamaRightAdjoint",
         [ IsCoPreSheafCategory, IsPreSheafCategory ] );
 
+if false then
 #! @Arguments B
 #! @Group NakayamaRightAdjoint
 DeclareAttribute( "NakayamaRightAdjoint",
         IsAlgebroid );
 #! @InsertChunk NakayamaRightAdjoint
+fi;
 
 ##
 DeclareOperation( "IsbellLeftAdjointData",

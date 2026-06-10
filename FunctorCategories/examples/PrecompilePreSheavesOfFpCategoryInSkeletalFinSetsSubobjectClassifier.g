@@ -6,6 +6,9 @@
 
 # #@if ValueOption( "no_precompiled_code" ) <> true
 
+LoadPackage( "Algebroids", false );
+#! true
+
 LoadPackage( "FunctorCategories", false );
 #! true
 
@@ -33,7 +36,8 @@ CapJitPrecompileCategoryAndCompareResult(
     given_arguments,
     package_name,
     compiled_category_name
-   : operations := [ "SubobjectClassifier",
+   : subdirectory := "with_algebroids/precompiled_categories",
+     operations := [ "SubobjectClassifier",
                      ]
 );;
 

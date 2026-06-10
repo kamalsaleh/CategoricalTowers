@@ -10,12 +10,16 @@ ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversPrecompi
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversAsCCCPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversAsCCCPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFpCategoryInSkeletalFinSetsPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFpCategoryInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
+
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfFpCategoryInSkeletalFinSetsPrecompiled.gi");
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfFpCategoryInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfFreeAlgebroidInCategoryOfRowsPrecompiled.gi");
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/precompiled_categories/PreSheavesOfAlgebroidWithRelationsInCategoryOfRowsPrecompiled.gi");
+fi;
+
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFreeAlgebroidInCategoryOfRowsPrecompiled.gi");
-ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfAlgebroidWithRelationsInCategoryOfRowsPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfAlgebroidFromDataTablesInCategoryOfRowsPrecompiled.gi");
 
 ReadPackage( "FunctorCategories", "gap/Tools.gi");
