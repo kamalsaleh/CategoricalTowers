@@ -803,7 +803,18 @@ INSTALL_DOT_METHOD( IsPathCategory );
 # =#
 
 ##
-InstallMethod( OppositePathCategory,
+InstallOtherMethod( OppositeOfPresentedCategory,
+        "for a category that was created as an opposite category",
+        [ WasCreatedAsOppositeCategory ],
+        
+  function( C )
+    
+    return OppositeCategory( C );
+    
+end );
+
+##
+InstallMethod( OppositeOfPresentedCategory,
         "for a path category",
         [ IsPathCategory ],
         
@@ -818,11 +829,18 @@ InstallMethod( OppositePathCategory,
         C_op := PathCategory( quiver_op );
     fi;
     
-    SetOppositePathCategory( C_op, C );
+    SetOppositeOfPresentedCategory( C_op, C );
     
     return C_op;
     
 end );
+
+##
+InstallMethod( OppositePathCategory,
+        "for a path category",
+        [ IsPathCategory ],
+        
+  OppositeOfPresentedCategory );
 
 ##
 InstallOtherMethod( CapFunctor,

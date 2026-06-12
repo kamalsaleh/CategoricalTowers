@@ -781,7 +781,7 @@ InstallMethod( OppositeNerveData,
 end );
 
 ##
-InstallMethod( OppositeCategoryFromNerveData,
+InstallMethod( OppositeOfPresentedCategory,
         "for a category from nerve data",
         [ IsCategoryFromNerveData ],
         
@@ -811,11 +811,18 @@ InstallMethod( OppositeCategoryFromNerveData,
                          labels := Cop!.labels,
                          properties := ListKnownCategoricalProperties( Cop ) ) );
     
-    SetOppositeCategoryFromNerveData( C_op, C );
+    SetOppositeOfPresentedCategory( C_op, C );
     
     return C_op;
     
 end );
+
+##
+InstallMethod( OppositeCategoryFromNerveData,
+        "for a category from nerve data",
+        [ IsCategoryFromNerveData ],
+        
+  OppositeOfPresentedCategory );
 
 ##
 InstallMethod( DataTablesOfCategory,

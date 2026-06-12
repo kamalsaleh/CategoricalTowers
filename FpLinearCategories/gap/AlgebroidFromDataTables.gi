@@ -1099,7 +1099,7 @@ InstallMethod( IsAdmissibleAlgebroid,
     
     q := UnderlyingQuiver( A );
     
-    A_op := OppositeAlgebroid( A );
+    A_op := OppositeOfPresentedCategory( A );
     
     if HasIsAdmissibleAlgebroid( A_op ) then
         
@@ -1184,7 +1184,7 @@ end );
 ####################################
 
 ##
-InstallOtherMethod( OppositeAlgebroid,
+InstallMethod( OppositeOfPresentedCategory,
           [ IsAlgebroidFromDataTables ],
   
   function ( A )
@@ -1199,7 +1199,7 @@ InstallOtherMethod( OppositeAlgebroid,
     
     A_op := AlgebroidFromDataTables( data_tables : colors := A!.colors, range_of_HomStructure := RangeCategoryOfHomomorphismStructure( A ) );
     
-    SetOppositeAlgebroid( A_op, A );
+    SetOppositeOfPresentedCategory( A_op, A );
     
     if HasIsAdmissibleAlgebroid( A ) then
         SetIsAdmissibleAlgebroid( A_op, IsAdmissibleAlgebroid( A ) );
@@ -1208,6 +1208,12 @@ InstallOtherMethod( OppositeAlgebroid,
     return A_op;
     
 end );
+
+##
+InstallMethod( OppositeAlgebroid,
+          [ IsAlgebroidFromDataTables ],
+          
+  OppositeOfPresentedCategory );
 
 ####################################
 #
