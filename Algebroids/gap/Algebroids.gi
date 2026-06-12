@@ -2175,7 +2175,7 @@ InstallMethod( CapFunctor,
 end );
 
 ##
-InstallMethod( OppositeAlgebroid,
+InstallMethod( OppositeOfPresentedCategory,
         "for an algebroid",
         [ IsAlgebroid and HasUnderlyingQuiver ],
         
@@ -2201,7 +2201,7 @@ InstallMethod( OppositeAlgebroid,
                     over_Z : range_of_HomStructure := range_category
                     );
     
-    SetOppositeAlgebroid( A_op, A );
+    SetOppositeOfPresentedCategory( A_op, A );
     
     if HasIsLinearClosureOfACategory( A ) then
         SetIsLinearClosureOfACategory( A_op, IsLinearClosureOfACategory( A ) );
@@ -2210,6 +2210,13 @@ InstallMethod( OppositeAlgebroid,
     return A_op;
     
 end );
+
+##
+InstallMethod( OppositeAlgebroid,
+        "for an algebroid",
+        [ IsAlgebroid and HasUnderlyingQuiver ],
+        
+  OppositeOfPresentedCategory );
 
 ####################################
 #

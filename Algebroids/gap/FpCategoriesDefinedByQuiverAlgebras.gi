@@ -1618,8 +1618,8 @@ InstallMethod( CapFunctor,
 end );
 
 ##
-InstallMethod( OppositeFpCategoryDefinedByQuiverAlgebra,
-        "for a free category",
+InstallMethod( OppositeOfPresentedCategory,
+        "for a f.p. category",
         [ IsFpCategoryDefinedByQuiverAlgebra and HasRelationsOfFpCategoryDefinedByQuiverAlgebra ],
         
   function( C )
@@ -1639,11 +1639,18 @@ InstallMethod( OppositeFpCategoryDefinedByQuiverAlgebra,
                     OppositeQuiver( UnderlyingQuiver( C ) ),
                     relations : range_of_HomStructure := range_category );
     
-    SetOppositeFpCategoryDefinedByQuiverAlgebra( C_op, C );
+    SetOppositeOfPresentedCategory( C_op, C );
     
     return C_op;
     
 end );
+
+##
+InstallMethod( OppositeFpCategoryDefinedByQuiverAlgebra,
+        "for a f.p. category",
+        [ IsFpCategoryDefinedByQuiverAlgebra ],
+        
+  OppositeOfPresentedCategory );
 
 ##
 InstallMethod( CategoryFromNerveData,
@@ -1673,7 +1680,7 @@ InstallMethod( SieveFunctor,
     # asserts that IsSkeletalCategoryOfFiniteSets( RangeCategoryOfHomomorphismStructure( B ) )
     Sieves := TruthMorphismOfTrueToSieveFunctorAndEmbedding( B );
     
-    Bop := OppositeFpCategoryDefinedByQuiverAlgebra( B );
+    Bop := OppositeOfPresentedCategory( B );
     
     sFinSets := RangeCategoryOfHomomorphismStructure( B );
     
@@ -1691,7 +1698,7 @@ InstallMethod( TruthMorphismOfTrueToSieveFunctor,
     # asserts that IsSkeletalCategoryOfFiniteSets( RangeCategoryOfHomomorphismStructure( B ) )
     Sieves := TruthMorphismOfTrueToSieveFunctorAndEmbedding( B );
     
-    Bop := OppositeFpCategoryDefinedByQuiverAlgebra( B );
+    Bop := OppositeOfPresentedCategory( B );
     
     sFinSets := RangeCategoryOfHomomorphismStructure( B );
     
@@ -1717,7 +1724,7 @@ InstallMethod( EmbeddingOfSieveFunctor,
     # asserts that IsSkeletalCategoryOfFiniteSets( RangeCategoryOfHomomorphismStructure( B ) )
     Sieves := TruthMorphismOfTrueToSieveFunctorAndEmbedding( B );
     
-    Bop := OppositeFpCategoryDefinedByQuiverAlgebra( B );
+    Bop := OppositeOfPresentedCategory( B );
     
     sFinSets := RangeCategoryOfHomomorphismStructure( B );
     

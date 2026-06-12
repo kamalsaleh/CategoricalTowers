@@ -87,6 +87,8 @@ DeclareOperation( "AssignSetOfGeneratingMorphisms", [ IsPathCategory, IsString ]
 #!  Returns the opposite category of the path category <A>C</A>.
 #! @Arguments C
 #! @Returns a path category
+DeclareAttribute( "OppositeOfPresentedCategory", IsCapCategory );
+
 DeclareAttribute( "OppositePathCategory", IsPathCategory );
 
 #! @Arguments C
