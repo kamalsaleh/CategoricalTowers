@@ -105,9 +105,9 @@ Dependencies := rec(
                    [ "FiniteCocompletions", ">= 2026.05-10" ],
                    [ "SubcategoriesForCAP", ">= 2026.04-01" ],
                    [ "SliceCategories", ">= 2026.04-01" ],
+                   [ "Algebroids", ">= 2026.04-01" ],
                    ],
   SuggestedOtherPackages := [
-                   [ "Algebroids", ">= 2026.04-01" ],
                    ],
   ExternalConditions := [ ],
 ),

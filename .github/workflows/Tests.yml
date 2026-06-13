@@ -45,7 +45,7 @@ jobs:
         run: |
           cp ./CategoricalTowers/dev/ci_gaprc /home/gap/.gap/gaprc
           git clone --depth 1 -vv https://github.com/homalg-project/homalg_project.git
-          git clone --depth 1 -vv https://github.com/homalg-project/CAP_project.git
+          git clone --depth 1 -vv https://github.com/kamalsaleh/CAP_project.git
           git clone --depth 1 -vv https://github.com/homalg-project/QPA2.git
           git clone --depth 1 -vv https://github.com/homalg-project/FinSetsForCAP.git
           git clone --depth 1 -vv https://github.com/homalg-project/ArangoDBInterface.git
