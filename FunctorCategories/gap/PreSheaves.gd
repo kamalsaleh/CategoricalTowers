@@ -281,9 +281,6 @@ CapJitAddTypeSignature( "PreSheavesOfFpEnrichedCategory", [ IsCapCategory, IsCap
 ## range category supports the corresponding operation.
 DeclareGlobalFunction( "ADD_BASIC_OPERATIONS_TO_PRESHEAF_CATEGORY" );
 
-## Returns the opposite category of an fp-enriched category B.
-DeclareGlobalFunction( "OppositeOfFpEnrichedCategory" );
-
 ## Installs IsWellDefinedForMorphisms, IsWellDefinedForObjects (B-type-specific),
 ## IsEqualForObjects, IsEqualForMorphisms, and IsCongruentForMorphisms.
 ## The second argument `relations` contains the defining relations of the source

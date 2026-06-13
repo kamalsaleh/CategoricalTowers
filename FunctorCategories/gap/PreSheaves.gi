@@ -1240,6 +1240,18 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
           skip, commutative_semiring, properties, supports_empty_limits, prop, option_record,
           PSh, H;
     
+    if not (HasIsObjectFiniteCategory( B ) and IsObjectFiniteCategory( B)) then
+        Error( "the source category must be object-finite" );
+    fi;
+    
+    if not CanCompute( B, "SetOfObjectsOfCategory" ) then
+        Error( "the source category must support computation of the set of objects" );
+    fi;
+
+    if not CanCompute( B, "SetOfGeneratingMorphismsOfCategory" ) then
+        Error( "the source category must support computation of the set of generating morphisms" );
+    fi;
+    
     ##
     name := "PreSheaves( ";
     
@@ -1298,40 +1310,26 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
     ##
     B_op := OppositeOfPresentedCategory( B );
     
-    ##
-    if ( IsFpCategoryDefinedByQuiverAlgebra( B ) and HasIsFinitelyPresentedCategory( B ) and IsFinitelyPresentedCategory( B ) ) or
-       IsCategoryFromNerveData( B ) or
-       IsCategoryFromDataTables( B ) or
-       (HasIsFiniteCategory and IsFiniteCategory)( B ) or
-       ( IsAlgebroid( B ) and HasIsFinitelyPresentedLinearCategory( B ) and IsFinitelyPresentedLinearCategory( B ) ) or
-       IsAlgebroidFromDataTables( B ) then
-        
-        create_func_bool :=
-          function ( name, PSh )
-            return """
-              function( input_arguments... )
-                local L;
-                
-                L := NTuple( number_of_arguments, input_arguments... );
-                
-                ## due to issue https://github.com/homalg-project/CAP_project/issues/802
-                ## the result is not saved if operation_name is called with Target( cat ) as first argument
-                
-                if IsObjectInPreSheafCategory( L[2] ) then
-                    return ForAll( ValuesOfPreSheaf( L[2] )[1], object -> operation_name( object ) );
-                else
-                    return ForAll( ValuesOnAllObjects( L[2] ), object -> operation_name( object ) );
-                fi;
-                
-              end
-              """;
-          end;
-        
-    else
-        
-        create_func_bool := fail;
-        
-    fi;
+    create_func_bool :=
+      function ( name, PSh )
+        return """
+          function( input_arguments... )
+            local L;
+            
+            L := NTuple( number_of_arguments, input_arguments... );
+            
+            ## due to issue https://github.com/homalg-project/CAP_project/issues/802
+            ## the result is not saved if operation_name is called with Target( cat ) as first argument
+            
+            if IsObjectInPreSheafCategory( L[2] ) then
+                return ForAll( ValuesOfPreSheaf( L[2] )[1], object -> operation_name( object ) );
+            else
+                return ForAll( ValuesOnAllObjects( L[2] ), object -> operation_name( object ) );
+            fi;
+            
+          end
+          """;
+    end;
     
     ## e.g., DirectSum, KernelObject
     create_func_object :=
