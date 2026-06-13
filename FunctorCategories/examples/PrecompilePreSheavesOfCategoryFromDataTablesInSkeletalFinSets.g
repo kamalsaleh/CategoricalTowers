@@ -53,10 +53,10 @@ CapJitPrecompileCategoryAndCompareResult(
 );;
 
 PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsPrecompiled( given_arguments[1] );
-#! PreSheaves( PathCategory( FinQuiver( "q(1,2)[m:1->2]" ) ), SkeletalFinSets )
+#! PreSheaves( PathCategory( FinQuiver( "q(1,2)[m:1→2]" ) ), SkeletalFinSets )
 
 cat := PreSheaves( free_category_of_quiver( given_arguments[1], SkeletalFinSets ) );
-#! PreSheaves( PathCategory( FinQuiver( "q(1,2)[m:1->2]" ) ), SkeletalFinSets )
+#! PreSheaves( PathCategory( FinQuiver( "q(1,2)[m:1→2]" ) ), SkeletalFinSets )
 
 cat!.precompiled_functions_added;
 #! true
