@@ -105,6 +105,67 @@ InstallMethodWithCache( PreSheaves,
 end );
 
 ##
+InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
+        "for a finitely presented category defined by a quiver algebra, a presheaf category of it, an object in it, and a CAP morphism",
+        [ IsFpCategoryDefinedByQuiverAlgebra, IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
+        
+  function ( B, PSh, F, morB )
+    local D, pos, F_datum;
+    
+    D := Target( PSh );
+    
+    pos := Position( SetOfGeneratingMorphisms( B ), morB );
+    
+    if IsInt( pos ) then
+        return ValuesOfPreSheaf( F )[2][pos];
+    elif IsEqualToIdentityMorphism( B, morB ) then
+        return IdentityMorphism( D,
+                       ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    fi;
+    
+    F_datum := ObjectDatum( PSh, F );
+    
+    return PostComposeList( D,
+                   F_datum[1][VertexIndex( UnderlyingVertex( Target( morB ) ) )],
+                   ListOfValues( F_datum[2] ){1 + DecompositionIndicesOfMorphism( B, morB )},
+                   F_datum[1][VertexIndex( UnderlyingVertex( Source( morB ) ) )] );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
+        "for an algebroid, a presheaf category of it, an object in it, and a CAP morphism",
+        [ IsAlgebroid, IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
+        
+  function ( B, PSh, F, morB )
+    local D, pos, B_op, morB_op;
+    
+    D := Target( PSh );
+    
+    pos := Position( SetOfGeneratingMorphisms( B ), morB );
+    
+    if IsInt( pos ) then
+        return ValuesOfPreSheaf( F )[2][pos];
+    elif IsEqualToIdentityMorphism( B, morB ) then
+        return IdentityMorphism( D,
+                       ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    fi;
+    
+    B_op := OppositeOfSource( PSh );
+    
+    morB_op := MorphismConstructor( B_op,
+                       SetOfObjects( B_op )[VertexIndex( UnderlyingVertex( Target( morB ) ) )],
+                       OppositeAlgebraElement( UnderlyingQuiverAlgebraElement( morB ) ),
+                       SetOfObjects( B_op )[VertexIndex( UnderlyingVertex( Source( morB ) ) )] );
+    
+    return FunctorMorphismOperation( UnderlyingCapTwoCategoryCell( PSh, F ) )(
+                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
+                   morB_op,
+                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    
+end );
+
+##
 InstallMethod( WellDefinednessForObjectsCheckDataOrFail,
     "for a finitely presented category defined by a quiver algebra",
     [ IsFpCategoryDefinedByQuiverAlgebra ],

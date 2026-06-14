@@ -2778,59 +2778,87 @@ end );
 
 ##
 InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
-        "for a presheaf category, an object in it, and a CAP morphism",
-        [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
+        "for a category from data tables, a presheaf category of it, an object in it, and a CAP morphism",
+        [ IsCategoryFromDataTables, IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
         
-  function ( PSh, F, morB )
-    local B, D, pos, B_op, F_datum, morB_op;
+  function ( B, PSh, F, morB )
+    local D, pos, F_datum;
     
-    B := Source( PSh );
     D := Target( PSh );
     
     pos := Position( SetOfGeneratingMorphisms( B ), morB );
     
     if IsInt( pos ) then
         return ValuesOfPreSheaf( F )[2][pos];
-    elif IsEqualToIdentityMorphism( Source( PSh ), morB ) then
-        return IdentityMorphism( Target( PSh ),
+    elif IsEqualToIdentityMorphism( B, morB ) then
+        return IdentityMorphism( D,
+                       ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    fi;
+    
+    F_datum := ObjectDatum( PSh, F );
+    
+    return PostComposeList( D,
+                   F_datum[1][1 + IndexOfObject( Target( morB ) )],
+                   F_datum[2]{1 + DecompositionIndicesOfMorphism( B, morB )},
+                   F_datum[1][1 + IndexOfObject( Source( morB ) )] );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
+        "for an algebroid from data tables, a presheaf category of it, an object in it, and a CAP morphism",
+        [ IsAlgebroidFromDataTables, IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
+        
+  function ( B, PSh, F, morB )
+    local D, pos, B_op, morB_op;
+    
+    D := Target( PSh );
+    
+    pos := Position( SetOfGeneratingMorphisms( B ), morB );
+    
+    if IsInt( pos ) then
+        return ValuesOfPreSheaf( F )[2][pos];
+    elif IsEqualToIdentityMorphism( B, morB ) then
+        return IdentityMorphism( D,
                        ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
     fi;
     
     B_op := OppositeOfSource( PSh );
     
-    if IsCategoryFromDataTables( B ) then
+    morB_op := MorphismConstructor( B_op,
+                       SetOfObjects( B_op )[ObjectIndex( Target( morB ) )],
+                       CoefficientsList( morB ),
+                       SetOfObjects( B_op )[ObjectIndex( Source( morB ) )] );
+    
+    return FunctorMorphismOperation( UnderlyingCapTwoCategoryCell( PSh, F ) )(
+                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
+                   morB_op,
+                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    
+end );
+
+##
+InstallMethod( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
+        "for a CAP category, a presheaf category of it, an object in it, and a CAP morphism",
+        [ IsCapCategory, IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
         
-        F_datum := ObjectDatum( PSh, F );
-        
-        return PostComposeList( D,
-                       F_datum[1][1 + IndexOfObject( Target( morB ) )],
-                       F_datum[2]{1 + DecompositionIndicesOfMorphism( B, morB )},
-                       F_datum[1][1 + IndexOfObject( Source( morB ) )] );
-        
-    elif IsFpCategoryDefinedByQuiverAlgebra( B ) then
-        
-        F_datum := ObjectDatum( PSh, F );
-        
-        return PostComposeList( D,
-                       F_datum[1][VertexIndex( UnderlyingVertex( Target( morB ) ) )],
-                       ListOfValues( F_datum[2] ){1 + DecompositionIndicesOfMorphism( B, morB )},
-                       F_datum[1][VertexIndex( UnderlyingVertex( Source( morB ) ) )] );
-        
-    elif IsAlgebroidFromDataTables( B_op ) then
-        
-        morB_op := MorphismConstructor( B_op,
-                           SetOfObjects( B_op )[ObjectIndex( Target( morB ) )],
-                           CoefficientsList( morB ),
-                           SetOfObjects( B_op )[ObjectIndex( Source( morB ) )] );
-        
-    elif IsAlgebroid( B ) then
-        
-        morB_op := MorphismConstructor( B_op,
-                           SetOfObjects( B_op )[VertexIndex( UnderlyingVertex( Target( morB ) ) )],
-                           OppositeAlgebraElement( UnderlyingQuiverAlgebraElement( morB ) ),
-                           SetOfObjects( B_op )[VertexIndex( UnderlyingVertex( Source( morB ) ) )] );
-        
-    elif WasCreatedAsOppositeCategory( B ) then
+  function ( B, PSh, F, morB )
+    local D, pos, B_op, morB_op;
+    
+    D := Target( PSh );
+    
+    pos := Position( SetOfGeneratingMorphisms( B ), morB );
+    
+    if IsInt( pos ) then
+        return ValuesOfPreSheaf( F )[2][pos];
+    elif IsEqualToIdentityMorphism( B, morB ) then
+        return IdentityMorphism( D,
+                       ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    fi;
+    
+    B_op := OppositeOfSource( PSh );
+    
+    if WasCreatedAsOppositeCategory( B ) then
         
         morB_op := MorphismConstructor( B_op,
                            SetOfObjects( B_op )[SafeUniquePositionProperty( SetOfObjects( B ), obj -> IsEqualForObjects( B, obj, Target( morB ) ) )],
@@ -2850,6 +2878,17 @@ InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategor
                    ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
                    morB_op,
                    ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    
+end );
+
+##
+InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
+        "for a presheaf category, an object in it, and a CAP morphism",
+        [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
+        
+  function ( PSh, F, morB )
+    
+    return ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism( Source( PSh ), PSh, F, morB );
     
 end );
 
