@@ -6,6 +6,9 @@
 
 # #@if ValueOption( "no_precompiled_code" ) <> true
 
+LoadPackage( "Algebroids", false );
+#! true
+
 LoadPackage( "FunctorCategories", false );
 #! true
 
@@ -37,7 +40,7 @@ CapJitPrecompileCategoryAndCompareResult(
                      ]
 );;
 
-PreSheavesOfFreeCategoryInSkeletalFinSetsSubobjectClassifierPrecompiled( given_arguments[1] );
+PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsSubobjectClassifierPrecompiled( given_arguments[1] );
 #! PreSheaves( FreeCategory( RightQuiver( "q(2)[m:1->2]" ) ), SkeletalFinSets )
 
 cat := PreSheaves( free_category_of_quiver( given_arguments[1], SkeletalFinSets ) );

@@ -2206,6 +2206,10 @@ InstallMethod( OppositeOfObjectFiniteCategory,
     if HasIsLinearClosureOfACategory( A ) then
         SetIsLinearClosureOfACategory( A_op, IsLinearClosureOfACategory( A ) );
     fi;
+
+    if HasIsAdmissibleAlgebroid( A ) then
+        SetIsAdmissibleAlgebroid( A_op, IsAdmissibleAlgebroid( A ) );
+    fi;
     
     return A_op;
     
@@ -2216,6 +2220,33 @@ end );
 # methods for properties:
 #
 ####################################
+
+##
+InstallMethod( IsAdmissibleAlgebroid,
+        "for an Algebroid defined by a quiver algebra",
+        [ IsFpAlgebroidDefinedByQuiverAlgebra ],
+     
+  function( A )
+    local A_op, bool;
+
+    A_op := fail;
+
+    if HasOppositeOfObjectFiniteCategory( A ) then
+        A_op := OppositeOfObjectFiniteCategory( A );
+
+        if HasIsAdmissibleAlgebroid( A_op ) then
+            return IsAdmissibleAlgebroid( A_op );
+        fi;
+    fi;
+
+    bool := IsAdmissibleQuiverAlgebra( UnderlyingQuiverAlgebra( A ) );
+
+    if A_op <> fail then
+        SetIsAdmissibleAlgebroid( A_op, bool );
+    fi;
+
+    return bool;
+end );
 
 ##
 InstallMethod( IsCommutative,
