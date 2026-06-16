@@ -593,7 +593,7 @@ InstallGlobalFunction( ADD_CARTESIAN_CLOSED_STRUCTURE_TO_PRESHEAF_CATEGORY,
     D := Target( PSh );
     
     ##
-    AddExponentialOnObjects ( PSh,
+    AddExponentialOnObjects( PSh,
       function ( PSh, F, G )
         local B, objs, Yoneda, mors, presheaf_on_objects, presheaf_on_morphisms;
         
@@ -2214,7 +2214,7 @@ end ) );
 ##
 InstallMethodWithCache( PreSheaves,
         "for a finite category and a category",
-        [ IsCapCategory and IsFinite, IsCapCategory ],
+        [ FilterIntersection( IsCapCategory, IsFinite ), IsCapCategory ],
         
   FunctionWithNamedArguments(
   [
@@ -2252,7 +2252,7 @@ end ) );
 ##
 InstallMethodWithCache( PreSheaves,
         "for two CAP categories",
-        [ IsCapCategory and IsInitialCategory, IsCapCategory ],
+        [ FilterIntersection( IsCapCategory, IsInitialCategory ), IsCapCategory ],
         
   FunctionWithNamedArguments(
   [
@@ -2274,7 +2274,7 @@ InstallMethodWithCache( PreSheaves,
         name := Concatenation( name, "..., ... )" );
     fi;
     
-    category_filter := IsPreSheafCategoryOfFpEnrichedCategory and IsTerminalCategory;
+    category_filter := FilterIntersection( IsPreSheafCategoryOfFpEnrichedCategory, IsTerminalCategory );
     
     category_object_filter := IsObjectInPreSheafCategoryOfFpEnrichedCategory;
     
@@ -2495,10 +2495,11 @@ InstallMethodWithCache( PreSheaves,
     
   end ) );
 
+#= comment for julia (clash with a method in PresheafCategories package)
 ##
 InstallMethod( PreSheaves,
         "for a CAP category",
-        [ IsCapCategory and HasRangeCategoryOfHomomorphismStructure ],
+        [ FilterIntersection( IsCapCategory, HasRangeCategoryOfHomomorphismStructure ) ],
         
   FunctionWithNamedArguments(
   [
@@ -2511,6 +2512,8 @@ InstallMethod( PreSheaves,
     return PreSheaves( B, RangeCategoryOfHomomorphismStructure( B ) : FinalizeCategory := CAP_NAMED_ARGUMENTS.FinalizeCategory, overhead := CAP_NAMED_ARGUMENTS.overhead, no_precompiled_code := CAP_NAMED_ARGUMENTS.no_precompiled_code );
     
 end ) );
+# =#
+
 
 ##
 InstallMethod( FiniteStrictCoproductCompletionOfSourceCategory,
@@ -2578,7 +2581,7 @@ InstallMethod( CategoryOfInternalCategories,
     
     membership_func :=
       function ( sH, N )
-        local H, DC1xC1, C1xC1, C2_C1xC1, C1xC1_C2, DC3, C3, p12, p23, mux1, 1xmu;
+        local H, DC1xC1, C1xC1, C2_C1xC1, C1xC1_C2, DC3, C3, p12, p23, muxid, idxmu;
         
         H := Target( sH );
         
@@ -2602,7 +2605,7 @@ InstallMethod( CategoryOfInternalCategories,
         p12 := ProjectionInFactorOfFiberProductWithGivenFiberProduct( H, DC3, 2, C3 );
         p23 := ProjectionInFactorOfFiberProductWithGivenFiberProduct( H, DC3, 1, C3 );
         
-        mux1 := PreCompose( H,
+        muxid := PreCompose( H,
                         UniversalMorphismIntoFiberProductWithGivenFiberProduct( H,
                                 DC1xC1,
                                 C3,
@@ -2611,7 +2614,7 @@ InstallMethod( CategoryOfInternalCategories,
                                 C1xC1 ),
                         C1xC1_C2 );
         
-        1xmu := PreCompose( H,
+        idxmu := PreCompose( H,
                         UniversalMorphismIntoFiberProductWithGivenFiberProduct( H,
                                 DC1xC1,
                                 C3,
@@ -2622,8 +2625,8 @@ InstallMethod( CategoryOfInternalCategories,
         
         ## check the identities
         return IsCongruentForMorphisms( H,
-                       PreCompose( H, 1xmu, N.mu ),
-                       PreCompose( H, mux1, N.mu ) );
+                       PreCompose( H, idxmu, N.mu ),
+                       PreCompose( H, muxid, N.mu ) );
         
     end;
     
@@ -2703,9 +2706,13 @@ end );
 
 ##
 InstallMethod( YonedaEmbedding,
-        [ IsCapCategory and HasRangeCategoryOfHomomorphismStructure ],
+        [ IsCapCategory ],
         
   function ( B )
+    
+    if not HasRangeCategoryOfHomomorphismStructure( B ) then
+        Error( "Yoneda embedding is only implemented for categories with a homomorphism structure." );
+    fi;
     
     return YonedaEmbeddingOfSourceCategory( PreSheaves( B ) );
     
@@ -2729,14 +2736,12 @@ InstallMethod( ImageOfYonedaEmbeddingOfSource,
 end );
 
 ##
-InstallMethod( \.,
+InstallMethod( \/,
         "for a presheaf category and a positive integer",
-        [ IsPreSheafCategory, IsPosInt ],
+        [ IsString, IsPreSheafCategory ],
         
-  function( PSh, string_as_int )
-    local name, Y, F, Yc;
-    
-    name := NameRNam( string_as_int );
+  function( name, PSh )
+    local Y, F, Yc;
     
     Y := YonedaEmbeddingOfSourceCategory( PSh );
     
@@ -2777,6 +2782,10 @@ InstallMethod( \.,
     return Yc;
     
 end );
+
+#= comment for Julia
+INSTALL_DOT_METHOD( IsPreSheafCategory );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject,
@@ -3015,6 +3024,18 @@ InstallMethod( CallFuncList,
 end );
 
 ##
+InstallOtherMethod( \/,
+        "for a presheaf and a positive integer",
+        [ IsString, IsObjectInPreSheafCategory ],
+        
+  function( name, presheaf )
+    
+    return presheaf( Source( presheaf ).(name) );
+    
+end );
+
+#= comment for Julia
+##
 InstallMethod( \.,
         "for a presheaf and a positive integer",
         [ IsObjectInPreSheafCategory, IsPosInt ],
@@ -3024,7 +3045,20 @@ InstallMethod( \.,
     return presheaf( Source( presheaf ).(NameRNam( string_as_int )) );
     
 end );
+# =#
 
+##
+InstallOtherMethod( \/,
+        "for a presheaf morphism and a positive integer",
+        [ IsString, IsMorphismInPreSheafCategory ],
+        
+  function( name, morphism )
+    
+    return morphism( Source( Source( morphism ) ).(name) );;
+    
+end );
+
+#= comment for Julia
 ##
 InstallMethod( \.,
         "for a presheaf morphism and a positive integer",
@@ -3035,15 +3069,21 @@ InstallMethod( \.,
     return morphism( Source( Source( morphism ) ).(NameRNam( string_as_int )) );;
     
 end );
+# =#
 
 ##
 InstallOtherMethodForCompilerForCAP( CoYonedaLemmaOnObjects,
-        [ IsPreSheafCategoryOfFpEnrichedCategory and HasRangeCategoryOfHomomorphismStructure, IsObjectInPreSheafCategoryOfFpEnrichedCategory ],
+        [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory ],
         
   function ( PSh, F )
     local C, H, defining_triple, nr_objs, nr_mors, arrows, map_of_sources_C, map_of_targets_C, objs, mors,
           UC, F_vals, V_list_of_objects_in_UC, A_list_of_objects_in_UC,
           s_list_of_morphisms_in_UC, t_list_of_morphisms_in_UC, s, t, V, A, C_hat;
+    
+    #% CAP_JIT_DROP_NEXT_STATEMENT
+    if not HasRangeCategoryOfHomomorphismStructure( PSh ) then
+        TryNextMethod( );
+    fi;
     
     C := Source( PSh );
     H := Target( PSh );
@@ -3159,6 +3199,7 @@ InstallMethod( CoYonedaLemmaOnObjects,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( CoYonedaLemmaOnMorphisms,
         [ IsPreSheafCategoryOfFpEnrichedCategory,
@@ -3302,6 +3343,7 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaOnMorphisms,
                    range );
     
 end );
+# =#
 
 ##
 InstallMethod( CoYonedaLemmaOnMorphisms,
@@ -3372,6 +3414,7 @@ InstallMethod( EmbeddingFunctorOfFiniteStrictCoproductCompletionIntoPreSheaves,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( AssociatedCoequalizerPairInPreSheaves,
         "for a category of colimit quivers and an object therein",
@@ -3468,6 +3511,7 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaCoequalizerPair,
     return AssociatedCoequalizerPairInPreSheaves( C_hat, CoYonedaLemmaOnObjects( PSh, F ) );
     
 end );
+# =#
 
 ##
 InstallMethod( CoYonedaLemmaCoequalizerPair,
@@ -3885,7 +3929,7 @@ end );
 
 ##
 InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentables,
-        [ IsAbelianCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
+        [ IsCapCategory and IsAbelianCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
         
   function ( H, PSh, F )
     local G, pi, cover, c, obj, nonliftable, mor_from_rep, values_of_mor_from_rep, c_new;
@@ -3959,10 +4003,14 @@ end );
 
 ##
 InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentablesUsingSplits,
-        [ IsAbelianCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
+        [ IsCapCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
         
   function ( H, PSh, F )
     local G, pi, cover, c, obj, section, nonliftable, mor_from_rep, values_of_mor_from_rep, c_new;
+    
+    if not HasIsAbelianCategory( H ) and IsAbelianCategory( H ) then
+        TryNextMethod( );
+    fi;
     
     G := F;
     
@@ -3981,7 +4029,8 @@ InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentablesUsingSplits,
         
         section := LiftOrFail( PSh, IdentityMorphism( PSh, Target( pi ) ), pi );
         
-        if not ( section = fail ) then  ## pi is a split epimorphism
+        ## pi is a split epimorphism
+        if not ( section = fail ) then
             
             ## precompose the nonliftable morphism with the o-th component of a section of pi
             nonliftable := PreCompose( H,
@@ -4052,9 +4101,13 @@ end );
 
 ##
 InstallOtherMethodForCompilerForCAP( EpimorphismFromSomeProjectiveObjectUsingSplits,
-        [ IsAbelianCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
+        [ IsCapCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
         
   function ( H, PSh, F )
+    
+    if not HasIsAbelianCategory( H ) and IsAbelianCategory( H ) then
+        TryNextMethod( );
+    fi;
     
     return MorphismFromCoproductOfRepresentables( PSh,
                    CoveringListOfRepresentablesUsingSplits( H, PSh, F ),
@@ -4310,7 +4363,7 @@ end );
 
 ##
 InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
-        [ IsAbelianCategory, IsPreSheafCategory, IsList, IsObjectInPreSheafCategory ],
+        [ IsCapCategory and IsAbelianCategory, IsPreSheafCategory, IsList, IsObjectInPreSheafCategory ],
         
   function ( H, PSh, covering_list, F )
     local CoequalizerPairs, UC, coYoneda, F_VAst, V, A, s, t,
@@ -4488,6 +4541,7 @@ InstallMethod( OptimizedCoYonedaLemmaCoequalizerPair,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethodForCompilerForCAP( ApplyPreSheafToObjectInFiniteStrictCoproductCompletion,
         [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsObjectInFiniteStrictCoproductCompletion ],
@@ -4554,6 +4608,7 @@ InstallMethodForCompilerForCAP( ApplyPreSheafToMorphismInFiniteStrictCoproductCo
                    G_on_source );
     
 end );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( NerveTruncatedInDegree2,
@@ -4722,9 +4777,13 @@ end );
 
 ##
 InstallMethod( SievesOfPathsToTruth,
-        [ IsMorphismInPreSheafCategory and IsMonomorphism ],
+        [ IsMorphismInPreSheafCategory ],
         
   function ( iota )
+    
+    if not HasIsMonomorphism( iota ) and IsMonomorphism( iota ) then
+        TryNextMethod( );
+    fi;
     
     return SievesOfPathsToTruth( CapCategory( iota ), iota );
     

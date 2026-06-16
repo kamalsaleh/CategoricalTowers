@@ -11,12 +11,14 @@ ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinQuiversAsCCCPre
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/FinReflexiveQuiversAsCCCPrecompiled.gi");
 
+#= comment for Julia
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsPrecompiled.gi");
     ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFpCategoryDefinedByQuiverAlgebraInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
     ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfFreeAlgebroidInCategoryOfRowsPrecompiled.gi");
     ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfAlgebroidWithRelationsInCategoryOfRowsPrecompiled.gi");
 fi;
+# =#
 
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsPrecompiled.gi");
 ReadPackage( "FunctorCategories", "gap/precompiled_categories/PreSheavesOfCategoryFromDataTablesInSkeletalFinSetsSubobjectClassifierPrecompiled.gi");
@@ -28,43 +30,59 @@ ReadPackage( "FunctorCategories", "gap/ToolsMethodRecordInstallations.autogen.gi
 ReadPackage( "FunctorCategories", "gap/ToolsDerivedMethods.gi");
 
 ReadPackage( "FunctorCategories", "gap/PreSheaves.gi");
+#= comment for Julia
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/with_algebroids/PreSheaves.gi");
 fi;
+# =#
 
 ReadPackage( "FunctorCategories", "gap/HomStructure.gi");
+
 ReadPackage( "FunctorCategories", "gap/FunctorCategories.gi");
+#= comment for Julia
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/with_algebroids/FunctorCategories.gi");
 fi;
+# =#
 
 ReadPackage( "FunctorCategories", "gap/CoPreSheaves.gi");
+#= comment for Julia
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/with_algebroids/CoPreSheaves.gi");
 fi;
+# =#
 
+#= comment for Julia
 ReadPackage( "FunctorCategories", "gap/FiniteCocompletion.gi");
+
 ReadPackage( "FunctorCategories", "gap/CategoryOfBouquets.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfQuivers.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfDecoratedQuivers.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfReflexiveQuivers.gi");
 ReadPackage( "FunctorCategories", "gap/FiniteCompletion.gi");
 ReadPackage( "FunctorCategories", "gap/FreeDistributiveCompletion.gi");
+# =#
 
 ReadPackage( "FunctorCategories", "gap/AbelianClosure.gi");
+#= comment for Julia
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/with_algebroids/AbelianClosure.gi");
 fi;
+# =#
 
 ReadPackage( "FunctorCategories", "gap/Functors.gi");
+#= comment for Julia
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/with_algebroids/Functors.gi");
 fi;
+# =#
 
 ReadPackage( "FunctorCategories", "gap/DirectSumDecomposition.gi");
 ReadPackage( "FunctorCategories", "gap/HomologicalMethods.gi");
 ReadPackage( "FunctorCategories", "gap/QuotientsOfAlgebroidsFromDataTablesUsingPreSheaves.gi" );
 
+#= comment for Julia
 if IsPackageMarkedForLoading( "JuliaInterface", ">= 0.2" ) then
     ReadPackage( "FunctorCategories", "gap/Julia.gi" );
 fi;
+# =#
