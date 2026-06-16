@@ -59,15 +59,13 @@ DeclareAttribute( "EmbeddingOfUnderlyingCategory",
 #
 ####################################
 
-if false then
 #! @Description
 #!  Construct an Abelian closure category.
 #! @Returns a &CAP; category
 #! @Arguments B
 #! @Group AbelianClosure
 DeclareOperation( "AbelianClosure",
-        [ IsFpAlgebroidDefinedByQuiverAlgebra ] );
+        [ IsFpAlgebroidFromDataTables ] );
 
 DeclareOperationWithCache( "AbelianClosure",
-        [ IsFpAlgebroidDefinedByQuiverAlgebra, IsCapCategory ] );
-fi;
+        [ IsFpAlgebroidFromDataTables, IsCapCategory ] );

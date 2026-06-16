@@ -37,7 +37,12 @@ ReadPackage( "FunctorCategories", "gap/FunctorCategories.gi");
 if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
     ReadPackage( "FunctorCategories", "gap/with_algebroids/FunctorCategories.gi");
 fi;
+
 ReadPackage( "FunctorCategories", "gap/CoPreSheaves.gi");
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/CoPreSheaves.gi");
+fi;
+
 ReadPackage( "FunctorCategories", "gap/FiniteCocompletion.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfBouquets.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfQuivers.gi");
@@ -45,8 +50,17 @@ ReadPackage( "FunctorCategories", "gap/CategoryOfDecoratedQuivers.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfReflexiveQuivers.gi");
 ReadPackage( "FunctorCategories", "gap/FiniteCompletion.gi");
 ReadPackage( "FunctorCategories", "gap/FreeDistributiveCompletion.gi");
+
 ReadPackage( "FunctorCategories", "gap/AbelianClosure.gi");
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/AbelianClosure.gi");
+fi;
+
 ReadPackage( "FunctorCategories", "gap/Functors.gi");
+if IsPackageMarkedForLoading( "Algebroids", ">= 2026.04-01" ) then
+    ReadPackage( "FunctorCategories", "gap/with_algebroids/Functors.gi");
+fi;
+
 ReadPackage( "FunctorCategories", "gap/DirectSumDecomposition.gi");
 ReadPackage( "FunctorCategories", "gap/HomologicalMethods.gi");
 ReadPackage( "FunctorCategories", "gap/QuotientsOfAlgebroidsFromDataTablesUsingPreSheaves.gi" );

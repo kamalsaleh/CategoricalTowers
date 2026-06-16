@@ -529,36 +529,6 @@ InstallMethodWithCache( FunctorCategory,
 end ) );
 
 ##
-InstallMethodWithCache( FunctorCategory,
-        "for a CAP category and a homalg field",
-        [ IsFpAlgebroidDefinedByQuiverAlgebra, IsHomalgRing and IsFieldForHomalg ],
-        
-  function ( B, k )
-    local kmat, Hom;
-    
-    if HasRangeCategoryOfHomomorphismStructure( B ) then
-        
-        kmat := RangeCategoryOfHomomorphismStructure( B );
-        
-    else
-        
-        kmat := CategoryOfRows( k );
-        
-    fi;
-    
-    Assert( 0, IsMatrixCategory( kmat ) or IsCategoryOfRows( kmat ) );
-    
-    CapCategorySwitchLogicOn( kmat );
-    
-    Hom := FunctorCategory( B, kmat );
-    
-    CapCategorySwitchLogicOn( Hom );
-    
-    return Hom;
-    
-end );
-
-##
 InstallMethod( FunctorCategory,
         "for a CAP category",
         [ IsCapCategory and HasRangeCategoryOfHomomorphismStructure ],
@@ -573,13 +543,6 @@ end );
 InstallMethod( Hom,
         "for two CAP categories",
         [ IsCapCategory, IsCapCategory ],
-        
-  FunctorCategory );
-
-##
-InstallMethod( Hom,
-        "for a CAP category and a homalg field",
-        [ IsFpAlgebroidDefinedByQuiverAlgebra, IsHomalgRing and IsFieldForHomalg ],
         
   FunctorCategory );
 
@@ -618,13 +581,15 @@ InstallMethodForCompilerForCAP( YonedaEmbeddingDataInFunctorCategory,
   function ( B_op )
     local B, Hom, objs, mors, name, Yoneda_on_objs, Yoneda_on_mors;
     
-    if IsFpCategoryDefinedByQuiverAlgebra( B_op ) then
-        B := OppositeOfObjectFiniteCategory( B_op : FinalizeCategory := true );
-    elif IsFpAlgebroidDefinedByQuiverAlgebra( B_op ) then
-        B := OppositeOfObjectFiniteCategory( B_op : FinalizeCategory := true );
-    else
-        Error( "the input must either be IsFpCategoryDefinedByQuiverAlgebra or is IsFpAlgebroidDefinedByQuiverAlgebra\n" );
-    fi;
+    Assert( 0, HasIsObjectFiniteCategory( B_op ) and IsObjectFiniteCategory( B_op ) );
+    
+    Assert( 0, CanCompute( B_op, "SetOfObjectsOfCategory" ) );
+    
+    Assert( 0, CanCompute( B_op, "SetOfGeneratingMorphismsOfCategory" ) );
+    
+    Assert( 0, ApplicableMethod( OppositeOfObjectFiniteCategory, [ B_op ] ) <> fail );
+    
+    B := OppositeOfObjectFiniteCategory( B_op : FinalizeCategory := true );
     
     Hom := FunctorCategory( B );
     
@@ -668,13 +633,9 @@ InstallMethod( YonedaEmbeddingInFunctorCategory,
   function ( B_op )
     local B, Hom, Yoneda, Yoneda_data;
     
-    if IsFpCategoryDefinedByQuiverAlgebra( B_op ) then
-        B := OppositeOfObjectFiniteCategory( B_op : FinalizeCategory := true );
-    elif IsFpAlgebroidDefinedByQuiverAlgebra( B_op ) then
-        B := OppositeOfObjectFiniteCategory( B_op : FinalizeCategory := true );
-    else
-        Error( "the input must either be IsFpCategoryDefinedByQuiverAlgebra or is IsFpAlgebroidDefinedByQuiverAlgebra\n" );
-    fi;
+    Assert( 0, ApplicableMethod( OppositeOfObjectFiniteCategory, [ B_op ] ) <> fail );
+    
+    B := OppositeOfObjectFiniteCategory( B_op : FinalizeCategory := true );
     
     Hom := FunctorCategory( B );
     
@@ -856,54 +817,6 @@ end );
 ####################################
 
 ##
-InstallMethod( ViewString,
-        [ IsObjectInFunctorCategory ],
-        
-  function ( F )
-    local algebroid, vertices, arrows, v_dim, v_string, a_dim, a_string, string;
-    
-    if not (IsMatrixCategory( Target( CapCategory( F ) ) ) or IsCategoryOfRows( Target( CapCategory( F ) ) )) then
-        TryNextMethod();
-    fi;
-    
-    algebroid := Source( CapCategory( F ) );
-    
-    vertices := List( SetOfObjects( algebroid ), UnderlyingVertex );
-    
-    v_dim := List( ValuesOfFunctor( F )[1], ObjectDatum );
-    
-    v_string := ListN( vertices, v_dim, { vertex, dim } -> Concatenation( "(", String( vertex ), ")->", String( dim ) ) );
-    
-    v_string := JoinStringsWithSeparator( v_string, ", " );
-    
-    arrows := List( SetOfGeneratingMorphisms( algebroid ), UnderlyingQuiverAlgebraElement );
-    
-    if not IsPathAlgebra( UnderlyingQuiverAlgebra( algebroid ) ) then
-      
-      arrows := List( arrows, a -> Paths( Representative( a ) )[ 1 ] );
-      
-    else
-      
-      arrows := List( arrows, a -> Paths( a )[ 1 ] );
-      
-    fi;
-    
-    a_dim := List( ValuesOfFunctor( F )[2], m -> [ ObjectDatum( Source( m ) ), ObjectDatum( Target( m ) ) ] );
-    
-    a_string := ListN( arrows, a_dim,
-                  { arrow, dim } -> Concatenation(
-                      "(", String( arrow ), ")->", String( dim[ 1 ] ), "x", String( dim[ 2 ] ) )
-                    );
-    
-    a_string := JoinStringsWithSeparator( a_string, ", " );
-    
-    string := Concatenation( v_string, "; ", a_string );
-    
-    return Concatenation( "<", string, ">" );
-    
-end );
-
-##
 InstallMethod( DisplayString,
         [ IsObjectInFunctorCategory ],
         
@@ -940,33 +853,6 @@ InstallMethod( DisplayString,
     
     return Concatenation( string,
                    "An object in ", Name( CapCategory( F ) ), " given by the above data\n" );
-    
-end );
-
-##
-InstallMethod( ViewString,
-        [ IsMorphismInFunctorCategory ],
-        
-  function ( eta )
-    local vertices, s_dim, r_dim, string;
-    
-    if not (IsMatrixCategory( Target( CapCategory( eta ) ) ) or IsCategoryOfRows( Target( CapCategory( eta ) ) )) then
-        TryNextMethod();
-    fi;
-    
-    vertices := List( SetOfObjects( Source( Source( eta ) ) ), UnderlyingVertex );
-     
-    s_dim := List( ValuesOfFunctor( Source( eta ) )[1], ObjectDatum );
-    
-    r_dim := List( ValuesOfFunctor( Target( eta ) )[1], ObjectDatum );
-   
-    string := ListN( vertices, s_dim, r_dim,
-                { vertex, s, r } ->
-                    Concatenation( "(", String( vertex ), ")->", String( s ), "x", String( r ) ) );
-    
-    string := JoinStringsWithSeparator( string, ", " );
-    
-    return Concatenation( "<", string, ">" );
     
 end );
 

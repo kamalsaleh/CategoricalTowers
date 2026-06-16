@@ -5,10 +5,8 @@
 #
 
 ##
-InstallMethodWithCache( AbelianClosure,
-        "for a CAP category",
-        [ IsFpAlgebroidDefinedByQuiverAlgebra, IsCapCategory and IsAbCategory ],
-        
+BindGlobal( "ABELIAN_CLOSURE_OF_ALGEBROID",
+
   function( algebroid, range_category_of_hom_structure )
     local name, category_filter, category_object_filter, category_morphism_filter,
           L, A,
@@ -18,9 +16,9 @@ InstallMethodWithCache( AbelianClosure,
     name := Concatenation( "AbelianClosure( ", Name( algebroid ), " )" );
     
     ##
-    category_filter := IsAbelianClosure and IsWrapperCapCategory;
-    category_object_filter := IsObjectInAbelianClosure and IsWrapperCapCategoryObject;
-    category_morphism_filter := IsMorphismInAbelianClosure and IsWrapperCapCategoryMorphism;
+    category_filter := FilterIntersection( IsAbelianClosure, IsWrapperCapCategory );
+    category_object_filter := FilterIntersection( IsObjectInAbelianClosure, IsWrapperCapCategoryObject );
+    category_morphism_filter := FilterIntersection( IsMorphismInAbelianClosure, IsWrapperCapCategoryMorphism );
     
     ## building the categorical tower:
     
@@ -44,9 +42,16 @@ InstallMethodWithCache( AbelianClosure,
 end );
 
 ##
+InstallMethodWithCache( AbelianClosure,
+        "for an algebroid from data tables",
+        [ IsFpAlgebroidFromDataTables, FilterIntersection( IsCapCategory, IsAbCategory ) ],
+        
+    ABELIAN_CLOSURE_OF_ALGEBROID );
+
+##
 InstallMethod( AbelianClosure,
         "for a CAP category",
-        [ IsFpAlgebroidDefinedByQuiverAlgebra and HasRangeCategoryOfHomomorphismStructure ],
+        [ FilterIntersection( IsFpAlgebroidFromDataTables, HasRangeCategoryOfHomomorphismStructure ) ],
         
   function( algebroid )
     
@@ -73,14 +78,12 @@ InstallMethod( EmbeddingOfUnderlyingCategory,
 end );
 
 ##
-InstallMethod( \.,
-        "for an Abelian closure category and a positive integer",
-        [ IsAbelianClosure, IsPosInt ],
+InstallMethod( \/,
+        "for a string and an Abelian closure category",
+        [ IsString, IsAbelianClosure ],
         
-  function( abelian_closure, string_as_int )
-    local name, F, Y, Yc;
-    
-    name := NameRNam( string_as_int );
+  function( name, abelian_closure )
+    local  F, Y, Yc;
     
     F := UnderlyingCategory( abelian_closure );
     
@@ -122,13 +125,17 @@ InstallMethod( \.,
     
 end );
 
+INSTALL_DOT_METHOD( IsAbelianClosure );
+
 ##
-InstallMethod( \.,
-        "for a cell in an Abelian closure category and a positive integer",
-        [ IsCellInAbelianClosure, IsPosInt ],
+InstallOtherMethod( \/,
+        "for a string and a cell in an Abelian closure category",
+        [ IsString, IsCellInAbelianClosure ],
         
-  function( cell, string_as_int )
+  function( name, cell )
     
-    return UnderlyingCell( cell ).(NameRNam( string_as_int ));
+    return UnderlyingCell( cell ).(name);
     
 end );
+
+INSTALL_DOT_METHOD( IsCellInAbelianClosure );
