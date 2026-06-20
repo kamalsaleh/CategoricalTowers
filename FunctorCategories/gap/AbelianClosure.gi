@@ -12,6 +12,9 @@ BindGlobal( "ABELIAN_CLOSURE_OF_ALGEBROID",
           L, A,
           abelian_closure;
     
+    if not (HasIsAbelianCategory( range_category_of_hom_structure ) and IsAbelianCategory( range_category_of_hom_structure ) ) then
+        Error( "the range category of the homomorphism structure must be an Abelian category!\n" );
+    fi;
     ##
     name := Concatenation( "AbelianClosure( ", Name( algebroid ), " )" );
     
@@ -44,16 +47,20 @@ end );
 ##
 InstallMethodWithCache( AbelianClosure,
         "for an algebroid from data tables",
-        [ IsFpAlgebroidFromDataTables, FilterIntersection( IsCapCategory, IsAbCategory ) ],
+        [ IsFpAlgebroidFromDataTables, IsCapCategory ],
         
     ABELIAN_CLOSURE_OF_ALGEBROID );
 
 ##
 InstallMethod( AbelianClosure,
         "for a CAP category",
-        [ FilterIntersection( IsFpAlgebroidFromDataTables, HasRangeCategoryOfHomomorphismStructure ) ],
+        [ IsFpAlgebroidFromDataTables ],
         
   function( algebroid )
+    
+    if not HasRangeCategoryOfHomomorphismStructure( algebroid ) then
+        TryNextMethod();
+    fi;
     
     return AbelianClosure( algebroid, RangeCategoryOfHomomorphismStructure( algebroid ) );
     
@@ -125,7 +132,9 @@ InstallMethod( \/,
     
 end );
 
+#= comment for Julia
 INSTALL_DOT_METHOD( IsAbelianClosure );
+# =#
 
 ##
 InstallOtherMethod( \/,
@@ -138,4 +147,7 @@ InstallOtherMethod( \/,
     
 end );
 
+#= comment for Julia
+#
 INSTALL_DOT_METHOD( IsCellInAbelianClosure );
+# =#

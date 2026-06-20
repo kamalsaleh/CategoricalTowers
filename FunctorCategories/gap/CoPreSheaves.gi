@@ -189,6 +189,8 @@ InstallOtherMethodForCompilerForCAP( CreateCoPreSheafByValues,
     
 end );
 
+#= comment for Julia
+# Multiple installations of an object-constructor causes issues in julia (ambiguous number of arguments).
 ##
 InstallMethodForCompilerForCAP( CreateCoPreSheafByValues,
         "for a copresheaf category and two lists",
@@ -200,6 +202,7 @@ InstallMethodForCompilerForCAP( CreateCoPreSheafByValues,
                    Pair( values_of_all_objects, values_of_all_generating_morphisms ) );
     
 end );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( CreateCoPreSheafByFunctions,
@@ -437,9 +440,9 @@ InstallMethodWithCache( CoPreSheaves,
     
     ## building the categorical tower:
     
-    Hom := FunctorCategory( B, D : FinalizeCategory := true );
+    Hom := FunctorCategory( B, D );
     
-    O := Opposite( Hom : only_primitive_operations_and_hom_structure := true, FinalizeCategory := true );
+    O := Opposite( Hom : only_primitive_operations_and_hom_structure := true );
     
     if HasIsInitialCategory( B ) and IsInitialCategory( B ) then
         Assert( 0, [ ] = MissingOperationsForConstructivenessOfCategory( O, "IsEquippedWithHomomorphismStructure" ) );
@@ -667,7 +670,7 @@ InstallMethod( CoYonedaEmbedding,
 end );
 
 ##
-InstallMethod( \/,
+InstallOtherMethod( \/,
         "for a copresheaf category and a string",
         [ IsString, IsCoPreSheafCategory ],
         

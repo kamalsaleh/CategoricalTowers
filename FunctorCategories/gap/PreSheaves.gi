@@ -1081,7 +1081,7 @@ InstallGlobalFunction( ADD_ADMISSIBLE_ALGEBROID_STRUCTURE_TO_PRESHEAF_CATEGORY,
         
         B := Source( PSh );
         
-        coPSh := CoPreSheaves( B, Target( PSh ) );
+        coPSh := AssociatedCategoryOfCoPreSheaves( PSh );
         
         NL := NakayamaLeftAdjointData( coPSh )[1];
         
@@ -1169,7 +1169,7 @@ InstallGlobalFunction( ADD_ADMISSIBLE_ALGEBROID_STRUCTURE_TO_PRESHEAF_CATEGORY,
         
         B := Source( PSh );
         
-        coPSh := CoPreSheaves( B, Target( PSh ) );
+        coPSh := AssociatedCategoryOfCoPreSheaves( PSh );
         
         NL := NakayamaLeftAdjointData( coPSh );
         
@@ -1205,13 +1205,13 @@ InstallGlobalFunction( ADD_ADMISSIBLE_ALGEBROID_STRUCTURE_TO_PRESHEAF_CATEGORY,
     
     AddIndecomposableInjectiveObjects( PSh,
       function( PSh )
-        local B, coPSh;
+        local coPSh, indecomposable_injectives_coPSh;
         
-        B := Source( PSh );
+        coPSh := AssociatedCategoryOfCoPreSheaves( PSh );
         
-        coPSh := CoPreSheaves( B, Target( PSh ) );
+        indecomposable_injectives_coPSh := CallFuncListAtRuntime( IndecomposableInjectiveObjects, [ coPSh ] );
         
-        return List( IndecomposableInjectiveObjects( coPSh ), NakayamaRightAdjointData( PSh )[1] );
+        return List( indecomposable_injectives_coPSh, NakayamaRightAdjointData( PSh )[1] );
         
     end );
     
@@ -1659,11 +1659,13 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
                     "IsSymmetricMonoidalCategoryStructureGivenByCoproduct",
                     ];
     
-    if ( HasIsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms and
-         IsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms and
-         HasCommutativeSemiringOfLinearCategory )( D ) then
+    if HasIsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms( D ) and
+        IsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms( D ) and
+        HasCommutativeSemiringOfLinearCategory( D ) then
         
-        if ( HasIsFieldForHomalg and IsFieldForHomalg )( CommutativeSemiringOfLinearCategory( D ) ) then
+        commutative_semiring := CommutativeSemiringOfLinearCategory( D );
+        
+        if HasIsFieldForHomalg( commutative_semiring ) and IsFieldForHomalg( commutative_semiring ) then
             Add( properties, "IsLinearCategoryOverCommutativeRingWithFinitelyGeneratedFreeExternalHoms" );
         fi;
         
@@ -1958,7 +1960,7 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
                           "FiniteColimitCompletionWithStrictCoproductsOfSourceCategory",
                           ] );
                 
-                if not (HasIsAbCategory and IsAbCategory)( B ) then
+                if not (HasIsAbCategory( B ) and IsAbCategory( B ) ) then
                     Append( PSh!.compiler_hints.category_attribute_names,
                             [ "CategoryOfColimitQuiversOfSourceCategory",
                               ] );
@@ -2160,7 +2162,9 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
         
     fi;
     
+    #= comment for Julia
     AddToToDoList( ToDoListEntry( [ [ PSh, "IsFinalized", true ] ], function ( ) IdentityFunctor( PSh )!.UnderlyingFunctor := IdentityFunctor( D ); end ) );
+    # =#
     
     #if false then
     if CAP_NAMED_ARGUMENTS.no_precompiled_code <> true then
@@ -2705,6 +2709,16 @@ InstallMethod( YonedaEmbeddingOfSourceCategory,
 end );
 
 ##
+InstallMethod( AssociatedCategoryOfCoPreSheaves,
+  [ IsPreSheafCategoryOfFpEnrichedCategory ],
+        
+  function ( PSh )
+    
+    return CoPreSheaves( Source( PSh ), Target( PSh ) );
+    
+end );
+
+##
 InstallMethod( YonedaEmbedding,
         [ IsCapCategory ],
         
@@ -2737,8 +2751,8 @@ end );
 
 ##
 InstallMethod( \/,
-        "for a presheaf category and a positive integer",
-        [ IsString, IsPreSheafCategory ],
+        "for a string and presheaf category",
+        [ IsString, IsPreSheafCategoryOfFpEnrichedCategory ],
         
   function( name, PSh )
     local Y, F, Yc;
@@ -2784,7 +2798,7 @@ InstallMethod( \/,
 end );
 
 #= comment for Julia
-INSTALL_DOT_METHOD( IsPreSheafCategory );
+INSTALL_DOT_METHOD( IsPreSheafCategoryOfFpEnrichedCategory );
 # =#
 
 ##
@@ -2862,7 +2876,7 @@ InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategor
         [ IsFpAlgebroidFromDataTables, IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsCapCategoryMorphism ],
         
   function ( B, PSh, F, morB )
-    local D, pos, B_op, morB_op;
+    local D, pos, B_op, morB_op, U;
     
     D := Target( PSh );
     
@@ -2882,10 +2896,12 @@ InstallMethodForCompilerForCAP( ApplyObjectInPreSheafCategoryOfFpEnrichedCategor
                        CoefficientsList( morB ),
                        SetOfObjects( B_op )[ObjectIndex( Source( morB ) )] );
     
-    return FunctorMorphismOperation( UnderlyingCapTwoCategoryCell( PSh, F ) )(
-                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
-                   morB_op,
-                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    U := UnderlyingCapTwoCategoryCell( PSh, F );
+    
+    return CallFuncListAtRuntime( FunctorMorphismOperation( U ),
+                  [ ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
+                    morB_op,
+                    ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) ] ); 
     
 end );
 
@@ -2991,7 +3007,7 @@ end );
 ##
 InstallMethod( CallFuncList,
         "for an object in a presheaf category and a list",
-        [ IsObjectInPreSheafCategory, IsList ],
+        [ IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsList ],
         
   function ( F, L )
     local PSh;
@@ -3011,7 +3027,7 @@ end );
 ##
 InstallMethod( CallFuncList,
         "for a morphism in a presheaf category and a list",
-        [ IsMorphismInPreSheafCategory, IsList ],
+        [ IsMorphismInPreSheafCategoryOfFpEnrichedCategory, IsList ],
         
   function ( eta, L )
     
@@ -3927,9 +3943,10 @@ InstallMethod( MaximalMorphismFromRepresentable,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentables,
-        [ IsCapCategory and IsAbelianCategory, IsPreSheafCategory, IsObjectInPreSheafCategory ],
+        [ FilterIntersection( IsCapCategory, IsAbelianCategory ), IsPreSheafCategory, IsObjectInPreSheafCategory ],
         
   function ( H, PSh, F )
     local G, pi, cover, c, obj, nonliftable, mor_from_rep, values_of_mor_from_rep, c_new;
@@ -3987,6 +4004,7 @@ InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentables,
     return cover;
     
 end );
+# =#
 
 ##
 InstallMethod( CoveringListOfRepresentables,
@@ -4361,9 +4379,10 @@ InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
     
 end );
 
+#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
-        [ IsCapCategory and IsAbelianCategory, IsPreSheafCategory, IsList, IsObjectInPreSheafCategory ],
+        [ FilterIntersection( IsCapCategory, IsAbelianCategory ), IsPreSheafCategory, IsList, IsObjectInPreSheafCategory ],
         
   function ( H, PSh, covering_list, F )
     local CoequalizerPairs, UC, coYoneda, F_VAst, V, A, s, t,
@@ -4422,6 +4441,7 @@ InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
                            V ) );
     
 end );
+# =#
 
 ##
 InstallOtherMethodForCompilerForCAP( RetractionFromCoYonedaProjectiveObjectOntoOptimizedCoYonedaProjectiveObject,

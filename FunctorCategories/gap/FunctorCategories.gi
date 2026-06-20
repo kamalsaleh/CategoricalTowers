@@ -200,6 +200,8 @@ InstallOtherMethodForCompilerForCAP( AsObjectInFunctorCategoryByValues,
     
 end );
 
+#= comment for Julia
+# Multiple installations of an object-constructor causes issues in julia (ambiguous number of arguments).
 ##
 InstallMethodForCompilerForCAP( AsObjectInFunctorCategoryByValues,
         "for a functor category and two lists",
@@ -211,6 +213,7 @@ InstallMethodForCompilerForCAP( AsObjectInFunctorCategoryByValues,
                    Pair( values_of_all_objects, values_of_all_generating_morphisms ) );
     
 end );
+# =#
 
 ##
 InstallMethodForCompilerForCAP( AsObjectInFunctorCategoryByFunctions,
@@ -465,7 +468,7 @@ InstallMethodWithCache( FunctorCategory,
         Error( "the first argument must be in { IsFpCategoryDefinedByQuiverAlgebra, IsFpAlgebroidDefinedByQuiverAlgebra, IsPathCategory, IsQuotientOfPathCategory, IsCategoryFromNerveData, IsCategoryFromDataTables, (HasIsFiniteCategory and IsFiniteCategory), IsAlgebroidFromDataTables }\n" );
     fi;
     
-    PSh := PreSheaves( B_op, D : FinalizeCategory := true );
+    PSh := PreSheaves( B_op, D );
     
     ## from the raw object data to the object in the modeling category
     modeling_tower_object_constructor :=
