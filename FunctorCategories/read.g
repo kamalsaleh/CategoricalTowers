@@ -35,8 +35,8 @@ ReadPackage( "FunctorCategories", "gap/HomStructure.gi");
 ReadPackage( "FunctorCategories", "gap/FunctorCategories.gi");
 ReadPackage( "FunctorCategories", "gap/CoPreSheaves.gi");
 
-#= comment for Julia
 ReadPackage( "FunctorCategories", "gap/FiniteCocompletion.gi");
+#= comment for Julia
 ReadPackage( "FunctorCategories", "gap/CategoryOfBouquets.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfQuivers.gi");
 ReadPackage( "FunctorCategories", "gap/CategoryOfDecoratedQuivers.gi");

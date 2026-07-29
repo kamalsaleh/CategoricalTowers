@@ -4,6 +4,10 @@
 # Implementations
 #
 
+#% G2J:julia-only @FilterIntersection( IsWrapperCapCategory, IsFiniteCocompletion );
+#% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCocompletion );
+#% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCocompletion );
+
 ##
 InstallMethodWithCache( FiniteCocompletion,
         "for a CAP category",
@@ -18,9 +22,9 @@ InstallMethodWithCache( FiniteCocompletion,
     name := Concatenation( "FiniteCocompletion( ", Name( fp_category ), " )" );
     
     ##
-    category_filter := FilterIntersection( IsFiniteCocompletion, IsWrapperCapCategory );
-    category_object_filter := FilterIntersection( IsObjectInFiniteCocompletion, IsWrapperCapCategoryObject );
-    category_morphism_filter := FilterIntersection( IsMorphismInFiniteCocompletion, IsWrapperCapCategoryMorphism );
+    category_filter := FilterIntersection( IsWrapperCapCategory, IsFiniteCocompletion );
+    category_object_filter := FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCocompletion );
+    category_morphism_filter := FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCocompletion );
     
     ## building the categorical tower:
     
@@ -83,7 +87,7 @@ InstallMethod( \/,
     
     Y := EmbeddingOfUnderlyingCategory( finite_cocompletion );
     
-    Yc := Y( F.(name) );
+    Yc := CallFuncListAtRuntime( ApplyFunctor, [ Y, name / F ] );
     
     if IsObjectInFiniteCocompletion( Yc ) then
         
