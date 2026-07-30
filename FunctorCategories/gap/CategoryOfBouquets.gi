@@ -109,7 +109,7 @@ InstallMethod( CategoryOfBouquetsEnrichedOver,
     
     F := CallFuncListAtRuntime( CategoryFromDataTables, [ F ] : set_category_attribute_resolving_functions := true, FinalizeCategory := true );
     
-    F_hat := FiniteCocompletion( F : FinalizeCategory := true );
+    F_hat := FiniteCocompletion( F );
 
     Assert( 0, IsIdenticalObj( RangeCategoryOfHomomorphismStructure( F ), category_of_skeletal_finsets ) );
     
