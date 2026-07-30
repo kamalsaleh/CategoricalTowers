@@ -23,6 +23,7 @@ InstallOtherMethodForCompilerForCAP( CreateBouquet,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( CreateBouquet,
         "for a category of bouquets, an integer, and a list of integers",
@@ -34,6 +35,7 @@ InstallMethod( CreateBouquet,
                    Triple( n, Length( loops ), loops ) );
     
 end );
+# =#
 
 ##
 InstallOtherMethodForCompilerForCAP( CreateBouquetMorphism,
@@ -49,6 +51,7 @@ InstallOtherMethodForCompilerForCAP( CreateBouquetMorphism,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( CreateBouquetMorphism,
         "for two objects in a category of bouquets and two lists",
@@ -59,6 +62,7 @@ InstallMethod( CreateBouquetMorphism,
     return CreateBouquetMorphism( CapCategory( source ), source, Pair( images_of_vertices, images_of_loops ), range );
     
 end );
+# =#
 
 ##
 InstallMethod( CategoryOfBouquetsEnrichedOver,
@@ -327,20 +331,18 @@ InstallMethod( EmbeddingOfUnderlyingCategory,
 end );
 
 ##
-InstallMethod( \.,
-        "for a category of bouquets and a positive integer",
-        [ IsCategoryOfBouquets, IsPosInt ],
+InstallOtherMethod( \/,
+        "for a string and a category of bouquets",
+        [ IsString, IsCategoryOfBouquets ],
         
-  function ( category_of_bouquets, string_as_int )
-    local name, F, Y, Yc;
-    
-    name := NameRNam( string_as_int );
+  function ( name, category_of_bouquets )
+    local F, Y, Yc;
     
     F := UnderlyingCategory( category_of_bouquets );
     
     Y := EmbeddingOfUnderlyingCategory( category_of_bouquets );
     
-    Yc := Y( F.(name) );
+    Yc := CallFuncListAtRuntime( ApplyFunctor, [ Y, name / F ] );
     
     if IsObjectInCategoryOfBouquets( Yc ) then
         
@@ -376,6 +378,11 @@ InstallMethod( \.,
     
 end );
 
+#= comment for Julia
+INSTALL_DOT_METHOD( IsCategoryOfBouquets );
+# =#
+
+#= comment for Julia
 ##
 InstallMethod( \.,
         "for an object in a category of bouquets and a positive integer",
@@ -431,6 +438,7 @@ end );
 ##
 MakeShowable( [ "image/svg+xml" ], IsObjectInCategoryOfBouquets );
 MakeShowable( [ "image/svg+xml" ], IsMorphismInCategoryOfBouquets and IsMonomorphism );
+# =#
 
 ##
 InstallOtherMethod( DotVertexLabelledDigraph,
@@ -478,11 +486,13 @@ end );
 
 ##
 InstallOtherMethod( DotVertexLabelledDigraph,
-        "for a morphism in a category of bouquets",
-        [ IsMorphismInCategoryOfBouquets and IsMonomorphism ],
+        "for a monomorphism in a category of bouquets",
+        [ IsMorphismInCategoryOfBouquets ],
         
   function ( monomorphism )
     local bouquet, vertices, loops, str, vertices_of_loops, i;
+    
+    Assert( 0, IsMonomorphism( monomorphism ) );
     
     bouquet := Target( monomorphism );
     
@@ -548,7 +558,7 @@ InstallMethod( SvgString,
 end );
 
 ##
-InstallMethod( Display,
+InstallMethod( DisplayString,
         "for an object in a category of bouquets",
         [ IsObjectInCategoryOfBouquets ],
         
@@ -559,13 +569,13 @@ InstallMethod( Display,
     
     loops := datum[3];
     
-    Print( "( ", StringPrint( FinSet( datum[1] ) ), ", {",
+    return Concatenation( "( ", StringPrint( FinSet( datum[1] ) ), ", {",
            JoinStringsWithSeparator( List( [ 1 .. datum[2] ], i -> Concatenation( " ", String( -1 + i ), " ↦ ", String( loops[i] ) ) ) ), " } )\n" );
     
 end );
 
 ##
-InstallMethod( Display,
+InstallMethod( DisplayString,
         "for a morphism in a category of bouquets",
         [ IsMorphismInCategoryOfBouquets ],
         
@@ -574,12 +584,11 @@ InstallMethod( Display,
 
     F := UnderlyingCategory( CapCategory( mor ) );
     
-    Print( "Image of ", StringView( F.P ), ":\n" );
-    Display( mor.P );
-    
-    Print( "\nImage of ", StringView( F.L ), ":\n" );
-    Display( mor.L );
-    
-    Print( "\nA morphism in ", Name( CapCategory( mor ) ), " given by the above data\n" );
+    return Concatenation(
+           "Image of ", StringView( F.P ), ":\n",
+           DisplayString( mor.P ),
+           "\nImage of ", StringView( F.L ), ":\n",
+           DisplayString( mor.L ),
+           "\nA morphism in ", Name( CapCategory( mor ) ), " given by the above data\n" );
     
 end );
