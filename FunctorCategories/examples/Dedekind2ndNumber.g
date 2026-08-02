@@ -56,5 +56,5 @@ DiffbCSL := MeetSemilatticeOfSingleDifferences( Dist );
 #! PosetOfCategory( PathCategory( FinQuiver( "quiver(p,q)[]" ) ) ) ) )
 Length( SetOfObjects( DiffbCSL ) );
 #! 13
-# @drop_example_in_Julia
+# @drop_example_in_Julia (Digraphs is required to compute the set of generating morphisms of P)
 #! @EndExample

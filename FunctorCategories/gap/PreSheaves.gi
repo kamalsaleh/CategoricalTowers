@@ -2389,6 +2389,13 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
         Finalize( PSh );
     fi;
     
+    # Set this attribute early because immediate use inside other methods might cause Julia world-age problems.
+    if HasRangeCategoryOfHomomorphismStructure( Source( PSh ) ) and
+       ApplicableMethod( EnrichmentSpecificFiniteStrictCoproductCompletion,
+               [ Source( PSh ), RangeCategoryOfHomomorphismStructure( Source( PSh ) ) ] ) <> fail then
+        FiniteStrictCoproductCompletionOfSourceCategory( PSh );
+    fi;
+    
     return PSh;
     
 end ) );
@@ -3496,8 +3503,8 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaOnObjects,
     nr_mors := defining_triple[2];
     arrows := defining_triple[3];
     
-    map_of_sources_C := List( [ 0 .. nr_mors - 1 ], m -> arrows[1 + m][1] );
-    map_of_targets_C := List( [ 0 .. nr_mors - 1 ], m -> arrows[1 + m][2] );
+    map_of_sources_C := List( [ 0 .. nr_mors - 1 ], m -> Int( arrows[1 + m][1] ) );
+    map_of_targets_C := List( [ 0 .. nr_mors - 1 ], m -> Int( arrows[1 + m][2] ) );
     
     objs := SetOfObjects( C );
     mors := SetOfGeneratingMorphisms( C );
@@ -3583,8 +3590,7 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaOnObjects,
     
     C_hat := FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh );
     
-    return ObjectConstructor( C_hat,
-                   Pair( Pair( V, A ), Pair( s, t ) ) );
+    return CallFuncListAtRuntime( ObjectConstructor, [ C_hat, Pair( Pair( V, A ), Pair( s, t ) ) ] );
     
 end );
 
@@ -3762,9 +3768,11 @@ InstallOtherMethodForCompilerForCAP( CoequalizerDataOfPreSheafUsingCoYonedaLemma
         [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory ],
         
   function ( PSh, F )
-    local F_VAst;
+    local C_hat, F_VAst;
     
-    F_VAst := ObjectDatum( FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh ), CoYonedaLemmaOnObjects( PSh, F ) );
+    C_hat := FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh );
+    
+    F_VAst := CallFuncListAtRuntime( ObjectDatum, [ C_hat, CoYonedaLemmaOnObjects( PSh, F ) ] );
     
     return Pair( F_VAst[1][1],
                  [ F_VAst[2][1], F_VAst[2][2] ] ); ## turn the pair F_VAst[2] into a list
@@ -4944,7 +4952,6 @@ InstallMethod( OptimizedCoYonedaLemmaCoequalizerPair,
     
 end );
 
-#= comment for Julia
 ##
 InstallMethodForCompilerForCAP( ApplyPreSheafToObjectInFiniteStrictCoproductCompletion,
         [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsObjectInFiniteStrictCoproductCompletion ],
@@ -5011,7 +5018,6 @@ InstallMethodForCompilerForCAP( ApplyPreSheafToMorphismInFiniteStrictCoproductCo
                    G_on_source );
     
 end );
-# =#
 
 ##
 #= comment for Julia (requires Algebroids)
@@ -5536,10 +5542,12 @@ end );
 InstallMethod( LaTeXOutput,
         [ IsMorphismInPreSheafCategoryOfFpEnrichedCategory ],
         
-  function( eta )
-    local only_datum, objs, v_objs, i, datum;
-    
-    only_datum := ValueOption( "OnlyDatum" );
+  FunctionWithNamedArguments(
+  [
+    [ "OnlyDatum", false ],
+  ],
+  function( CAP_NAMED_ARGUMENTS, eta )
+    local objs, v_objs, i, datum;
     
     objs := SetOfObjects( Source( Source( eta ) ) );
     
@@ -5560,7 +5568,7 @@ InstallMethod( LaTeXOutput,
     
     datum := Concatenation( datum, "\\end{array}" );
     
-    if only_datum = true then
+    if CAP_NAMED_ARGUMENTS.OnlyDatum = true then
       
       return datum;
       
@@ -5576,4 +5584,4 @@ InstallMethod( LaTeXOutput,
     
     fi;
     
-end );
+end ) );
