@@ -34,6 +34,7 @@ fi;
 DeclareAttribute( "DefiningTripleOfUnderlyingQuiver",
         IsCapCategory );
 
+# TODO: Do we need to change those to BigInt?
 CapJitAddTypeSignature( "DefiningTripleOfUnderlyingQuiver", [ IsCapCategory ],
   function ( input_types )
     
