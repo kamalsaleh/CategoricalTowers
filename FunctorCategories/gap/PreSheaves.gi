@@ -1920,6 +1920,8 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
         
         if HasIsSkeletalCategory( B ) and IsSkeletalCategory( B ) then
             Add( properties, "IsSkeletalCategory" );
+            # Locales/gap/Poset.gi: InstallTrueMethod( IsPosetCategory, IsThinCategory and IsSkeletalCategory ) is commented out in Julia
+            Add( properties, "IsPosetCategory" );
         fi;
         
     fi;
@@ -3583,8 +3585,7 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaOnObjects,
     
     C_hat := FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh );
     
-    return ObjectConstructor( C_hat,
-                   Pair( Pair( V, A ), Pair( s, t ) ) );
+    return CallFuncListAtRuntime( ObjectConstructor, [ C_hat, Pair( Pair( V, A ), Pair( s, t ) ) ] );
     
 end );
 
@@ -3762,9 +3763,11 @@ InstallOtherMethodForCompilerForCAP( CoequalizerDataOfPreSheafUsingCoYonedaLemma
         [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory ],
         
   function ( PSh, F )
-    local F_VAst;
+    local C_hat, F_VAst;
     
-    F_VAst := ObjectDatum( FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh ), CoYonedaLemmaOnObjects( PSh, F ) );
+    C_hat := FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh );
+    
+    F_VAst := CallFuncListAtRuntime( ObjectDatum, [ C_hat, CoYonedaLemmaOnObjects( PSh, F ) ] );
     
     return Pair( F_VAst[1][1],
                  [ F_VAst[2][1], F_VAst[2][2] ] ); ## turn the pair F_VAst[2] into a list
@@ -4944,7 +4947,6 @@ InstallMethod( OptimizedCoYonedaLemmaCoequalizerPair,
     
 end );
 
-#= comment for Julia
 ##
 InstallMethodForCompilerForCAP( ApplyPreSheafToObjectInFiniteStrictCoproductCompletion,
         [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsObjectInFiniteStrictCoproductCompletion ],
@@ -5011,7 +5013,6 @@ InstallMethodForCompilerForCAP( ApplyPreSheafToMorphismInFiniteStrictCoproductCo
                    G_on_source );
     
 end );
-# =#
 
 ##
 #= comment for Julia (requires Algebroids)
@@ -5536,10 +5537,12 @@ end );
 InstallMethod( LaTeXOutput,
         [ IsMorphismInPreSheafCategoryOfFpEnrichedCategory ],
         
-  function( eta )
-    local only_datum, objs, v_objs, i, datum;
-    
-    only_datum := ValueOption( "OnlyDatum" );
+  FunctionWithNamedArguments(
+  [
+    [ "OnlyDatum", false ],
+  ],
+  function( CAP_NAMED_ARGUMENTS, eta )
+    local objs, v_objs, i, datum;
     
     objs := SetOfObjects( Source( Source( eta ) ) );
     
@@ -5560,7 +5563,7 @@ InstallMethod( LaTeXOutput,
     
     datum := Concatenation( datum, "\\end{array}" );
     
-    if only_datum = true then
+    if CAP_NAMED_ARGUMENTS.OnlyDatum = true then
       
       return datum;
       
@@ -5576,4 +5579,4 @@ InstallMethod( LaTeXOutput,
     
     fi;
     
-end );
+end ) );
