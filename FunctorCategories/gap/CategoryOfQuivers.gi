@@ -14,12 +14,10 @@ InstallOtherMethodForCompilerForCAP( CreateQuiver,
     #% CAP_JIT_DROP_NEXT_STATEMENT
     Assert( 0, Length( triple ) = 3 and IsList( triple[3] ) and ForAll( triple[3], IsList ) );
     
-    return CreateCapCategoryObjectWithAttributes( category_of_quivers,
-                   DefiningTripleOfQuiverEnrichedOverSkeletalFinSets, triple );
+    return ObjectConstructor( category_of_quivers, triple );
     
 end );
 
-#= comment for Julia
 ##
 InstallMethod( CreateQuiver,
         "for a category of quivers, an integer, and a list of pairs of integers",
@@ -39,7 +37,6 @@ InstallMethod( CreateQuiver,
                    Triple( n, Length( arr ), arr ) );
     
 end );
-# =#
 
 ##
 InstallOtherMethodForCompilerForCAP( CreateQuiverMorphism,
@@ -48,14 +45,10 @@ InstallOtherMethodForCompilerForCAP( CreateQuiverMorphism,
         
   function ( category_of_quivers, source, images, range )
     
-    return CreateCapCategoryMorphismWithAttributes( category_of_quivers,
-                   source,
-                   range,
-                   DefiningPairOfQuiverMorphismEnrichedOverSkeletalFinSets, images );
+    return MorphismConstructor( category_of_quivers, source, images, range );
     
 end );
 
-#= comment for Julia
 ##
 InstallMethod( CreateQuiverMorphism,
         "for two objects in a category of quivers and two lists",
@@ -66,7 +59,6 @@ InstallMethod( CreateQuiverMorphism,
     return CreateQuiverMorphism( CapCategory( source ), source, Pair( images_of_vertices, images_of_arrows ), range );
     
 end );
-# =#
 
 ##
 InstallMethod( CategoryOfQuiversEnrichedOver,
@@ -105,7 +97,9 @@ InstallMethod( CategoryOfQuiversEnrichedOver,
                               IsBigInt,
                               IsBigInt ) ) );
     
-    object_constructor := CreateQuiver;
+    object_constructor :=
+        { Quivers, triple } -> CreateCapCategoryObjectWithAttributes( Quivers,
+                                    DefiningTripleOfQuiverEnrichedOverSkeletalFinSets, triple );
     
     object_datum := { Quivers, o } -> DefiningTripleOfQuiverEnrichedOverSkeletalFinSets( o );
     
@@ -115,7 +109,12 @@ InstallMethod( CategoryOfQuiversEnrichedOver,
               CapJitDataTypeOfListOf( IsBigInt ),
               CapJitDataTypeOfListOf( IsBigInt ) );
     
-    morphism_constructor := CreateQuiverMorphism;
+    morphism_constructor :=
+        { Quivers, source, images, range } ->
+                CreateCapCategoryMorphismWithAttributes( Quivers,
+                        source,
+                        range,
+                        DefiningPairOfQuiverMorphismEnrichedOverSkeletalFinSets, images );
     
     morphism_datum := { Quivers, m } -> DefiningPairOfQuiverMorphismEnrichedOverSkeletalFinSets( m );
     
