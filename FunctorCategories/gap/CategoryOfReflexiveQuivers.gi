@@ -37,13 +37,13 @@ InstallMethod( CreateReflexiveQuiver,
     
     if ForAll( arrows, IsBigInt ) then
         Assert( 0, IsEvenInt( Length( arrows ) ) );
-        arr := List( [ 1 .. Length( arrows ) / 2 ], i -> Pair( arrows[2 * i - 1], arrows[2 * i] ) );
+        arr := List( [ 1 .. QuoInt( Length( arrows ), 2 ) ], i -> Pair( arrows[2 * i - 1], arrows[2 * i] ) );
     else
         arr := arrows;
     fi;
     
     return CreateReflexiveQuiver( category_of_quivers,
-                   NTuple( 4, n, Length( arr ), loops, arr ) );
+                   NTuple( 4, n, BigInt( Length( arr ) ), loops, arr ) );
     
 end );
 
