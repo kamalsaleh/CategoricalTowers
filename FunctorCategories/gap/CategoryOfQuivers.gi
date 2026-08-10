@@ -28,13 +28,13 @@ InstallMethod( CreateQuiver,
     
     if ForAll( arrows, IsBigInt ) then
         Assert( 0, IsEvenInt( Length( arrows ) ) );
-        arr := List( [ 1 .. Length( arrows ) / 2 ], i -> Pair( arrows[2 * i - 1], arrows[2 * i] ) );
+        arr := List( [ 1 .. QuoInt( Length( arrows ), 2 ) ], i -> Pair( arrows[2 * i - 1], arrows[2 * i] ) );
     else
         arr := arrows;
     fi;
     
     return CreateQuiver( category_of_quivers,
-                   Triple( n, Length( arr ), arr ) );
+                   Triple( n, BigInt( Length( arr ) ), arr ) );
     
 end );
 
@@ -266,7 +266,7 @@ FinQuivers!.Name := "FinQuivers";
 ##
 InstallMethod( CreateQuiver,
         "for an integer, and a list of pairs of integers",
-        [ IsInt, IsList ],
+        [ IsBigInt, IsList ],
         
   function ( n, arrows )
     
@@ -301,7 +301,7 @@ InstallMethod( Subobject,
     
     source := CreateQuiver( CapCategory( quiver ),
                       Length( vertices ),
-                      List( arrows_as_pairs, a -> -1 + [ SafePosition( vertices, a[1] ), SafePosition( vertices, a[2] ) ] ) );
+                      List( arrows_as_pairs, a -> -1 + [ BigInt( SafePosition( vertices, a[1] ) ), BigInt( SafePosition( vertices, a[2] ) ) ] ) );
     
     subquiver := CreateQuiverMorphism( source, vertices, arrows, quiver );
     
