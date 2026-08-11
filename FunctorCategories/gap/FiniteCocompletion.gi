@@ -4,10 +4,6 @@
 # Implementations
 #
 
-#% G2J:julia-only @FilterIntersection( IsWrapperCapCategory, IsFiniteCocompletion );
-#% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCocompletion );
-#% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCocompletion );
-
 ##
 InstallMethodWithCache( FiniteCocompletion,
         "for a CAP category",
@@ -22,9 +18,9 @@ InstallMethodWithCache( FiniteCocompletion,
     name := Concatenation( "FiniteCocompletion( ", Name( fp_category ), " )" );
     
     ##
-    category_filter := FilterIntersection( IsWrapperCapCategory, IsFiniteCocompletion );
-    category_object_filter := FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCocompletion );
-    category_morphism_filter := FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCocompletion );
+    category_filter := IsFiniteCocompletion;
+    category_object_filter := IsObjectInFiniteCocompletion;
+    category_morphism_filter := IsMorphismInFiniteCocompletion;
     
     ## building the categorical tower:
     
