@@ -4,6 +4,7 @@
 # Implementations
 #
 
+# Do we still need this??
 #% G2J:julia-only @FilterIntersection( IsWrapperCapCategory, IsFiniteCompletion );
 #% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCompletion );
 #% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCompletion );
@@ -22,9 +23,9 @@ InstallMethodWithCache( FiniteCompletion,
     name := Concatenation( "FiniteCompletion( ", Name( fp_category ), " )" );
     
     ##
-    category_filter := FilterIntersection( IsWrapperCapCategory, IsFiniteCompletion );
-    category_object_filter := FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCompletion );
-    category_morphism_filter := FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCompletion );
+    category_filter := IsFiniteCompletion;
+    category_object_filter := IsObjectInFiniteCompletion;
+    category_morphism_filter := IsMorphismInFiniteCompletion;
     
     ## building the categorical tower:
     
