@@ -4,10 +4,6 @@
 # Implementations
 #
 
-#% G2J:julia-only @FilterIntersection( IsWrapperCapCategory, IsFiniteCocompletion );
-#% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryObject, IsObjectInFiniteCocompletion );
-#% G2J:julia-only @FilterIntersection( IsWrapperCapCategoryMorphism, IsMorphismInFiniteCocompletion );
-
 ##
 InstallMethodWithCache( FiniteCocompletion,
         "for a CAP category",
