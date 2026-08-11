@@ -37,6 +37,9 @@ InstallGlobalFunction( "CreateIntervalCategory",
     
     SetIsCategoryWithDecidableLifts( IntervalCategory, true );
     SetIsCategoryWithDecidableColifts( IntervalCategory, true );
+
+    ## Required for Julia: IsBooleanAlgebra => IsDistributiveBicartesianProset via InstallTrueMethod in GAP.
+    SetIsDistributiveBicartesianProset( IntervalCategory, true );
     
     ##
     AddObjectConstructor( IntervalCategory,
