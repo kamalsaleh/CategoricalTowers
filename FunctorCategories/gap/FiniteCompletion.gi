@@ -31,6 +31,8 @@ InstallMethodWithCache( FiniteCompletion,
     
     coPSh := CoPreSheaves( fp_category, range_category_of_hom_structure : FinalizeCategory := true, overhead := false );
     
+    ADD_CONJUNCTION_DERIVED_LATTICE_PROPERTIES( coPSh );
+    
     ##
     finite_completion :=
       WrapperCategory( coPSh,
