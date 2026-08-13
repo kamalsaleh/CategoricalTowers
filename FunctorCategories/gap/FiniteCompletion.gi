@@ -76,6 +76,8 @@ InstallMethod( EmbeddingOfUnderlyingCategory,
   function( finite_completion )
     local Y;
     
+    ## Use ModelingCategory to get the stored coPSh instance; CoYonedaEmbedding( UnderlyingCategory ) would create a fresh one,
+    ## causing IsEqualForObjects to fail in PreCompose. Mirrors FiniteCocompletion using YonedaEmbeddingOfSourceCategory( ModelingCategory ).
     Y := CoYonedaEmbeddingOfSourceCategory( ModelingCategory( finite_completion ) );
     
     return PreCompose( Y, WrappingFunctor( finite_completion ) );
