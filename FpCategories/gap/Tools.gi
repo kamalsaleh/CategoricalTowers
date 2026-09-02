@@ -59,7 +59,7 @@ InstallMethod( DefiningTripleOfUnderlyingQuiver,
   function( cat )
     local objs, mors;
     
-    if not ( HasIsFinitelyPresentedCategory( cat ) and IsFinitelyPresentedCategory( cat ) ) then
+    if not ( CanCompute( cat, "SetOfObjectsOfCategory" ) and CanCompute( cat, "SetOfGeneratingMorphismsOfCategory" ) ) then
         TryNextMethod( );
     fi;
     
