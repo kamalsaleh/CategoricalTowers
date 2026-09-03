@@ -4568,7 +4568,7 @@ InstallOtherMethodForCompilerForCAP( SectionAndComplementByCoveringListOfReprese
   function ( PSh, covering_list, F )
     local C, H, d, defining_triple, nr_objs, objs, UC,
           F_on_objs, embs, cover, sources, source, targets, target,
-          sections, section, complement_sources, complements, complement;
+          sections, section, complement_sources, complements, complement, coproduct_obj;
     
     C := Source( PSh );
     H := RangeCategoryOfHomomorphismStructure( PSh );
@@ -4644,12 +4644,13 @@ InstallOtherMethodForCompilerForCAP( SectionAndComplementByCoveringListOfReprese
                               cover[1 + o][4],
                               targets[1 + o] ) );
     
-    section := CoproductFunctorialWithGivenCoproducts( UC,
-                       source,
-                       sources,
-                       sections,
-                       targets,
-                       target );
+    section := CallFuncListAtRuntime( CoproductFunctorialWithGivenCoproducts,
+                [ UC,
+                  source,
+                  sources,
+                  sections,
+                  targets,
+                  target ] );
     
     complement_sources := List( [ 0 .. nr_objs - 1 ], o ->
                                 TensorizeObjectWithObjectInRangeCategoryOfHomomorphismStructure( H, UC,
@@ -4663,12 +4664,15 @@ InstallOtherMethodForCompilerForCAP( SectionAndComplementByCoveringListOfReprese
                                  cover[1 + o][5],
                                  targets[1 + o] ) );
     
-    complement := CoproductFunctorialWithGivenCoproducts( UC,
-                          Coproduct( UC, complement_sources ),
-                          complement_sources,
-                          complements,
-                          targets,
-                          target );
+    coproduct_obj := CallFuncListAtRuntime( Coproduct, [ UC, complement_sources ] );
+    
+    complement := CallFuncListAtRuntime( CoproductFunctorialWithGivenCoproducts,
+                [ UC,
+                  coproduct_obj,
+                  complement_sources,
+                  complements,
+                  targets,
+                  target ] );
     
     #% CAP_JIT_DROP_NEXT_STATEMENT
     SetIsSplitMonomorphism( section, true );
