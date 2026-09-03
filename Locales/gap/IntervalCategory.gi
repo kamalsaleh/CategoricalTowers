@@ -44,6 +44,9 @@ InstallGlobalFunction( "CreateIntervalCategory",
     ## BicartesianCategories.gi: InstallTrueMethod( IsFiniteBicompleteCategory, IsFiniteCompleteCategory and IsFiniteCocompleteCategory );
     SetIsFiniteBicompleteCategory( IntervalCategory, true );
     
+    ## Poset.gi: InstallTrueMethod( IsPosetCategory, IsThinCategory and IsSkeletalCategory );
+    SetIsPosetCategory( IntervalCategory, true );
+    
     ##
     AddObjectConstructor( IntervalCategory,
       function( cat, truth_value )
