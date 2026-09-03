@@ -3155,7 +3155,7 @@ InstallOtherMethod( UnderlyingCapTwoCategoryCell,
     
     values := ValuesOfPreSheaf( F );
     
-    return CapFunctor( OppositeOfSource( PSh ), values[1], values[2], Target( PSh ) );
+    return CreateFunctor( OppositeOfSource( PSh ), values[1], values[2], Target( PSh ) );
     
 end );
 
