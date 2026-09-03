@@ -3343,10 +3343,11 @@ InstallMethod( ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToMorphism,
         
     fi;
     
-    return FunctorMorphismOperation( UnderlyingCapTwoCategoryCell( PSh, F ) )(
-                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
-                   morB_op,
-                   ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) );
+    return CallFuncListAtRuntime(
+                FunctorMorphismOperation( UnderlyingCapTwoCategoryCell( PSh, F ) ),
+                [ ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Target( morB ) ),
+                  morB_op,
+                  ApplyObjectInPreSheafCategoryOfFpEnrichedCategoryToObject( PSh, F, Source( morB ) ) ] );
     
 end );
 
@@ -4627,14 +4628,14 @@ InstallOtherMethodForCompilerForCAP( SectionAndComplementByCoveringListOfReprese
                              objs[1 + o],
                              cover[1 + o][2] ) );
     
-    source := Coproduct( UC, sources );
+    source := CallFuncListAtRuntime( Coproduct, [ UC, sources ] );
     
     targets := List( [ 0 .. nr_objs - 1 ], o ->
                      TensorizeObjectWithObjectInRangeCategoryOfHomomorphismStructure( H, UC,
                              objs[1 + o],
                              cover[1 + o][3] ) );
     
-    target := Coproduct( UC, targets );
+    target := CallFuncListAtRuntime( Coproduct, [ UC, targets ] );
     
     sections := List( [ 0 .. nr_objs - 1 ], o ->
                       TensorizeObjectWithMorphismInRangeCategoryOfHomomorphismStructure( H, UC,
