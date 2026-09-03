@@ -12,15 +12,15 @@
 LoadPackage( "FunctorCategories" );
 
 #! @Example
-q := RightQuiver( "q(4)[x:1->1,a:1->2,b:2->4,c:1->3,d:3->4,y:4->4]" );
-#! q(4)[x:1->1,a:1->2,b:2->4,c:1->3,d:3->4,y:4->4]
-F := FreeCategory( q );
-#! FreeCategory( RightQuiver( "q(4)[x:1->1,a:1->2,b:2->4,c:1->3,d:3->4,y:4->4]" ) )
+q := FinQuiver( "q(4)[x:1->1,a:1->2,b:2->4,c:1->3,d:3->4,y:4->4]" );
+#! FinQuiver( "q(1,2,3,4)[x:1→1,a:1→2,b:2→4,c:1→3,d:3→4,y:4→4]" )
+F := PathCategory( q );
+#! PathCategory( FinQuiver( "q(1,2,3,4)[x:1→1,a:1→2,b:2→4,c:1→3,d:3→4,y:4→4]" ) )
 k := HomalgFieldOfRationals( );
 #! Q
 kF := k[F];
-#! Algebroid( Q, FreeCategory( RightQuiver( "q(4)[x:1->1,a:1->2,b:2->4,c:1->3,d:3->4,
-#! y:4->4]" ) ) )
+#! Q-LinearClosure( PathCategory( FinQuiver( "q(1,2,3,4)[x:1→1,a:1→2,b:2→4,c:1→3,d:3→4,
+#! y:4→4]" ) ) )
 A := AlgebroidFromDataTables( kF / [ kF.x^3, kF.y^2 ] );
 #! Q-algebroid( {1,2,3,4}[x:1→1,a:1→2,b:2→4,c:1→3,d:3→4,y:4→4] ) defined by 4 objects
 #! and 6 generating morphisms
