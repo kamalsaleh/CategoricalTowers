@@ -365,3 +365,4 @@ DeclareOperation( "ElementaryTensor",
 DeclareOperation( "ElementaryTensor",
             [ IsMorphismInFpAlgebroidFromDataTables, IsMorphismInFpAlgebroidFromDataTables, IsFpAlgebroidFromDataTables ] );
 
+# `CreateFunctor` is declared centrally in ToolsForCategoricalTowers
