@@ -30,11 +30,11 @@
 #         hom(U,Y)  ≺----------  hom(V,Y)
 #
 ##
-InstallOtherMethod( AlgebroidAsObjectInPreSheavesCategory,
-          [ IsPreSheafCategory, IsFpAlgebroidFromDataTables ],
+InstallMethod( AlgebroidAsObjectInPreSheavesCategory,
+          [ IsFpAlgebroidFromDataTables ],
           
-  function ( PSh, A )
-    local q, nr_objs, nr_gmors, images_of_objs, images_of_gmorphisms;
+  function ( A )
+    local q, nr_objs, nr_gmors, images_of_objs, images_of_gmorphisms, PSh;
     
     q := UnderlyingQuiver( A );
     
@@ -53,38 +53,9 @@ InstallOtherMethod( AlgebroidAsObjectInPreSheavesCategory,
              _ConcatenationLazyHLists_( LazyHList( [ 1 .. nr_gmors ], l -> LazyHList( [ 1 .. nr_objs ],
               r -> HomomorphismStructureOnMorphisms( A, IdentityMorphism( SetOfObjects( A )[r] ), SetOfGeneratingMorphisms( A )[l] ) ) ) ) ] );
     
-    return ObjectConstructor( PSh, Pair( images_of_objs, images_of_gmorphisms ) );
-    
-end );
+    PSh := PreSheaves( EnvelopingAlgebroid( A ) );
 
-##
-InstallMethod( AlgebroidAsObjectInPreSheavesCategory,
-          [ IsFpAlgebroidFromDataTables ],
-  function ( A )
-    local PSh;
-    
-    PSh := PreSheaves( TensorProductOfAlgebroids( OppositeOfObjectFiniteCategory( A ), A ) );
-    
-    return CallFuncListAtRuntime( AlgebroidAsObjectInPreSheavesCategory, [ PSh, A ] );
-    
-end );
-
-##
-InstallOtherMethod( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory,
-          [ IsPreSheafCategory, IsMorphismInFpAlgebroidFromDataTables ],
-          
-  function ( PSh, m )
-    local A, A_op, A_op_objs;
-    
-    A := CapCategory( m );
-    A_op := Source( PSh );
-    
-    A_op_objs := SetOfObjects( A_op );
-    
-    return MorphismFromRepresentableByYonedaLemma( PSh,
-                ElementaryTensor( A_op_objs[ObjectIndex( Target( m ) )], Source( m ), Source( PSh ) ),
-                InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructure( A, m ),
-                AlgebroidAsObjectInPreSheavesCategory( A ) );
+    return CallFuncListAtRuntime( ObjectConstructor, [ PSh, Pair( images_of_objs, images_of_gmorphisms ) ] );
     
 end );
 
@@ -93,12 +64,20 @@ InstallMethod( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory,
           [ IsMorphismInFpAlgebroidFromDataTables ],
           
   function ( m )
-    local A, PSh;
+    local A, F_A, PSh, target_op;
     
     A := CapCategory( m );
     
-    PSh := PreSheaves( TensorProductOfAlgebroids( OppositeOfObjectFiniteCategory( A ), A ) );
+    F_A := AlgebroidAsObjectInPreSheavesCategory( A );
     
-    return CallFuncListAtRuntime( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory, [ PSh, m ] );
+    PSh := CapCategory( F_A );
+    
+    target_op := CallFuncListAtRuntime( SetOfObjects, [ OppositeOfObjectFiniteCategory( A ) ] )[ObjectIndex( Target( m ) )];
+    
+    return CallFuncListAtRuntime( MorphismFromRepresentableByYonedaLemma,
+              [ PSh,
+                ElementaryTensor( target_op, Source( m ), Source( PSh ) ),
+                InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructure( A, m ),
+                F_A ] );
     
 end );
