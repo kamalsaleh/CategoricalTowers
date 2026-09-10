@@ -5,7 +5,7 @@
 #
 
 #
-#  Interpret an algebroid from data tables A as an object in PreSheaves(A^op ⊗ A, k-rows).
+#  Interpret an algebroid defined by data tables A as an object in PreSheaves(A^op ⊗ A, k-rows).
 #
 #  For two morphims: g: X --> Y in A^op   &  f: U --> V in A
 #
@@ -30,11 +30,11 @@
 #         hom(U,Y)  ≺----------  hom(V,Y)
 #
 ##
-InstallMethod( AlgebroidAsObjectInPreSheavesCategory,
-          [ IsFpAlgebroidFromDataTables ],
+InstallOtherMethod( AlgebroidAsObjectInPreSheavesCategory,
+          [ IsPreSheafCategory, IsFpAlgebroidFromDataTables ],
           
-  function ( A )
-    local q, nr_objs, nr_gmors, images_of_objs, images_of_gmorphisms, PSh;
+  function ( PSh, A )
+    local q, nr_objs, nr_gmors, images_of_objs, images_of_gmorphisms;
     
     q := UnderlyingQuiver( A );
     
@@ -47,15 +47,44 @@ InstallMethod( AlgebroidAsObjectInPreSheavesCategory,
             r -> HomomorphismStructureOnObjects( A, SetOfObjects( A )[r], SetOfObjects( A )[l] ) ) ) );
     
     images_of_gmorphisms :=
-                _ConcatenationLazyHLists_(
-                     [ _ConcatenationLazyHLists_( LazyHList( [ 1 .. nr_objs ], l -> LazyHList( [ 1 .. nr_gmors ],
-                        r -> HomomorphismStructureOnMorphisms( A, SetOfGeneratingMorphisms( A )[r], IdentityMorphism( SetOfObjects( A )[l] ) ) ) ) ),
-                       _ConcatenationLazyHLists_( LazyHList( [ 1 .. nr_gmors ], l -> LazyHList( [ 1 .. nr_objs ],
-                        r -> HomomorphismStructureOnMorphisms( A, IdentityMorphism( SetOfObjects( A )[r] ), SetOfGeneratingMorphisms( A )[l] ) ) ) ) ] );
+      _ConcatenationLazyHLists_(
+           [ _ConcatenationLazyHLists_( LazyHList( [ 1 .. nr_objs ], l -> LazyHList( [ 1 .. nr_gmors ],
+              r -> HomomorphismStructureOnMorphisms( A, SetOfGeneratingMorphisms( A )[r], IdentityMorphism( SetOfObjects( A )[l] ) ) ) ) ),
+             _ConcatenationLazyHLists_( LazyHList( [ 1 .. nr_gmors ], l -> LazyHList( [ 1 .. nr_objs ],
+              r -> HomomorphismStructureOnMorphisms( A, IdentityMorphism( SetOfObjects( A )[r] ), SetOfGeneratingMorphisms( A )[l] ) ) ) ) ] );
+    
+    return ObjectConstructor( PSh, Pair( images_of_objs, images_of_gmorphisms ) );
+    
+end );
+
+##
+InstallMethod( AlgebroidAsObjectInPreSheavesCategory,
+          [ IsFpAlgebroidFromDataTables ],
+  function ( A )
+    local PSh;
     
     PSh := PreSheaves( TensorProductOfAlgebroids( OppositeOfObjectFiniteCategory( A ), A ) );
     
-    return ObjectConstructor( PSh, Pair( images_of_objs, images_of_gmorphisms ) );
+    return CallFuncListAtRuntime( AlgebroidAsObjectInPreSheavesCategory, [ PSh, A ] );
+    
+end );
+
+##
+InstallOtherMethod( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory,
+          [ IsPreSheafCategory, IsMorphismInFpAlgebroidFromDataTables ],
+          
+  function ( PSh, m )
+    local A, A_op, A_op_objs;
+    
+    A := CapCategory( m );
+    A_op := Source( PSh );
+    
+    A_op_objs := SetOfObjects( A_op );
+    
+    return MorphismFromRepresentableByYonedaLemma( PSh,
+                ElementaryTensor( A_op_objs[ObjectIndex( Target( m ) )], Source( m ), Source( PSh ) ),
+                InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructure( A, m ),
+                AlgebroidAsObjectInPreSheavesCategory( A ) );
     
 end );
 
@@ -64,16 +93,12 @@ InstallMethod( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory,
           [ IsMorphismInFpAlgebroidFromDataTables ],
           
   function ( m )
-    local A, A_op, T;
+    local A, PSh;
     
     A := CapCategory( m );
-    A_op := OppositeOfObjectFiniteCategory( A );
-    T := TensorProductOfAlgebroids( A_op, A );
     
-    return MorphismFromRepresentableByYonedaLemma(
-                PreSheaves( T ),
-                ElementaryTensor( SetOfObjects( A_op )[ObjectIndex( Target( m ) )], Source( m ), T ),
-                InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructure( A, m ),
-                AlgebroidAsObjectInPreSheavesCategory( A ) );
+    PSh := PreSheaves( TensorProductOfAlgebroids( OppositeOfObjectFiniteCategory( A ), A ) );
+    
+    return CallFuncListAtRuntime( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory, [ PSh, m ] );
     
 end );
