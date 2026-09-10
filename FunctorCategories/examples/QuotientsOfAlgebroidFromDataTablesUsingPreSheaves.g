@@ -17,18 +17,7 @@ quo_kC := kC / [ kC.e^3 ];
 A := AlgebroidFromDataTables( quo_kC );
 #! Q-algebroid( {0,1,2,3}[a:0→1,b:1→3,c:0→2,d:2→3,e:3→3] ) defined by
 #! 4 objects and 5 generating morphisms
-A_op := OppositeOfObjectFiniteCategory( A );
-#! Q-algebroid( {0,1,2,3}[a:1→0,b:3→1,c:2→0,d:3→2,e:3→3] ) defined by
-#! 4 objects and 5 generating morphisms
-T := TensorProductOfAlgebroids( A_op, A );
-#! Q-algebroid( {0⊗0,0⊗1,0⊗2,..,3⊗1,3⊗2,3⊗3}[0⊗a:0⊗0→0⊗1,0⊗b:0⊗1→0⊗3,
-#! 0⊗c:0⊗0→0⊗2,..,e⊗1:3⊗1→3⊗1,e⊗2:3⊗2→3⊗2,e⊗3:3⊗3→3⊗3] ) defined by
-#! 16 objects and 40 generating morphisms
-PSh := PreSheaves( T );
-#! PreSheaves( Q-algebroid( {0⊗0,0⊗1,0⊗2,..,3⊗1,3⊗2,3⊗3}[0⊗a:0⊗0→0⊗1,
-#! 0⊗b:0⊗1→0⊗3,0⊗c:0⊗0→0⊗2,..,e⊗1:3⊗1→3⊗1,e⊗2:3⊗2→3⊗2,e⊗3:3⊗3→3⊗3] )
-#! defined by 16 objects and 40 generating morphisms, Rows( Q ) )
-e := AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory( PSh, A.e );
+e := AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory( A.e );
 #! <(0⊗0)->0x1, (0⊗1)->0x0, (0⊗2)->0x0, (0⊗3)->0x0, (1⊗0)->0x1, (1⊗1)->0x1,
 #! (1⊗2)->0x0, (1⊗3)->0x0, (2⊗0)->0x1, (2⊗1)->0x0, (2⊗2)->0x1, (2⊗3)->0x0,
 #! (3⊗0)->18x6, (3⊗1)->9x3, (3⊗2)->9x3, (3⊗3)->9x3>
