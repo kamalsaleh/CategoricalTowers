@@ -1238,6 +1238,15 @@ end );
 ####################################
 
 ##
+InstallMethod( EnvelopingAlgebroid,
+          [ IsFpAlgebroidFromDataTables ],
+  function ( A )
+    
+    return TensorProductOfAlgebroids( OppositeOfObjectFiniteCategory( A ), A );
+    
+end );
+
+##
 InstallMethodWithCache( TensorProductOfAlgebroids,
           [ IsFpAlgebroidFromDataTables, IsFpAlgebroidFromDataTables ],
   
