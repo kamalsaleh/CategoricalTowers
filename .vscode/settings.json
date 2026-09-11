@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.g": "gap",
+        "*.gd": "gap",
+        "*.gi": "gap"
+    },
+    "files.trimTrailingWhitespace": false,
+    "files.trimTrailingWhitespaceInRegexAndStrings": false,
+    "files.trimFinalNewlines": false,
+    "[gap]": {
+        "editor.formatOnSave": false,
+        "editor.trimAutoWhitespace": false
+    }
+}
