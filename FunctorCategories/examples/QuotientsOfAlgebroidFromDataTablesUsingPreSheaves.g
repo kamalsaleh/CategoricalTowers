@@ -27,27 +27,29 @@ qA := QuotientCategory( A, [ A.ab - A.cd, 2*A.be ] );
 #! QuotientCategory( Q-algebroid( {0,1,2,3}[a:0→1,b:1→3,c:0→2,d:2→3,e:3→3] )
 #! defined by 4 objects and 5 generating morphisms, 2-sided ideal generated
 #! by 2 morphisms )
-qA.0;
+qA.("0");
 #! <(0)>
 RangeCategoryOfHomomorphismStructure( qA );
 #! Rows( Q )
-IsZero( qA.cde );
+IsZeroForMorphisms( qA.cde );
 #! true
 f := RandomMorphism( qA, 20 );;
-1/2 * HomStructure( Source( f ), Target( f ), 2 * HomStructure( f ) ) = f;
+2 * HomStructure( Source( f ), Target( f ), 3 * HomStructure( f ) ) = 6 * f;
 #! true
 qA := QuotientCategory( A, [ A.id_0, A.id_1, A.id_2 ] );
 #! QuotientCategory( Q-algebroid( {0,1,2,3}[a:0→1,b:1→3,c:0→2,d:2→3,e:3→3] )
 #! defined by 4 objects and 5 generating morphisms, 2-sided ideal generated
 #! by 3 morphisms )
-ForAll( [ qA.0, qA.1, qA.2 ], IsZeroForObjects );
+ForAll( [ qA.("0"), qA.("1"), qA.("2") ], IsZeroForObjects );
 #! true
-IsZero( qA.3 );
+IsZeroForObjects( qA.("3") );
 #! false
 D := AlgebroidFromDataTables( qA );
 #! Q-algebroid( {3}[e:3→3] ) defined by 1 object and 1 generating morphism
-BasisOfExternalHom( D.3, D.3 );
-#! [ <1*id(3):(3) → (3)>, <1*e:(3) → (3)>, <1*e^2:(3) → (3)> ]
+Perform( BasisOfExternalHom( D.("3"), D.("3") ), Display );
+#! <1*id(3):(3) → (3)>
+#! <1*e:(3) → (3)>
+#! <1*e^2:(3) → (3)>
 data_tables := DataTablesOfLinearCategory( quo_kC );;
 data_tables_Z := ShallowCopy( data_tables );;
 data_tables_Z[1] := HomalgRingOfIntegers();;
@@ -74,12 +76,10 @@ T := RandomObject( add_qB, [[10],[1]] );;
 u := RandomMorphism( T, T, 5 );;
 v := RandomMorphism( T, T, 5 );;
 w := RandomMorphism( T, T, 5 );;
-HomStructure( PreCompose( [ u, v, w ] ) )
-      = PreCompose( HomStructure( v ), HomStructure( u, w ) );
+HomStructure( PreCompose( [ u, v, w ] ) ) = PreCompose( HomStructure( v ), HomStructure( u, w ) );
 #! true
 HomStructure( T, T, 2 * HomStructure( u ) ) = 2 * u;
 #! true
-# @drop_example_in_Julia
 #! @EndExample
 #!
 #! @Example
@@ -89,8 +89,7 @@ q := FinQuiver( "q(0,1,2)[x:0->1,y:1->2,z:0->2]" );
 #! FinQuiver( "q(0,1,2)[x:0→1,y:1→2,z:0→2]" )
 C := PathCategory( q );
 #! PathCategory( FinQuiver( "q(0,1,2)[x:0→1,y:1→2,z:0→2]" ) )
-k := HomalgFieldOfRationals( );
-#! Q
+k := HomalgFieldOfRationals( );;
 kC := k[C];
 #! Q-LinearClosure( PathCategory( FinQuiver( "q(0,1,2)[x:0→1,
 #! y:1→2,z:0→2]" ) ) )
@@ -122,6 +121,5 @@ B := AlgebroidFromDataTables( A );
 #! Q-algebroid( {o}[x:o→o,y:o→o] ) defined by 1 object and 2 generating morphisms
 IsAdmissibleAlgebroid( B );
 #! false
-# @drop_example_in_Julia
 #! @EndExample
 #! @EndChunk
