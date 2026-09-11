@@ -64,7 +64,7 @@ InstallMethod( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory,
           [ IsMorphismInFpAlgebroidFromDataTables ],
           
   function ( m )
-    local A, F_A, PSh, target_op;
+    local A, F_A, PSh, target_op, elementary_tensor;
     
     A := CapCategory( m );
     
@@ -74,9 +74,11 @@ InstallMethod( AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory,
     
     target_op := CallFuncListAtRuntime( SetOfObjects, [ OppositeOfObjectFiniteCategory( A ) ] )[ObjectIndex( Target( m ) )];
     
+    elementary_tensor := CallFuncListAtRuntime( ElementaryTensor, [ target_op, Source( m ), Source( PSh ) ] );
+    
     return CallFuncListAtRuntime( MorphismFromRepresentableByYonedaLemma,
               [ PSh,
-                ElementaryTensor( target_op, Source( m ), Source( PSh ) ),
+                elementary_tensor,
                 InterpretMorphismAsMorphismFromDistinguishedObjectToHomomorphismStructure( A, m ),
                 F_A ] );
     
