@@ -64,9 +64,9 @@ qB := QuotientCategory( B, [ B.ab - B.cd, 2*B.be ] );
 #! 2 morphisms )
 RangeCategoryOfHomomorphismStructure( qB );
 #! Freyd( Rows( Z ) )
-IsZero( qB.cde );
+IsZeroForMorphisms( qB.cde );
 #! false
-IsZero( 2*qB.cde );
+IsZeroForMorphisms( 2 * qB.cde );
 #! true
 add_qB := AdditiveClosure( qB );
 #! AdditiveClosure( QuotientCategory( Z-algebroid( {0,1,2,3}[a:0→1,b:1→3,
@@ -78,7 +78,7 @@ v := RandomMorphism( T, T, 5 );;
 w := RandomMorphism( T, T, 5 );;
 HomStructure( PreCompose( [ u, v, w ] ) ) = PreCompose( HomStructure( v ), HomStructure( u, w ) );
 #! true
-HomStructure( T, T, 2 * HomStructure( u ) ) = 2 * u;
+HomStructure( T, T, 2 * HomStructure( 3 * u ) ) = 6 * u;
 #! true
 #! @EndExample
 #!
