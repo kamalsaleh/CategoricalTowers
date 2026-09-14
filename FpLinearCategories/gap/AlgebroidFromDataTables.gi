@@ -1188,14 +1188,6 @@ InstallOtherMethod( CreateFunctor,
     
 end );
 
-##
-InstallOtherMethod( CapFunctor,
-        "for an algebroid from data tables, two lists, a CAP Category",
-        [ IsFpAlgebroidFromDataTables, IsList, IsList, IsCapCategory ],
-        
-  CreateFunctor
-);
-
 ####################################
 #
 # Opposite Algebroid
