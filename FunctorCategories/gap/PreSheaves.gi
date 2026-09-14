@@ -3008,8 +3008,8 @@ InstallMethodForCompilerForCAP( YonedaEmbeddingDataOfSourceCategory,
       function ( source, mor, target )
         local source_on_objs, target_on_objs;
         
-        source_on_objs := ObjectDatum( PSh, source )[1];
-        target_on_objs := ObjectDatum( PSh, target )[1];
+        source_on_objs := CallFuncListAtRuntime( ObjectDatum, [ PSh, source ] )[1];
+        target_on_objs := CallFuncListAtRuntime( ObjectDatum, [ PSh, target ] )[1];
         
         return CreatePreSheafMorphismByValues( PSh,
                        source,
@@ -3843,7 +3843,6 @@ InstallMethod( EmbeddingFunctorOfFiniteStrictCoproductCompletionIntoPreSheaves,
     
 end );
 
-#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( AssociatedCoequalizerPairInPreSheaves,
         "for a category of colimit quivers and an object therein",
@@ -3937,10 +3936,9 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaCoequalizerPair,
     
     C_hat := FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh );
     
-    return AssociatedCoequalizerPairInPreSheaves( C_hat, CoYonedaLemmaOnObjects( PSh, F ) );
+    return CallFuncListAtRuntime( AssociatedCoequalizerPairInPreSheaves, [ C_hat, CoYonedaLemmaOnObjects( PSh, F ) ] );
     
 end );
-# =#
 
 ##
 InstallMethod( CoYonedaLemmaCoequalizerPair,
