@@ -37,7 +37,7 @@ InstallMethodWithCache( AbelianClosure,
     A := CallFuncListAtRuntime( FreydCategory,
             [ L ]
             #= comment for julia
-            : FinalizeCategory = true
+            : FinalizeCategory := true
             # =#
             );
     
