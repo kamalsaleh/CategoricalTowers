@@ -182,17 +182,10 @@ InstallOtherMethodForCompilerForCAP( CreateCoPreSheafByValues,
         
   function ( coPSh, values_of_copresheaf )
     
-    return CreateCapCategoryObjectWithAttributes( coPSh,
-                   Source, Source( coPSh ),
-                   Target, Target( coPSh ),
-                   ValuesOfCoPreSheaf, values_of_copresheaf );
+    return ObjectConstructor( coPSh, values_of_copresheaf );
     
 end );
 
-#= comment for Julia
-# Multiple installations of an object-constructor causes issues in julia (ambiguous number of arguments).
-# It would be much better to implement the object-constructor of CoPreSheaves properly without letting it delegate to CreateCoPreSheafByValues which would have
-# multiple convenience methods.
 ##
 InstallMethodForCompilerForCAP( CreateCoPreSheafByValues,
         "for a copresheaf category and two lists",
@@ -204,7 +197,6 @@ InstallMethodForCompilerForCAP( CreateCoPreSheafByValues,
                    Pair( values_of_all_objects, values_of_all_generating_morphisms ) );
     
 end );
-# =#
 
 ##
 InstallMethodForCompilerForCAP( CreateCoPreSheafByFunctions,
@@ -484,7 +476,11 @@ InstallMethodWithCache( CoPreSheaves,
               CapJitDataTypeOfListOf( CapJitDataTypeOfObjectOfCategory( D ) ),
               CapJitDataTypeOfListOf( CapJitDataTypeOfMorphismOfCategory( D ) ) );
     
-    object_constructor := CreateCoPreSheafByValues;
+    object_constructor :=
+      {coPSh, values_of_copresheaf } -> CreateCapCategoryObjectWithAttributes( coPSh,
+                                            Source, Source( coPSh ),
+                                            Target, Target( coPSh ),
+                                            ValuesOfCoPreSheaf, values_of_copresheaf );
     
     object_datum := { coPSh, o } -> ValuesOfCoPreSheaf( o );
     
