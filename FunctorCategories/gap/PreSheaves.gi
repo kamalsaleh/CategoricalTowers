@@ -3936,6 +3936,8 @@ InstallOtherMethodForCompilerForCAP( CoYonedaLemmaCoequalizerPair,
     
     C_hat := FiniteColimitCompletionWithStrictCoproductsOfSourceCategory( PSh );
     
+    #% G2J:julia-only SetCategoryOfPreSheavesOfUnderlyingCategory( C_hat, PSh );
+    
     return CallFuncListAtRuntime( AssociatedCoequalizerPairInPreSheaves, [ C_hat, CoYonedaLemmaOnObjects( PSh, F ) ] );
     
 end );
@@ -4354,7 +4356,6 @@ InstallMethod( MaximalMorphismFromRepresentable,
     
 end );
 
-#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentables,
         [ FilterIntersection( IsCapCategory, IsAbelianCategory ), IsPreSheafCategory, IsObjectInPreSheafCategory ],
@@ -4415,7 +4416,6 @@ InstallOtherMethodForCompilerForCAP( CoveringListOfRepresentables,
     return cover;
     
 end );
-# =#
 
 ##
 InstallMethod( CoveringListOfRepresentables,
@@ -4794,7 +4794,6 @@ InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
     
 end );
 
-#= comment for Julia
 ##
 InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
         [ FilterIntersection( IsCapCategory, IsAbelianCategory ), IsPreSheafCategory, IsList, IsObjectInPreSheafCategory ],
@@ -4856,7 +4855,6 @@ InstallOtherMethodForCompilerForCAP( RetractionByCoveringListOfRepresentables,
                            V ) );
     
 end );
-# =#
 
 ##
 InstallOtherMethodForCompilerForCAP( RetractionFromCoYonedaProjectiveObjectOntoOptimizedCoYonedaProjectiveObject,
