@@ -276,6 +276,8 @@ DeclareAttribute( "DecompositionIndicesOfAllMorphisms",
 DeclareAttribute( "CategoryFromNerveData",
         IsFpCategoryDefinedByQuiverAlgebra );
 
+if false then
+
 DeclareAttribute( "EmbeddingOfSieveFunctor", IsFpCategoryDefinedByQuiverAlgebra );
 
 #! @Description
@@ -294,6 +296,8 @@ DeclareAttribute( "TruthMorphismOfTrueToSieveFunctor", IsFpCategoryDefinedByQuiv
 #! @Returns a &CAP; functor
 DeclareAttribute( "SieveFunctor", IsFpCategoryDefinedByQuiverAlgebra );
 #! @InsertChunk SieveFunctor
+
+fi;
 
 DeclareAttribute( "AssociatedFreeCategory",
         IsPathCategory );

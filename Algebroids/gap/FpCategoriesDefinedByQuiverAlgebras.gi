@@ -1663,6 +1663,8 @@ InstallMethod( CategoryFromNerveData,
     
 end );
 
+if false then
+
 ##
 InstallMethod( SieveFunctor,
         [ IsFpCategoryDefinedByQuiverAlgebra ],
@@ -1732,6 +1734,8 @@ InstallMethod( EmbeddingOfSieveFunctor,
                    HomHomOmega_functor );
     
 end );
+
+fi;
 
 ####################################
 #
