@@ -2356,7 +2356,7 @@ InstallMethodWithCache( PreSheavesOfFpEnrichedCategory,
             
             unit := UnitOfIsbellAdjunction( PSh );
             
-            return IsIsomorphism( PSh, unit( F ) );
+            return IsIsomorphism( PSh, CallFuncListAtRuntime( ApplyNaturalTransformation, [ unit, F ] ) );
             
         end );
         
@@ -4591,7 +4591,7 @@ InstallOtherMethodForCompilerForCAP( SectionAndComplementByCoveringListOfReprese
         F_o := ObjectDatum( H, F_on_objs[1 + o] );
         
         #% CAP_JIT_DROP_NEXT_STATEMENT
-        Assert( 0, IsBigInt( F_o ) );
+        Assert( 0, IsInt( F_o ) or IsBigInt( F_o ) );
         
         source_diagram_o := ListWithIdenticalEntries( c_o, d );
         
