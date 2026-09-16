@@ -706,6 +706,8 @@ InstallMethodForCompilerForCAP( CoYonedaEmbeddingDataOfSourceCategory,
       function ( obj )
         local Yobj;
         
+        # Does it work without CallFuncListAtRuntime?
+        # Yobj := CallFuncListAtRuntime( CreateCoPreSheafByValues, [ coPSh, coyoneda_data[1]( obj ) ] );
         Yobj := CreateCoPreSheafByValues( coPSh, coyoneda_data[1]( obj ) );
         
         #% CAP_JIT_DROP_NEXT_STATEMENT
