@@ -705,7 +705,7 @@ InstallMethodForCompilerForCAP( CoYonedaEmbeddingDataOfSourceCategory,
       function ( obj )
         local Yobj;
         
-        Yobj := CreateCoPreSheafByValues( coPSh, coyoneda_data[1]( obj ) );
+        Yobj := CallFuncListAtRuntime( CreateCoPreSheafByValues, [ coPSh, coyoneda_data[1]( obj ) ] );
         
         #% CAP_JIT_DROP_NEXT_STATEMENT
         SetIsInjective( Yobj, true );
