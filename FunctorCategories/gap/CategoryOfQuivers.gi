@@ -19,6 +19,7 @@ InstallOtherMethodForCompilerForCAP( CreateQuiver,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( CreateQuiver,
         "for a category of quivers, an integer, and a list of pairs of integers",
@@ -38,6 +39,7 @@ InstallMethod( CreateQuiver,
                    Triple( n, Length( arr ), arr ) );
     
 end );
+# =#
 
 ##
 InstallOtherMethodForCompilerForCAP( CreateQuiverMorphism,
@@ -53,6 +55,7 @@ InstallOtherMethodForCompilerForCAP( CreateQuiverMorphism,
     
 end );
 
+#= comment for Julia
 ##
 InstallMethod( CreateQuiverMorphism,
         "for two objects in a category of quivers and two lists",
@@ -63,6 +66,7 @@ InstallMethod( CreateQuiverMorphism,
     return CreateQuiverMorphism( CapCategory( source ), source, Pair( images_of_vertices, images_of_arrows ), range );
     
 end );
+# =#
 
 ##
 InstallMethod( CategoryOfQuiversEnrichedOver,
