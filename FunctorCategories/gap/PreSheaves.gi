@@ -4948,7 +4948,6 @@ InstallMethod( OptimizedCoYonedaLemmaCoequalizerPair,
     
 end );
 
-#= comment for Julia
 ##
 InstallMethodForCompilerForCAP( ApplyPreSheafToObjectInFiniteStrictCoproductCompletion,
         [ IsPreSheafCategoryOfFpEnrichedCategory, IsObjectInPreSheafCategoryOfFpEnrichedCategory, IsObjectInFiniteStrictCoproductCompletion ],
@@ -5015,7 +5014,6 @@ InstallMethodForCompilerForCAP( ApplyPreSheafToMorphismInFiniteStrictCoproductCo
                    G_on_source );
     
 end );
-# =#
 
 ##
 #= comment for Julia (requires Algebroids)
