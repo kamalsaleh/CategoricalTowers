@@ -47,6 +47,11 @@ InstallMethodWithCache( FreeDistributiveCompletion,
               );
     
     SetUnderlyingCategory( free_distributive_completion, fp_category );
+
+    ## FiniteStrictCoproductCompletion.gi sets IsDistributiveCategory when its source is Cartesian; Julia does not propagate it through the wrapper tower.
+    if HasIsCartesianCategory( finite_completion ) and IsCartesianCategory( finite_completion ) then
+      SetIsDistributiveCategory( free_distributive_completion, true );
+    fi;
     
     if HasIsInitialCategory( fp_category ) and IsInitialCategory( fp_category ) then
         Assert( 0, [ ] = MissingOperationsForConstructivenessOfCategory( free_distributive_completion, "IsEquippedWithHomomorphismStructure" ) );
