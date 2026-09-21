@@ -52,6 +52,9 @@ InstallMethodWithCache( FreeDistributiveCompletion,
     if HasIsCartesianCategory( finite_completion ) and IsCartesianCategory( finite_completion ) then
       SetIsDistributiveCategory( free_distributive_completion, true );
     fi;
+
+    ## Required for Julia, which does not support all forms of InstallTrueMethod with conjunctions.
+    ADD_CONJUNCTION_DERIVED_LATTICE_PROPERTIES( free_distributive_completion );
     
     if HasIsInitialCategory( fp_category ) and IsInitialCategory( fp_category ) then
         Assert( 0, [ ] = MissingOperationsForConstructivenessOfCategory( free_distributive_completion, "IsEquippedWithHomomorphismStructure" ) );
