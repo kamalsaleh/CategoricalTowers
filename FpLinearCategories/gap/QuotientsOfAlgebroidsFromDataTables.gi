@@ -11,27 +11,30 @@ InstallOtherMethod( QuotientCategory,
   function ( A, relations )
     local A_op, A_as_presheaf, eager, PSh, tau, S, H, pi, congruence_func, name, quo_A, FinalizeCategory, range_of_HomStructure, ring;
     
+    
+    #= comment for Julia
     if not IsPackageMarkedForLoading( "FunctorCategories", "2023.12-01" ) then
-        
         Error( "the package `FunctorCategories` with version at least V2023.12-01 is required for this method!\n" );
-        
     fi;
+    # =#
     
     A_op := OppositeOfObjectFiniteCategory( A );
     
-    A_as_presheaf := ValueGlobal( "AlgebroidAsObjectInPreSheavesCategory" )( A : eager := false );
+    A_as_presheaf := ValueGlobal( "AlgebroidAsObjectInPreSheavesCategory" )( A );
     
     PSh := CapCategory( A_as_presheaf );
     
-    tau := UniversalMorphismFromDirectSum( PSh, A_as_presheaf,
-              List( relations, rel -> ValueGlobal( "AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory" )( rel ) ) );
+    tau := CallFuncListAtRuntime( UniversalMorphismFromDirectSum,
+              [ PSh,
+                A_as_presheaf,
+                List( relations, rel -> ValueGlobal( "AssociatedMorphismIntoAlgebroidAsObjectInPreSheavesCategory" )( rel ) ) ] );
     
     S := Source( PSh );
     H := Target( PSh );
     
     if HasIsAbelianCategory( H ) and IsAbelianCategory( H ) then
         
-        pi := CokernelProjection( PSh, tau );
+        pi := CallFuncListAtRuntime( CokernelProjection, [ PSh, tau ] );
         
         congruence_func :=
           function ( m )
