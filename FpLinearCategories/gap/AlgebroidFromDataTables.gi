@@ -1100,7 +1100,6 @@ InstallMethod( PowerOfArrowIdealOp,
     
 end );
 
-#= comment for Julia
 ##
 InstallMethod( IsAdmissibleAlgebroid,
           [ IsFpAlgebroidFromDataTables ],
@@ -1113,20 +1112,22 @@ InstallMethod( IsAdmissibleAlgebroid,
     A_op := OppositeOfObjectFiniteCategory( A );
     
     if HasIsAdmissibleAlgebroid( A_op ) then
-        
         return IsAdmissibleAlgebroid( A_op );
-        
     fi;
     
     dim := AsZFunction(
         function ( i )
           local C, objs;
           
-          C := QuotientCategory( A, PowerOfArrowIdeal( A, i ) : overhead := false );
+          C := QuotientCategory( A, PowerOfArrowIdeal( A, i )
+                  #= comment for julia
+                  : overhead := false
+                  # =#
+                  );
           
-          objs := List( SetOfObjects( A ), u -> ObjectConstructor( C, u ) );
+          objs := List( SetOfObjects( A ), u -> CallFuncListAtRuntime( ObjectConstructor,  [ C, u ] ) );
           
-          return Sum( List( objs, u -> Sum( List( objs, v -> RankOfObject( HomomorphismStructureOnObjects( C, u, v ) ) ) ) ) );
+          return Sum( List( objs, u -> Sum( List( objs, v -> RankOfObject( CallFuncListAtRuntime( HomomorphismStructureOnObjects, [ C, u, v ] ) ) ) ) ) );
           
         end );
     
@@ -1155,7 +1156,6 @@ InstallMethod( IsAdmissibleAlgebroid,
     return bool;
     
 end );
-# =#
 
 ##
 InstallOtherMethod( CreateFunctor,
