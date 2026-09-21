@@ -340,6 +340,14 @@ DeclareAttribute( "DecompositionIndicesOfMorphismInAlgebroid",
 DeclareOperation( "TensorProductOfAlgebroids",
             [ IsFpAlgebroidFromDataTables, IsFpAlgebroidFromDataTables ] );
 
+#! @Description
+#!  The argument is an algebroid $A$ over a commutative ring $k$, defined by
+#!  data tables.  The output is its enveloping algebroid
+#!  $A^{\mathrm{op}}\otimes_k A$.
+#! @Arguments A
+#! @Returns a &CAP; category
+DeclareAttribute( "EnvelopingAlgebroid", IsFpAlgebroidFromDataTables );
+
 #= comment for Julia
 #! @Description
 #!  Delegates to <C>TensorProductOfAlgebroids</C>(<A>A</A>,<A>B</A>).
