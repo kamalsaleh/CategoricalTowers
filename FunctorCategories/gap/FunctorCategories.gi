@@ -344,7 +344,7 @@ InstallOtherMethodForCompilerForCAP( AsObjectInFunctorCategoryByValues,
         
   function ( Hom, values_of_functor )
     
-    return ObjectConstructor( Hom, values_of_functor );
+    return CallFuncListAtRuntime( ObjectConstructor, [ Hom, values_of_functor ] );
     
 end );
 
