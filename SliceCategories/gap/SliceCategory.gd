@@ -24,13 +24,19 @@ DeclareCategory( "IsCellInASliceCategory",
 
 #! @Description
 #!  The &GAP; category of objects in a slice category.
+#= CAP's Julia filter declaration requires FilterIntersection rather than &&.
 DeclareCategory( "IsObjectInASliceCategory",
         IsCellInASliceCategory and IsCapCategoryObject );
+# =#
+#% G2J:julia-only @DeclareFilter( "IsObjectInASliceCategory", FilterIntersection( IsCellInASliceCategory, IsCapCategoryObject ) );
 
 #! @Description
 #!  The &GAP; category of morphisms in a slice category.
+#= CAP's Julia filter declaration requires FilterIntersection rather than &&.
 DeclareCategory( "IsMorphismInASliceCategory",
         IsCellInASliceCategory and IsCapCategoryMorphism );
+# =#
+#% G2J:julia-only @DeclareFilter( "IsMorphismInASliceCategory", FilterIntersection( IsCellInASliceCategory, IsCapCategoryMorphism ) );
 
 #! @Description
 #!  The &GAP; category of a slice category over the tensor unit.
@@ -44,13 +50,19 @@ DeclareCategory( "IsCellInSliceCategoryOverTensorUnit",
 
 #! @Description
 #!  The &GAP; category of objects in a slice category over the tensor unit.
+#= CAP's Julia filter declaration requires FilterIntersection rather than &&.
 DeclareCategory( "IsObjectInSliceCategoryOverTensorUnit",
         IsCellInSliceCategoryOverTensorUnit and IsObjectInASliceCategory );
+# =#
+#% G2J:julia-only @DeclareFilter( "IsObjectInSliceCategoryOverTensorUnit", FilterIntersection( IsCellInSliceCategoryOverTensorUnit, IsObjectInASliceCategory ) );
 
 #! @Description
 #!  The &GAP; category of morphisms in a slice category over the tensor unit.
+#= CAP's Julia filter declaration requires FilterIntersection rather than &&.
 DeclareCategory( "IsMorphismInSliceCategoryOverTensorUnit",
         IsCellInSliceCategoryOverTensorUnit and IsMorphismInASliceCategory );
+# =#
+#% G2J:julia-only @DeclareFilter( "IsMorphismInSliceCategoryOverTensorUnit", FilterIntersection( IsCellInSliceCategoryOverTensorUnit, IsMorphismInASliceCategory ) );
 
 ####################################
 #
