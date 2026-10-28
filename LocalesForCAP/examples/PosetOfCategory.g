@@ -1,7 +1,7 @@
 #! @Chunk PosetOfCategory
 
 #! @Example
-LoadPackage( "Locales", false );
+LoadPackage( "LocalesForCAP", false );
 #! true
 q := FinQuiver( "q(a,b)[f:a->b,g:b->a]" );
 #! FinQuiver( "q(a,b)[f:a→b,g:b→a]" )

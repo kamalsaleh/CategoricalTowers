@@ -1,7 +1,7 @@
 #! @Chunk TotalOrderAsCategory
 
 #! @Example
-LoadPackage( "Locales" );
+LoadPackage( "LocalesForCAP" );
 #! true
 D := TotalOrderAsCategory( "IsInt", {a,b} -> a <= b );
 #! TotalOrderAsCategory( "IsInt" )

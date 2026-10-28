@@ -2,7 +2,7 @@
 
 #! @Example
 
-LoadPackage( "Locales", false );
+LoadPackage( "LocalesForCAP", false );
 #! true
 LoadPackage( "SubcategoriesForCAP", false );
 #! true
@@ -74,7 +74,7 @@ end""", "@", ";" ) );;
 
 given_arguments := [ zz ];;
 compiled_category_name := "StablePosetOfCategoryOfPosetOfCategoryOfSliceCategoryOverTensorUnitOfCategoryOfRowsOfCommutativeRingPrecompiled";;
-package_name := "Locales";;
+package_name := "LocalesForCAP";;
 
 CapJitPrecompileCategoryAndCompareResult(
     category_constructor,

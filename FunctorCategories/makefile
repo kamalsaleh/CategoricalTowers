@@ -82,7 +82,7 @@ test-spacing:
 
 ci-test: test-basic-spacing test-with-coverage test-notebooks
 
-ci-test-base: test-basic-spacing test-with-coverage-base test-notebooks
+ci-test-base: test-basic-spacing test-with-coverage-base
 
 ci-test-single: test-with-coverage-single
 

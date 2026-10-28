@@ -5,7 +5,7 @@ LoadPackage( "FreydCategoriesForCAP" )
 
 LoadPackage( "SubcategoriesForCAP" )
 
-LoadPackage( "Locales" )
+LoadPackage( "LocalesForCAP" )
 
 LoadPackage( "LazyCategories" )
 

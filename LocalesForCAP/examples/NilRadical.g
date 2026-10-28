@@ -1,6 +1,6 @@
 #! @Chunk NilRadical
 
-LoadPackage( "Locales" );
+LoadPackage( "LocalesForCAP" );
 
 #! @Example
 LoadPackage( "SubcategoriesForCAP", ">= 2020.10-02" );

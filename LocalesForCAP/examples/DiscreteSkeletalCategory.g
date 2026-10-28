@@ -1,7 +1,7 @@
 #! @Chunk SkeletalDiscreteCategory
 
 #! @Example
-LoadPackage( "Locales" );
+LoadPackage( "LocalesForCAP" );
 #! true
 D := SkeletalDiscreteCategory( "IsPosInt" );
 #! SkeletalDiscreteCategory( "IsPosInt" )

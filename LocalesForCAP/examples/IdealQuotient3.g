@@ -1,6 +1,6 @@
 #! @Chunk IdealQuotient3
 
-LoadPackage( "Locales" );
+LoadPackage( "LocalesForCAP" );
 
 #! @Example
 LoadPackage( "AdditiveClosuresForCAP", ">= 2025.07-02" );
